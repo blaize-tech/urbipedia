@@ -1,0 +1,10 @@
+:~
+  title+'Zettelkasten'
+  info+'Zettelkastens'
+  color+0xd9.b06d
+  version+[0 1 0]
+  website+'https://urbit.org'
+  license+'MIT'
+  base+'zettelkasten'
+  glob-ames+[~zod 0v0]
+==
