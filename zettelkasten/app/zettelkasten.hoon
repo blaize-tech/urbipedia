@@ -80,6 +80,9 @@
   ?>  (team:title our.bowl src.bowl)
   =/  now=@  (unm:chrono:userlib now.bowl)
   ?+    path  (on-peek:def path)
+      [%x %count ~]
+    ``noun+!>(countIds)
+  ::
       [%x %entries *]
     ?+    t.t.path  (on-peek:def path)
         [%all ~]
