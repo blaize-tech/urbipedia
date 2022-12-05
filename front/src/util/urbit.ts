@@ -132,7 +132,7 @@ export function urbitCreateLinkFileToFile(fromId: string, toId: string, type: nu
 
 }
 
-export function urbitDeleteLinkFileToFile(link_id: string) {
+export function urbitDeleteLinkFileToFile(linkId: string) {
 
 }
 
@@ -154,4 +154,8 @@ export function urbitGetFileName(id: string): string {
 
 export function urbitGetLinksList(id: string): Array<string> {
     return Array<string>();
+}
+
+export function getFileContent(id: string): string {
+    return "test text";
 }
