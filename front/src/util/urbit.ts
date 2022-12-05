@@ -24,73 +24,30 @@ class UrbitClientWrapperImpl implements UrbitClientWrapper {
 
 const urbitClientWrapper = new UrbitClientWrapperImpl();
 
+async function updateGraphData() {
+    const graphdata: OrgRoamGraphReponse = {
+        nodes: allNodes,
+        links: allLinks,
+        tags: allTags,
+    };
+
+    const message = {
+        type: "graphdata",
+        data: graphdata
+    };
+    const event = {
+        data: JSON.stringify(message)
+    };
+    if (!urbitClientWrapper.listener) {
+        throw "urbitClientWrapper not defined";
+    }
+    urbitClientWrapper.listener.onEvent(event);
+}
+
 export function connectUrbitClient(listener: UrbitListener): UrbitClientWrapper {
     urbitClientWrapper.listener = listener;
     setTimeout(() => {
-        const node1: OrgRoamNode = {
-            id: "123",
-            file: "mock file",
-            title: "title mock",
-            level: 0,
-            pos: 1,
-            olp: ["wtf?"],
-            properties: {
-                "key1": 123,
-                "key2": 234,
-            },
-            tags: ["tag1", "tag2"],
-        };
-        const node2: OrgRoamNode = {
-            id: "99",
-            file: "mock file 2",
-            title: "title mock 2",
-            level: 0,
-            pos: 2,
-            olp: ["wtf?"],
-            properties: {
-                "key1": 123,
-                "key2": 234,
-            },
-            tags: ["tag2", "tag3"],
-        };
-        const node3: OrgRoamNode = {
-            id: "77",
-            file: "mock file 3",
-            title: "title mock 3",
-            level: 0,
-            pos: 3,
-            olp: ["wtf?"],
-            properties: {
-                "key1": 555,
-                "key2": 444,
-            },
-            tags: ["tag3", "tag4"],
-        };
-        const link1: OrgRoamLink = {
-            source: "123",
-            target: "99",
-            type: "heading",
-        };
-        const link2: OrgRoamLink = {
-            source: "77",
-            target: "99",
-            type: "heading",
-        };
-
-        const graphdata: OrgRoamGraphReponse = {
-            nodes: allNodes,
-            links: allLinks,
-            tags: allTags,
-        };
-
-        const message = {
-            type: "graphdata",
-            data: graphdata
-        };
-        const event = {
-            data: JSON.stringify(message)
-        };
-        listener.onEvent(event);
+        updateGraphData().catch(console.error);
     }, 1000);
 
     setTimeout(() => {
