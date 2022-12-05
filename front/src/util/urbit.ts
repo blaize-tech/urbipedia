@@ -8,7 +8,11 @@ export interface UrbitClientWrapper {
     send(data: string): void;
 }
 
-const nodes = [];
+let nodesCounter = 0;
+let linksCounter = 0;
+const allNodes = new Array<OrgRoamNode>;
+const allLinks = new Array<OrgRoamLink>;
+const allTags = new Array<string>;
 
 class UrbitClientWrapperImpl implements UrbitClientWrapper {
     listener: UrbitListener | undefined;
@@ -74,9 +78,9 @@ export function connectUrbitClient(listener: UrbitListener): UrbitClientWrapper 
         };
 
         const graphdata: OrgRoamGraphReponse = {
-            nodes: [node1, node2, node3],
-            links: [link1, link2],
-            tags: ["tag1", "tag2"],
+            nodes: allNodes,
+            links: allLinks,
+            tags: allTags,
         };
 
         const message = {
@@ -123,7 +127,12 @@ export async function urbitRenameFile(id: string, name: string) {
 }
 
 export async function urbitCreateLinkFileToFile(fromId: string, toId: string, type: number) {
-
+    allLinks.push({
+        id: String(linksCounter++),
+        source: fromId,
+        target: toId,
+        type: type === 0 ? "heading" : "parent",
+    })
 }
 
 export async function urbitDeleteLinkFileToFile(linkId: string) {
@@ -134,32 +143,55 @@ export async function urbitDeleteFile(id: string) {
 
 }
 
-export function urbitGetCountIds(): Promise<number> {
+export function urbitGetNodesCountIds(): Promise<number> {
     return new Promise((resolve, reject) => {
-        resolve(0);
+        resolve(nodesCounter);
+    });
+}
+
+export function urbitGetLinksCountIds(): Promise<number> {
+    return new Promise((resolve, reject) => {
+        resolve(linksCounter);
     });
 }
 
 export function urbitGetFilesList(): Promise<Array<string>> {
     return new Promise((resolve, reject) => {
-        resolve(Array<string>());
+        const res = Array<string>();
+        for (let i = 0; i < allNodes.length; i++) {
+            res.push(allNodes[i].file);
+        }
+        resolve(res);
     });
 }
 
 export function urbitGetFileName(id: string): Promise<string> {
     return new Promise((resolve, reject) => {
-        resolve('foo');
+        for (let i = 0; i < allNodes.length; i++) {
+            if (allNodes[i].id == id) {
+                resolve(allNodes[i].file);
+            }
+        }
+        reject("id for node not found");
     });
 }
 
 export function urbitGetLinksList(id: string): Promise<Array<string>> {
     return new Promise((resolve, reject) => {
-        resolve(Array<string>());
+        const res = Array<string>();
+        for (let i = 0; i < allLinks.length; i++) {
+            res.push(String(allLinks[i].id));
+        }
+        resolve(res);
     });
 }
 
 export function getFileContent(id: string): Promise<string> {
     return new Promise((resolve, reject) => {
-        resolve('foo');
+        for (let i = 0; i < allNodes.length; i++) {
+            if (allNodes[i].id == id) {
+                resolve(String(allNodes[i].content));
+            }
+        }
     });
 }

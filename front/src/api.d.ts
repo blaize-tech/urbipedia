@@ -15,9 +15,11 @@ export type OrgRoamNode = {
     [key: string]: string | number
   }
   tags: string[]
+  content?: string // todo remove this
 }
 
 export type OrgRoamLink = {
+  id?: string // todo remove this
   source: string
   target: string
   type: string
