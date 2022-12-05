@@ -338,7 +338,7 @@ export function GraphPage() {
   const scopeRef = useRef<Scope>({ nodeIds: [], excludedNodeIds: [] })
   const behaviorRef = useRef(initialBehavior)
   behaviorRef.current = behavior
-  const WebSocketRef = useRef<UrbitClientWrapper | null>(null)
+  const urbitClient = useRef<UrbitClientWrapper | null>(null)
 
   scopeRef.current = scope
   const followBehavior = (
@@ -411,7 +411,7 @@ export function GraphPage() {
   }
 
   useEffect(() => {
-    WebSocketRef.current = connectUrbitClient({ onEvent:(event: any) => {
+    urbitClient.current = connectUrbitClient({ onEvent:(event: any) => {
       const bh = behaviorRef.current
       const message = JSON.parse(event.data)
       switch (message.type) {
@@ -574,7 +574,7 @@ export function GraphPage() {
               //ref={graphRef}
               nodeById={nodeByIdRef.current!}
               linksByNodeId={linksByNodeIdRef.current!}
-              webSocket={WebSocketRef.current}
+              webSocket={urbitClient.current}
               variables={emacsVariables}
               {...{
                 physics,
@@ -688,7 +688,7 @@ export function GraphPage() {
               coordinates={contextPos}
               handleLocal={handleLocal}
               menuClose={contextMenu.onClose.bind(contextMenu)}
-              webSocket={WebSocketRef.current}
+              webSocket={urbitClient.current}
               setPreviewNode={setPreviewNode}
               setFilter={setFilter}
               filter={filter}

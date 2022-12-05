@@ -92,6 +92,7 @@ export async function addTagToFile(id: string, tag: string) {
             break;
         }
     }
+    updateGraphData().catch();
 }
 
 export async function deleteTagFromFile(id: string, tag: string) {
@@ -104,6 +105,7 @@ export async function deleteTagFromFile(id: string, tag: string) {
             break;
         }
     }
+    updateGraphData().catch();
 }
 
 export async function urbitUpdateFile(id: string, text: string) {
@@ -112,6 +114,7 @@ export async function urbitUpdateFile(id: string, text: string) {
             allNodes[i].content = text;
         }
     }
+    updateGraphData().catch();
 }
 
 export async function urbitRenameFile(id: string, name: string) {
@@ -120,6 +123,7 @@ export async function urbitRenameFile(id: string, name: string) {
             allNodes[i].file = name;
         }
     }
+    updateGraphData().catch();
 }
 
 export async function urbitCreateLinkFileToFile(fromId: string, toId: string, type: number) {
@@ -129,6 +133,7 @@ export async function urbitCreateLinkFileToFile(fromId: string, toId: string, ty
         target: toId,
         type: type === 0 ? "heading" : "parent",
     })
+    updateGraphData().catch();
 }
 
 export async function urbitDeleteLinkFileToFile(linkId: string) {
@@ -138,6 +143,7 @@ export async function urbitDeleteLinkFileToFile(linkId: string) {
             break;
         }
     }
+    updateGraphData().catch();
 }
 
 export async function urbitDeleteFile(id: string) {
@@ -147,6 +153,7 @@ export async function urbitDeleteFile(id: string) {
             break;
         }
     }
+    updateGraphData().catch();
 }
 
 export function urbitGetNodesCountIds(): Promise<number> {
