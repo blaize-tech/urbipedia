@@ -72,20 +72,23 @@ export function connectUrbitClient(listener: UrbitListener): UrbitClientWrapper 
             target: "99",
             type: "heading",
         };
-        const nodes: OrgRoamGraphReponse = {
+
+        const graphdata: OrgRoamGraphReponse = {
             nodes: [node1, node2, node3],
             links: [link1, link2],
             tags: ["tag1", "tag2"],
         };
+
         const message = {
             type: "graphdata",
-            data: nodes
+            data: graphdata
         };
         const event = {
             data: JSON.stringify(message)
         };
         listener.onEvent(event);
     }, 1000);
+
     setTimeout(() => {
         const message = {
             type: "variables",
@@ -99,6 +102,7 @@ export function connectUrbitClient(listener: UrbitListener): UrbitClientWrapper 
         };
         listener.onEvent(event);
     }, 1000);
+
     return urbitClientWrapper;
 }
 
