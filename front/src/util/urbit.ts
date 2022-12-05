@@ -125,10 +125,26 @@ export async function urbitCreateFile(name: string, text: string) {
     })
 }
 
-export async function urbitAddTagToFile(id: string, tag: string) {
+async function updateTagsToFile(id: string, tags: string) {
+}
+
+export async function addTagToFile(id: string, tag: string) {
     for (let i = 0; i < allNodes.length; i++) {
         if (allNodes[i].id == id) {
             allNodes[i].tags.push(tag);
+            break;
+        }
+    }
+}
+
+export async function deleteTagFromFile(id: string, tag: string) {
+    for (let i = 0; i < allNodes.length; i++) {
+        if (allNodes[i].id == id) {
+            const pos = allNodes[i].tags.indexOf(tag);
+            if (pos >= 0) {
+                allNodes[i].tags.splice(pos, 1)
+            }
+            break;
         }
     }
 }
