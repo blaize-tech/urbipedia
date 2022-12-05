@@ -111,19 +111,42 @@ export function connectUrbitClient(listener: UrbitListener): UrbitClientWrapper 
 }
 
 export async function urbitCreateFile(name: string, text: string) {
-
+    const newId = nodesCounter++;
+    allNodes.push({
+        id: String(newId),
+        file: name,
+        title: "unknown" + String(newId),
+        level: 0,
+        pos: newId,
+        olp: [],
+        properties: {},
+        tags: [],
+        content: text
+    })
 }
 
 export async function urbitAddTagToFile(id: string, tag: string) {
-
+    for (let i = 0; i < allNodes.length; i++) {
+        if (allNodes[i].id == id) {
+            allNodes[i].tags.push(tag);
+        }
+    }
 }
 
 export async function urbitUpdateFile(id: string, text: string) {
-
+    for (let i = 0; i < allNodes.length; i++) {
+        if (allNodes[i].id == id) {
+            allNodes[i].content = text;
+        }
+    }
 }
 
 export async function urbitRenameFile(id: string, name: string) {
-
+    for (let i = 0; i < allNodes.length; i++) {
+        if (allNodes[i].id == id) {
+            allNodes[i].file = name;
+        }
+    }
 }
 
 export async function urbitCreateLinkFileToFile(fromId: string, toId: string, type: number) {
@@ -136,11 +159,21 @@ export async function urbitCreateLinkFileToFile(fromId: string, toId: string, ty
 }
 
 export async function urbitDeleteLinkFileToFile(linkId: string) {
-
+    for (let i = 0; i < allLinks.length; i++) {
+        if (allLinks[i].id == linkId) {
+            allLinks.splice(i, 1);
+            break;
+        }
+    }
 }
 
 export async function urbitDeleteFile(id: string) {
-
+    for (let i = 0; i < allNodes.length; i++) {
+        if (allNodes[i].id == id) {
+            allNodes.splice(i, 1);
+            break;
+        }
+    }
 }
 
 export function urbitGetNodesCountIds(): Promise<number> {
