@@ -1,4 +1,4 @@
-/-  *zettelkasten, *sole
+/-  *journal, *sole
 /+  *generators
 :-  %ask
 |=  [[now=@da * bek=beak] *]
@@ -20,7 +20,7 @@
 %+  print  leaf+"{off}-------------------------------------\0a"
 %+  print  leaf+"{off}|                                   |"
 %+  print  leaf+"{off}| (\\\\\\ to submit, <BKSP> to cancel) |"
-%+  print  leaf+"{off}|         New zettelkasten Entry         |"
+%+  print  leaf+"{off}|         New Journal Entry         |"
 %+  print  leaf+"{off}|                                   |"
 %+  print  leaf+"\0a{off}-------------------------------------"
 line
@@ -28,7 +28,7 @@ line
   %+  prompt   [%& %prompt ""]
   |=  t=tape
   ?:  =(t "\\\\\\")
-    %+  produce  %zettelkasten-action
+    %+  produce  %journal-action
     :+  %add
       (unm:chrono:userlib now)
     (of-wain:format (flop acc))

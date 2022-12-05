@@ -1,5 +1,5 @@
-/-  *zettelkasten
-/+  *zettelkasten
+/-  *journal
+/+  *journal
 |_  act=action
 ++  grow
   |%

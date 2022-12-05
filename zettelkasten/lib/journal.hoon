@@ -1,4 +1,4 @@
-/-  *zettelkasten
+/-  *journal
 |%
 ++  dejs-action
   =,  dejs:format

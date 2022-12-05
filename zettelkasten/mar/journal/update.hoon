@@ -1,5 +1,5 @@
-/-  *zettelkasten
-/+  *zettelkasten
+/-  *journal
+/+  *journal
 |_  upd=update
 ++  grow
   |%

@@ -66,7 +66,7 @@
   ::
   ++  rest
     |=  p=@da
-    (arvo %b %rest p)
+    (arvo %b %wait p)
   ::
   ++  warp
     |=  [wer=ship =riff:clay]
