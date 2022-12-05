@@ -132,7 +132,7 @@ export async function urbitCreateLinkFileToFile(fromId: string, toId: string, ty
         source: fromId,
         target: toId,
         type: type === 0 ? "heading" : "parent",
-    })
+    });
     updateGraphData().catch();
 }
 
