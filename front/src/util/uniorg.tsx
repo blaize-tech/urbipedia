@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { LinksByNodeId, NodeByCite, NodeById } from '../index'
 import { ProcessedOrg } from './processOrg'
-import {fetchNodeById} from "./dataSource";
+import {fetchNodeById} from "./urbit";
 
 export interface UniOrgProps {
   nodeById: NodeById

@@ -63,7 +63,7 @@ import { nodeSize } from './util/nodeSize'
 import { getNodeColor } from './util/getNodeColor'
 import { isLinkRelatedToNode } from './util/isLinkRelatedToNode'
 import { getLinkColor } from './util/getLinkColor'
-import {MockWS, mockWS} from "./util/dataSource";
+import {MockWS, mockWS} from "./util/urbit";
 import MyApp from './_app'
 
 const d3promise = import('d3-force-3d')

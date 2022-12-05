@@ -32,7 +32,7 @@ import { defaultNoteStyle, viewerNoteStyle, outlineNoteStyle } from './noteStyle
 import { Scrollbars } from 'react-custom-scrollbars-2'
 import { ExternalLinkIcon } from '@chakra-ui/icons'
 import { getThemeColor } from '../../util/getThemeColor'
-import {fetchNodeById} from "../../util/dataSource";
+import {fetchNodeById} from "../../util/urbit";
 
 export interface LinkProps {
   href: any
