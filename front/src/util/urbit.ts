@@ -112,50 +112,60 @@ export function fetchNodeById(id: string): Promise<string> {
     });
 }
 
-export function urbitCreateFile(name: string, text: string) {
+export async function urbitCreateFile(name: string, text: string) {
 
 }
 
-export function urbitAddTagToFile(id: string, tag: string) {
+export async function urbitAddTagToFile(id: string, tag: string) {
 
 }
 
-export function urbitUpdateFile(id: string, text: string) {
+export async function urbitUpdateFile(id: string, text: string) {
 
 }
 
-export function urbitRenameFile(id: string, name: string) {
+export async function urbitRenameFile(id: string, name: string) {
 
 }
 
-export function urbitCreateLinkFileToFile(fromId: string, toId: string, type: number) {
+export async function urbitCreateLinkFileToFile(fromId: string, toId: string, type: number) {
 
 }
 
-export function urbitDeleteLinkFileToFile(linkId: string) {
+export async function urbitDeleteLinkFileToFile(linkId: string) {
 
 }
 
-export function urbitDeleteFile(id: string) {
+export async function urbitDeleteFile(id: string) {
 
 }
 
-export function urbitGetCountIds(): string {
-    return "0";
+export function urbitGetCountIds(): Promise<number> {
+    return new Promise((resolve, reject) => {
+        resolve(0);
+    });
 }
 
-export function urbitGetFilesList(): Array<string> {
-    return Array<string>();
+export function urbitGetFilesList(): Promise<Array<string>> {
+    return new Promise((resolve, reject) => {
+        resolve(Array<string>());
+    });
 }
 
-export function urbitGetFileName(id: string): string {
-    return "test.name";
+export function urbitGetFileName(id: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+        resolve('foo');
+    });
 }
 
-export function urbitGetLinksList(id: string): Array<string> {
-    return Array<string>();
+export function urbitGetLinksList(id: string): Promise<Array<string>> {
+    return new Promise((resolve, reject) => {
+        resolve(Array<string>());
+    });
 }
 
-export function getFileContent(id: string): string {
-    return "test text";
+export function getFileContent(id: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+        resolve('foo');
+    });
 }
