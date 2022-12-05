@@ -32,7 +32,6 @@ import type {
 } from 'react-force-graph'
 import { BiNetworkChart } from 'react-icons/bi'
 import { BsReverseLayoutSidebarInsetReverse } from 'react-icons/bs'
-import ReconnectingWebSocket from 'reconnecting-websocket'
 import SpriteText from 'three-spritetext'
 import useUndo from 'use-undo'
 import { OrgRoamGraphReponse, OrgRoamLink, OrgRoamNode } from './api'
@@ -63,7 +62,7 @@ import { nodeSize } from './util/nodeSize'
 import { getNodeColor } from './util/getNodeColor'
 import { isLinkRelatedToNode } from './util/isLinkRelatedToNode'
 import { getLinkColor } from './util/getLinkColor'
-import {MockWS, mockWS} from "./util/urbit";
+import {UrbitClientWrapper, connectUrbitClient} from "./util/urbit";
 import MyApp from './_app'
 
 const d3promise = import('d3-force-3d')
@@ -339,7 +338,7 @@ export function GraphPage() {
   const scopeRef = useRef<Scope>({ nodeIds: [], excludedNodeIds: [] })
   const behaviorRef = useRef(initialBehavior)
   behaviorRef.current = behavior
-  const WebSocketRef = useRef<MockWS | null>(null)
+  const WebSocketRef = useRef<UrbitClientWrapper | null>(null)
 
   scopeRef.current = scope
   const followBehavior = (
@@ -412,7 +411,7 @@ export function GraphPage() {
   }
 
   useEffect(() => {
-    WebSocketRef.current = mockWS({ onEvent:(event: any) => {
+    WebSocketRef.current = connectUrbitClient({ onEvent:(event: any) => {
       const bh = behaviorRef.current
       const message = JSON.parse(event.data)
       switch (message.type) {

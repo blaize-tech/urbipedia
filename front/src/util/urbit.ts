@@ -1,27 +1,27 @@
 import {OrgRoamGraphReponse, OrgRoamLink, OrgRoamNode} from "../api";
 
-export interface WsListener {
+export interface UrbitListener {
     onEvent(event: any): void;
 }
 
-export interface MockWS {
+export interface UrbitClientWrapper {
     send(data: string): void;
 }
 
 const nodes = [];
 
-class MockWsImpl implements MockWS {
-    listener: WsListener | undefined;
+class UrbitClientWrapperImpl implements UrbitClientWrapper {
+    listener: UrbitListener | undefined;
 
     send(data: string): void {
         console.log("received data from ws mock", data);
     }
 }
 
-const mockWs = new MockWsImpl();
+const urbitClientWrapper = new UrbitClientWrapperImpl();
 
-export function mockWS(listener: WsListener): MockWS {
-    mockWs.listener = listener;
+export function connectUrbitClient(listener: UrbitListener): UrbitClientWrapper {
+    urbitClientWrapper.listener = listener;
     setTimeout(() => {
         const node1: OrgRoamNode = {
             id: "123",
@@ -99,17 +99,7 @@ export function mockWS(listener: WsListener): MockWS {
         };
         listener.onEvent(event);
     }, 1000);
-    return mockWs;
-}
-
-export function fetchNodeById(id: string): Promise<string> {
-    return new Promise(function (resolve, reject) {
-        if (Number(id) < 1000) {
-            resolve("mock text for node - " + id + " [[mock file]]");
-        } else {
-            reject("mock error for node - " + id);
-        }
-    });
+    return urbitClientWrapper;
 }
 
 export async function urbitCreateFile(name: string, text: string) {
