@@ -90,7 +90,7 @@ export const Tweaks = (props: TweakProps) => {
       zIndex="overlay"
       marginTop={1}
       marginLeft={0}
-      left={haveOffset ? 252 :0}
+      left={haveOffset ? 402 :0}
       display={showTweaks ? 'none' : 'block'}
     >
       <IconButton
@@ -107,7 +107,7 @@ export const Tweaks = (props: TweakProps) => {
       w="xs"
       marginTop={2}
       marginLeft={2}
-      left={haveOffset ? 252 :0}
+      left={haveOffset ? 402 :0}
       borderRadius="lg"
       paddingBottom={5}
       zIndex={10}

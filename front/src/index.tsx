@@ -157,7 +157,7 @@ export function GraphPage() {
     const headingLinks: OrgRoamLink[] = Object.keys(nodesByFile).flatMap((file) => {
       const nodesInFile = nodesByFile[file] ?? []
       // "file node" as opposed to "heading node"
-      const fileNode = nodesInFile.find((node) => node.level === 0)
+      const fileNode = nodesInFile.find((node) => node.level === 0);
       const headingNodes = nodesInFile.filter((node) => node.level !== 0)
 
       if (!fileNode) {
@@ -547,7 +547,6 @@ export function GraphPage() {
         overflow="clip"
       >
         <Box position="relative" zIndex={4}>
-          {/*<div style={{width: "250px", height: "100vh", background: "#923123"}}/>*/}
           <FilesystemBar
               {...{
                 isOpen,
@@ -603,7 +602,7 @@ export function GraphPage() {
           haveOffset={true}
         />
         <Box position="absolute">
-          {(graphData && scope.nodeIds.length) && (
+          {(graphData && scope.nodeIds.length) ? (
             <Graph
               //ref={graphRef}
               nodeById={nodeByIdRef.current!}
@@ -638,7 +637,7 @@ export function GraphPage() {
                 local,
               }}
             />
-          )}
+          ) : (<div/>)}
         </Box>
         <Box position="relative" zIndex={4} width="100%">
           <Flex className="headerBar" h={10} flexDir="column">
