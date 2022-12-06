@@ -64,6 +64,7 @@ import { isLinkRelatedToNode } from './util/isLinkRelatedToNode'
 import { getLinkColor } from './util/getLinkColor'
 import {UrbitClientWrapper, connectUrbitClient} from "./util/urbit";
 import MyApp from './_app'
+import FilesystemBar from './components/FilesystemBar'
 
 const d3promise = import('d3-force-3d')
 
@@ -546,7 +547,36 @@ export function GraphPage() {
         overflow="clip"
       >
         <Box position="relative" zIndex={4}>
-          <div style={{width: "250px", height: "100vh", background: "#923123"}}/>
+          {/*<div style={{width: "250px", height: "100vh", background: "#923123"}}/>*/}
+          <FilesystemBar
+              {...{
+                isOpen,
+                onOpen,
+                onClose,
+                previewNode,
+                setPreviewNode,
+                canUndo,
+                canRedo,
+                previousPreviewNode,
+                nextPreviewNode,
+                resetPreviewNode,
+                setSidebarHighlightedNode,
+                openContextMenu,
+                scope,
+                setScope,
+                windowWidth,
+                tagColors,
+                setTagColors,
+                filter,
+                setFilter,
+              }}
+              macros={emacsVariables.katexMacros}
+              attachDir={emacsVariables.attachDir || ''}
+              useInheritance={emacsVariables.useInheritance || false}
+              nodeById={nodeByIdRef.current!}
+              linksByNodeId={linksByNodeIdRef.current!}
+              nodeByCite={nodeByCiteRef.current!}
+          />
         </Box>
         <Tweaks
           {...{
