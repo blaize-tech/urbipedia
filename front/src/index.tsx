@@ -26,7 +26,7 @@ import React, {
 import ReactDOM from 'react-dom/client';
 //@ts-expect-error
 import jLouvain from 'jlouvain.js'
-import type {
+import type, {
   ForceGraph2D as TForceGraph2D,
   ForceGraph3D as TForceGraph3D,
 } from 'react-force-graph'
