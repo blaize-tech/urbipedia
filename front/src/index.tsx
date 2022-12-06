@@ -545,6 +545,9 @@ export function GraphPage() {
         height="100vh"
         overflow="clip"
       >
+        <Box position="relative" zIndex={4}>
+          <div style={{width: "250px", height: "100vh", background: "#923123"}}/>
+        </Box>
         <Tweaks
           {...{
             physics,
@@ -567,6 +570,7 @@ export function GraphPage() {
             setLocal,
           }}
           tags={tagsRef.current}
+          haveOffset={true}
         />
         <Box position="absolute">
           {(graphData && scope.nodeIds.length) && (
