@@ -130,6 +130,14 @@ export function GraphPage() {
   const [sidebarHighlightedNode, setSidebarHighlightedNode] = useState<OrgRoamNode | null>(null)
   const { isOpen, onOpen, onClose } = useDisclosure()
 
+  let isOpenFilesListSideBar, onOpenFilesListSideBar, onCloseFilesListSideBar;
+  {
+    const { isOpen, onOpen, onClose } = useDisclosure()
+    isOpenFilesListSideBar=isOpen;
+    onOpenFilesListSideBar=onOpen;
+    onCloseFilesListSideBar=onClose;
+  }
+
   const nodeByIdRef = useRef<NodeById>({})
   const linksByNodeIdRef = useRef<LinksByNodeId>({})
   const nodeByCiteRef = useRef<NodeByCite>({})
@@ -549,9 +557,9 @@ export function GraphPage() {
         <Box position="relative" zIndex={4}>
           <FilesystemBar
               {...{
-                isOpen,
-                onOpen,
-                onClose,
+                isOpen: isOpenFilesListSideBar,
+                onOpen: onOpenFilesListSideBar,
+                onClose: onCloseFilesListSideBar,
                 previewNode,
                 setPreviewNode,
                 canUndo,
@@ -577,6 +585,16 @@ export function GraphPage() {
               nodeByCite={nodeByCiteRef.current!}
           />
         </Box>
+        <Tooltip label={isOpenFilesListSideBar ? 'Close sidebar' : 'Open sidebar'}>
+          <IconButton
+              m={1}
+              // eslint-disable-next-line react/jsx-no-undef
+              icon={<BsReverseLayoutSidebarInsetReverse />}
+              aria-label="Close files-list"
+              variant="subtle"
+              onClick={isOpenFilesListSideBar ? onCloseFilesListSideBar : onOpenFilesListSideBar}
+          />
+        </Tooltip>
         <Tweaks
           {...{
             physics,
@@ -599,7 +617,7 @@ export function GraphPage() {
             setLocal,
           }}
           tags={tagsRef.current}
-          haveOffset={true}
+          haveOffset={isOpenFilesListSideBar}
         />
         <Box position="absolute">
           {(graphData && scope.nodeIds.length) ? (
