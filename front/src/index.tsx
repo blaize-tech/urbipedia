@@ -569,7 +569,7 @@ export function GraphPage() {
           tags={tagsRef.current}
         />
         <Box position="absolute">
-          {graphData && (
+          {(graphData && scope.nodeIds.length) && (
             <Graph
               //ref={graphRef}
               nodeById={nodeByIdRef.current!}
