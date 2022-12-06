@@ -31,7 +31,7 @@ import type, {
   ForceGraph3D as TForceGraph3D,
 } from 'react-force-graph'
 import { BiNetworkChart } from 'react-icons/bi'
-import { BsReverseLayoutSidebarInsetReverse } from 'react-icons/bs'
+import { BsReverseLayoutSidebarInsetReverse, BsLayoutSidebarInset } from 'react-icons/bs'
 import SpriteText from 'three-spritetext'
 import useUndo from 'use-undo'
 import { OrgRoamGraphReponse, OrgRoamLink, OrgRoamNode } from './api'
@@ -589,7 +589,7 @@ export function GraphPage() {
           <IconButton
               m={1}
               // eslint-disable-next-line react/jsx-no-undef
-              icon={<BsReverseLayoutSidebarInsetReverse />}
+              icon={<BsLayoutSidebarInset />}
               aria-label="Close files-list"
               variant="subtle"
               onClick={isOpenFilesListSideBar ? onCloseFilesListSideBar : onOpenFilesListSideBar}
