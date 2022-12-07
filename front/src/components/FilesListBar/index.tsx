@@ -44,6 +44,7 @@ export const FilesListBar = (props: SidebarProps) => {
     const items = (list: Array<string>) => {
         return (
             list.map((item, index) => {
+
                 return (<div
                     key={index}
                     onClick={() => {
