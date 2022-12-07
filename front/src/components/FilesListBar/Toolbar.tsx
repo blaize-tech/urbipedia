@@ -4,11 +4,15 @@ import {PlusSquareIcon, EditIcon, DeleteIcon, CalendarIcon} from '@chakra-ui/ico
 
 export interface ToolbarProps {
     createNewFile: any
+    renameFile: any
+    haveSelection: boolean
 }
 
 export const Toolbar = (props: ToolbarProps) => {
     const {
         createNewFile,
+        renameFile,
+        haveSelection,
     } = props
     return (
         <Flex flex="0 1 40px" pb={3} alignItems="center" justifyContent="space-between" pr={1}>
@@ -20,7 +24,6 @@ export const Toolbar = (props: ToolbarProps) => {
                             variant="subtle"
                             icon={<PlusSquareIcon/>}
                             aria-label="Create new file"
-                            disabled={false}
                             onClick={createNewFile}
                         />
                     </Tooltip>
@@ -30,7 +33,7 @@ export const Toolbar = (props: ToolbarProps) => {
                             variant="subtle"
                             icon={<CalendarIcon/>}
                             aria-label="Edit selected file"
-                            disabled={true}
+                            disabled={!haveSelection}
                             onClick={() => {
                             }}
                         />
@@ -41,9 +44,8 @@ export const Toolbar = (props: ToolbarProps) => {
                             variant="subtle"
                             icon={<EditIcon/>}
                             aria-label="Rename selected file"
-                            disabled={true}
-                            onClick={() => {
-                            }}
+                            disabled={!haveSelection}
+                            onClick={renameFile}
                         />
                     </Tooltip>
                     <Tooltip label="Delete selected">
@@ -52,7 +54,7 @@ export const Toolbar = (props: ToolbarProps) => {
                             variant="subtle"
                             icon={<DeleteIcon/>}
                             aria-label="Delete selected file"
-                            disabled={true}
+                            disabled={!haveSelection}
                             onClick={() => {
                             }}
                         />

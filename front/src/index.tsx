@@ -64,7 +64,7 @@ import { isLinkRelatedToNode } from './util/isLinkRelatedToNode'
 import { getLinkColor } from './util/getLinkColor'
 import {UrbitClientWrapper, connectUrbitClient} from "./util/urbit";
 import MyApp from './_app'
-import FilesListBar from './components/FilesListBar'
+import {FilesListBar} from './components/FilesListBar'
 
 const d3promise = import('d3-force-3d')
 

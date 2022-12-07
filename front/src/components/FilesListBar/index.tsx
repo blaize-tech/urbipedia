@@ -13,6 +13,7 @@ import {OrgRoamGraphReponse} from "../../api";
 import {getThemeColor} from "../../util/getThemeColor";
 import {initialVisuals} from "../config";
 import {urbitCreateFile} from "../../util/urbit";
+import {RenameModal} from "./RenameModal";
 
 export interface SidebarProps {
     isOpen: boolean
@@ -23,7 +24,7 @@ export interface SidebarProps {
     visuals: typeof initialVisuals
 }
 
-const FilesListBar = (props: SidebarProps) => {
+export const FilesListBar = (props: SidebarProps) => {
     const {
         isOpen,
         onOpen,
@@ -35,13 +36,16 @@ const FilesListBar = (props: SidebarProps) => {
 
     const theme = useTheme()
     const {highlightColor} = useContext(ThemeContext)
-    const [sidebarWidth, setSidebarWidth] = usePersistantState<number>('sidebarWidth', 400)
-    const [selectedItemIndex, setSelectedItemIndex] = useState<number>(-1)
+    const [sidebarWidth, setSidebarWidth] = usePersistantState<number>('sidebarWidth', 400);
+    const [selectedItemIndex, setSelectedItemIndex] = useState<number>(-1);
+    const [showRenameDialog, setShowRenameDialog] = useState<boolean>(false);
+    const [currentFileName, setCurrentFileName] = useState<string>("");
 
     const items = (list: Array<string>) => {
         return (
             list.map((item, index) => {
                 return (<div
+                    key={index}
                     onClick={() => {
                         setSelectedItemIndex(index);
                     }}
@@ -64,6 +68,19 @@ const FilesListBar = (props: SidebarProps) => {
 
     const createNewFile = async () => {
         await urbitCreateFile("NewFile", "").catch(console.error);
+    };
+
+    const onRenameFile = async (name: string) => {
+        setCurrentFileName(name.length ? name : "noname");
+        setShowRenameDialog(false);
+    };
+
+    const onCloseRenameFileDialog = async () => {
+        setShowRenameDialog(false);
+    };
+
+    const renameFile = async () => {
+        setShowRenameDialog(true);
     };
 
     return (
@@ -105,9 +122,12 @@ const FilesListBar = (props: SidebarProps) => {
                         width="100%"
                     >
                         <Flex pt={1} flexShrink={0}>
-                            <Toolbar{...{
-                                createNewFile
-                            }}
+                            <Toolbar
+                                {...{
+                                    createNewFile,
+                                    renameFile,
+                                }}
+                                haveSelection={(selectedItemIndex >= 0)}
                             />
                         </Flex>
                     </Flex>
@@ -131,8 +151,12 @@ const FilesListBar = (props: SidebarProps) => {
                     </Scrollbars>
                 </Flex>
             </Resizable>
+            <RenameModal
+                name={currentFileName}
+                showModal={showRenameDialog}
+                onRename={onRenameFile}
+                onClose={onCloseRenameFileDialog}
+            />
         </Collapse>
     )
 }
-
-export default FilesListBar
