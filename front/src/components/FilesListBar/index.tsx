@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react'
+import React, {useCallback, useContext, useState} from 'react'
 
 import {Toolbar} from './Toolbar'
 
@@ -13,6 +13,7 @@ import {usePersistantState} from '../../util/persistant-state'
 import {OrgRoamGraphReponse} from "../../api";
 import {getThemeColor} from "../../util/getThemeColor";
 import {initialVisuals} from "../config";
+import {urbitCreateFile} from "../../util/urbit";
 
 export interface SidebarProps {
     isOpen: boolean
@@ -46,12 +47,12 @@ const FilesListBar = (props: SidebarProps) => {
                         setSelectedItemIndex(index);
                     }}
                     style={{
+                        width: "100%",
                         background: (index !== selectedItemIndex)
                             ? getThemeColor(visuals.labelBackgroundColor, theme)
-                            : getThemeColor("base0", theme),
-                        color: (index === selectedItemIndex)
-                            ? getThemeColor(highlightColor, theme)
-                            : getThemeColor(visuals.labelTextColor, theme),
+                            : getThemeColor(highlightColor, theme),
+                        margin: "1px",
+                        paddingLeft: "5px",
                     }}
                 >{item}</div>)
             })
@@ -61,6 +62,10 @@ const FilesListBar = (props: SidebarProps) => {
     const filesList = graphData.nodes.map((node) => {
         return node.file;
     });
+
+    const createNewFile = async () => {
+        await urbitCreateFile("NewFile", "").catch(console.error);
+    };
 
     return (
         <Collapse
@@ -101,7 +106,10 @@ const FilesListBar = (props: SidebarProps) => {
                         width="100%"
                     >
                         <Flex pt={1} flexShrink={0}>
-                            <Toolbar/>
+                            <Toolbar{...{
+                                createNewFile
+                            }}
+                            />
                         </Flex>
                         <Flex flexDir="row" ml="auto">
                             <IconButton

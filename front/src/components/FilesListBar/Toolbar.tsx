@@ -3,13 +3,13 @@ import {Flex, IconButton, ButtonGroup, Tooltip} from '@chakra-ui/react'
 import {PlusSquareIcon, EditIcon, DeleteIcon, CalendarIcon} from '@chakra-ui/icons'
 
 export interface ToolbarProps {
-    // setJustification: any
+    createNewFile: any
 }
 
 export const Toolbar = (props: ToolbarProps) => {
-    // const {
-    //   // setJustification,
-    // } = props
+    const {
+        createNewFile,
+    } = props
     return (
         <Flex flex="0 1 40px" pb={3} alignItems="center" justifyContent="space-between" pr={1}>
             <Flex>
@@ -21,8 +21,7 @@ export const Toolbar = (props: ToolbarProps) => {
                             icon={<PlusSquareIcon/>}
                             aria-label="Create new file"
                             disabled={false}
-                            onClick={() => {
-                            }}
+                            onClick={createNewFile}
                         />
                     </Tooltip>
                     <Tooltip label="Edit selected">

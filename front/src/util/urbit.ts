@@ -79,7 +79,8 @@ export async function urbitCreateFile(name: string, text: string) {
         properties: {},
         tags: [],
         content: text
-    })
+    });
+    updateGraphData().catch();
 }
 
 async function updateTagsToFile(id: string, tags: string) {
