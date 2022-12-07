@@ -12,7 +12,7 @@ import {usePersistantState} from '../../util/persistant-state'
 import {OrgRoamGraphReponse} from "../../api";
 import {getThemeColor} from "../../util/getThemeColor";
 import {initialVisuals} from "../config";
-import {urbitCreateFile} from "../../util/urbit";
+import {urbitCreateFile, urbitRenameFile} from "../../util/urbit";
 import {RenameModal} from "./RenameModal";
 
 export interface SidebarProps {
@@ -78,11 +78,13 @@ export const FilesListBar = (props: SidebarProps) => {
     };
 
     const onRenameFile = async (name: string) => {
-        setCurrentFileName(name.length ? name : "noname");
+        urbitRenameFile(graphData.nodes[selectedItemIndex].id, name.length ? name : "noname")
+            .catch(console.error);
         onCloseRenameDialog();
     };
 
     const renameFile = async () => {
+        setCurrentFileName(graphData.nodes[selectedItemIndex].file);
         onOpenRenameDialog();
     };
 
