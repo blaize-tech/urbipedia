@@ -64,7 +64,7 @@ import { isLinkRelatedToNode } from './util/isLinkRelatedToNode'
 import { getLinkColor } from './util/getLinkColor'
 import {UrbitClientWrapper, connectUrbitClient} from "./util/urbit";
 import MyApp from './_app'
-import FilesystemBar from './components/FilesystemBar'
+import FilesListBar from './components/FilesListBar'
 
 const d3promise = import('d3-force-3d')
 
@@ -549,7 +549,7 @@ export function GraphPage() {
         overflow="clip"
       >
         <Box position="relative" zIndex={4}>
-          <FilesystemBar
+          <FilesListBar
               {...{
                 isOpen: isOpenFilesListSideBar,
                 onOpen: onOpenFilesListSideBar,
