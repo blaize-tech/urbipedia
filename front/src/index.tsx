@@ -132,7 +132,7 @@ export function GraphPage() {
 
   let isOpenFilesListSideBar, onOpenFilesListSideBar, onCloseFilesListSideBar;
   {
-    const { isOpen, onOpen, onClose } = useDisclosure()
+    const { isOpen, onOpen, onClose } = useDisclosure({isOpen: true})
     isOpenFilesListSideBar=isOpen;
     onOpenFilesListSideBar=onOpen;
     onCloseFilesListSideBar=onClose;
