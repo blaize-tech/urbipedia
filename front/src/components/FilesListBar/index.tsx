@@ -12,7 +12,7 @@ import {usePersistantState} from '../../util/persistant-state'
 import {OrgRoamGraphReponse} from "../../api";
 import {getThemeColor} from "../../util/getThemeColor";
 import {initialVisuals} from "../config";
-import {urbitCreateFile, urbitRenameFile} from "../../util/urbit";
+import {urbitCreateFile, urbitDeleteFile, urbitRenameFile} from "../../util/urbit";
 import {RenameModal} from "./RenameModal";
 
 export interface SidebarProps {
@@ -88,6 +88,11 @@ export const FilesListBar = (props: SidebarProps) => {
         onOpenRenameDialog();
     };
 
+    const deleteFile = async () => {
+        urbitDeleteFile(graphData.nodes[selectedItemIndex].id)
+            .catch(console.error);
+    };
+
     return (
         <Collapse
             animateOpacity={false}
@@ -131,6 +136,7 @@ export const FilesListBar = (props: SidebarProps) => {
                                 {...{
                                     createNewFile,
                                     renameFile,
+                                    deleteFile,
                                 }}
                                 haveSelection={(selectedItemIndex >= 0)}
                             />
