@@ -91,6 +91,7 @@ export const FilesListBar = (props: SidebarProps) => {
     const deleteFile = async () => {
         urbitDeleteFile(graphData.nodes[selectedItemIndex].id)
             .catch(console.error);
+        setSelectedItemIndex(-1);
     };
 
     return (
