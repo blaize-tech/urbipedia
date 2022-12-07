@@ -79,7 +79,7 @@ export const FilesListBar = (props: SidebarProps) => {
             nameExist.set(graphData.nodes[i].file, true);
         }
         let defaultName = "New file";
-        for (let i = 0; i < 100; i++) {
+        for (let i = 1; i < 100; i++) {
             if (!nameExist.has(defaultName + " " + String(i))) {
                 defaultName = defaultName + " " + String(i);
                 break;
