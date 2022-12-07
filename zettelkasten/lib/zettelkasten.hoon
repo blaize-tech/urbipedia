@@ -6,8 +6,15 @@
   ^-  action
   %.  jon
   %-  of
-  :~  [%add (ot ~[id+ni txt+so])]
-      [%edit (ot ~[id+ni txt+so])]
+  :~  [%add (ot ~[id+ni name+so txt+so])]
+      [%edit (ot ~[id+ni name+so txt+so])]
+      [%del (ot ~[id+ni])]
+  ==
+  ^-  action
+  %.  jon
+  %-  of
+  :~  [%add (ot ~[id+ni name+so txt+so])]
+      [%edit (ot ~[id+ni name+so txt+so])]
       [%del (ot ~[id+ni])]
   ==
 ++  enjs-update
@@ -16,7 +23,7 @@
   ^-  json
   |^
   ?+    -.q.upd  (logged upd)
-      %jrnl
+      %zttl
     %-  pairs
     :~  ['time' (numb p.upd)]
         ['entries' a+(turn list.q.upd entry)]
@@ -28,12 +35,20 @@
         ['logs' a+(turn list.q.upd logged)]
     ==
   ==
+  ++  zettel
+    |=  ztl=zettel
+    ^-  json
+    %-  pairs
+    :~
+        ['name' s+name.ztl]
+        ['txt' s+txt.ztl]
+    ==
   ++  entry
     |=  ent=^entry
     ^-  json
     %-  pairs
     :~  ['id' (numb id.ent)]
-        ['txt' s+txt.ent]
+        ['zettel' o+zettel.ent]
     ==
   ++  logged
     |=  lgd=^logged
@@ -45,6 +60,7 @@
           :-  'add'
           %-  pairs
           :~  ['id' (numb id.q.lgd)]
+              ['name' s+name.q.lgd]
               ['txt' s+txt.q.lgd]
       ==  ==
         %edit
@@ -53,6 +69,7 @@
           :-  'edit'
           %-  pairs
           :~  ['id' (numb id.q.lgd)]
+              ['name' s+name.q.lgd]
               ['txt' s+txt.q.lgd]
       ==  ==
         %del

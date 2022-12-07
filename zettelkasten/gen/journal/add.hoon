@@ -20,7 +20,7 @@
 %+  print  leaf+"{off}-------------------------------------\0a"
 %+  print  leaf+"{off}|                                   |"
 %+  print  leaf+"{off}| (\\\\\\ to submit, <BKSP> to cancel) |"
-%+  print  leaf+"{off}|         New zettelkasten Entry         |"
+%+  print  leaf+"{off}|         New zettelkasten Zettel         |"
 %+  print  leaf+"{off}|                                   |"
 %+  print  leaf+"\0a{off}-------------------------------------"
 line
