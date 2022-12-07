@@ -4,6 +4,7 @@ import {PlusSquareIcon, EditIcon, DeleteIcon, CalendarIcon} from '@chakra-ui/ico
 
 export interface ToolbarProps {
     createNewFile: any
+    editFile: any
     renameFile: any
     deleteFile: any
     haveSelection: boolean
@@ -12,6 +13,7 @@ export interface ToolbarProps {
 export const Toolbar = (props: ToolbarProps) => {
     const {
         createNewFile,
+        editFile,
         renameFile,
         deleteFile,
         haveSelection,
@@ -36,8 +38,7 @@ export const Toolbar = (props: ToolbarProps) => {
                             icon={<CalendarIcon/>}
                             aria-label="Edit selected file"
                             disabled={!haveSelection}
-                            onClick={() => {
-                            }}
+                            onClick={editFile}
                         />
                     </Tooltip>
                     <Tooltip label="Rename selected">

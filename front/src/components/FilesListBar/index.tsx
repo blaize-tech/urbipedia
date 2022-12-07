@@ -12,8 +12,9 @@ import {usePersistantState} from '../../util/persistant-state'
 import {OrgRoamGraphReponse} from "../../api";
 import {getThemeColor} from "../../util/getThemeColor";
 import {initialVisuals} from "../config";
-import {urbitCreateFile, urbitDeleteFile, urbitRenameFile} from "../../util/urbit";
+import {urbitCreateFile, urbitDeleteFile, urbitRenameFile, urbitUpdateFile} from "../../util/urbit";
 import {RenameModal} from "./RenameModal";
+import {EditFileModal} from "./EditFileModal";
 
 export interface SidebarProps {
     isOpen: boolean
@@ -39,6 +40,7 @@ export const FilesListBar = (props: SidebarProps) => {
     const [sidebarWidth, setSidebarWidth] = usePersistantState<number>('sidebarWidth', 400);
     const [selectedItemIndex, setSelectedItemIndex] = useState<number>(-1);
     const [currentFileName, setCurrentFileName] = useState<string>("");
+    const [currentFileContent, setCurrentFileContent] = useState<string>("");
     let isOpenRenameDialog, onOpenRenameDialog: () => void, onCloseRenameDialog: () => void;
     {
         const {isOpen, onOpen, onClose} = useDisclosure({defaultIsOpen: false})
@@ -46,15 +48,28 @@ export const FilesListBar = (props: SidebarProps) => {
         onOpenRenameDialog = onOpen;
         onCloseRenameDialog = onClose;
     }
+    let isOpenEditFileModal, onOpenEditFileModal: () => void, onCloseEditFileModal: () => void;
+    {
+        const {isOpen, onOpen, onClose} = useDisclosure({defaultIsOpen: false})
+        isOpenEditFileModal = isOpen;
+        onOpenEditFileModal = onOpen;
+        onCloseEditFileModal = onClose;
+    }
 
     const items = (list: Array<string>) => {
         return (
             list.map((item, index) => {
-
+                const id = graphData.nodes[index].id;
                 return (<div
-                    key={index}
+                    key={id}
                     onClick={() => {
-                        setSelectedItemIndex(index);
+                        for (let i = 0; i < graphData.nodes.length; i++) {
+                            if (graphData.nodes[index].id === id) {
+                                setCurrentFileName(graphData.nodes[index].file);
+                                setSelectedItemIndex(index);
+                                break;
+                            }
+                        }
                     }}
                     style={{
                         width: "100%",
@@ -91,7 +106,15 @@ export const FilesListBar = (props: SidebarProps) => {
     const onRenameFile = async (name: string) => {
         urbitRenameFile(graphData.nodes[selectedItemIndex].id, name.length ? name : "noname")
             .catch(console.error);
+        setCurrentFileName(name);
         onCloseRenameDialog();
+    };
+
+    const onEditFileContent = async (value: string) => {
+        urbitUpdateFile(graphData.nodes[selectedItemIndex].id, value)
+            .catch(console.error);
+        setCurrentFileContent(value);
+        onCloseEditFileModal();
     };
 
     const renameFile = async () => {
@@ -103,6 +126,11 @@ export const FilesListBar = (props: SidebarProps) => {
         urbitDeleteFile(graphData.nodes[selectedItemIndex].id)
             .catch(console.error);
         setSelectedItemIndex(-1);
+    };
+
+    const editFile = async () => {
+        setCurrentFileContent(graphData.nodes[selectedItemIndex].content || "");
+        onOpenEditFileModal();
     };
 
     return (
@@ -147,6 +175,7 @@ export const FilesListBar = (props: SidebarProps) => {
                             <Toolbar
                                 {...{
                                     createNewFile,
+                                    editFile,
                                     renameFile,
                                     deleteFile,
                                 }}
@@ -179,6 +208,13 @@ export const FilesListBar = (props: SidebarProps) => {
                 showModal={isOpenRenameDialog}
                 onRename={onRenameFile}
                 onClose={onCloseRenameDialog}
+            />)}
+            {isOpenEditFileModal && (<EditFileModal
+                content={currentFileContent}
+                fileName={currentFileName}
+                showModal={isOpenEditFileModal}
+                onEdit={onEditFileContent}
+                onClose={onCloseEditFileModal}
             />)}
         </Collapse>
     )
