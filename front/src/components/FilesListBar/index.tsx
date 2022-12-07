@@ -1,11 +1,10 @@
-import React, {useCallback, useContext, useState} from 'react'
+import React, {useContext, useState} from 'react'
 
 import {Toolbar} from './Toolbar'
 
-import {Flex, Box, IconButton, useTheme} from '@chakra-ui/react'
+import {Flex, Box, useTheme} from '@chakra-ui/react'
 import {Collapse} from './Collapse'
 import {Scrollbars} from 'react-custom-scrollbars-2'
-import {BiDotsVerticalRounded} from 'react-icons/bi'
 
 import {ThemeContext} from '../../util/themecontext'
 import {Resizable} from 're-resizable'
@@ -35,7 +34,7 @@ const FilesListBar = (props: SidebarProps) => {
     } = props;
 
     const theme = useTheme()
-    const {emacsTheme, highlightColor} = useContext(ThemeContext)
+    const {highlightColor} = useContext(ThemeContext)
     const [sidebarWidth, setSidebarWidth] = usePersistantState<number>('sidebarWidth', 400)
     const [selectedItemIndex, setSelectedItemIndex] = useState<number>(-1)
 
@@ -109,17 +108,6 @@ const FilesListBar = (props: SidebarProps) => {
                             <Toolbar{...{
                                 createNewFile
                             }}
-                            />
-                        </Flex>
-                        <Flex flexDir="row" ml="auto">
-                            <IconButton
-                                // eslint-disable-next-line react/jsx-no-undef
-                                m={1}
-                                icon={<BiDotsVerticalRounded/>}
-                                aria-label="Options"
-                                variant="subtle"
-                                onClick={(e) => {
-                                }}
                             />
                         </Flex>
                     </Flex>
