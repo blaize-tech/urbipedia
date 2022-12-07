@@ -114,18 +114,18 @@ const FilesListBar = (props: SidebarProps) => {
                     <Scrollbars
                         //autoHeight
                         //autoHeightMax={600}
-                        autoHide
-                        renderThumbVertical={({style, ...props}) => (
-                            <Box
-                                style={{
-                                    ...style,
-                                    borderRadius: 0,
-                                    // backgroundColor: highlightColor,
-                                }}
-                                //color="alt.100"
-                                {...props}
-                            />
-                        )}
+                        autoHide={false}
+                        // renderThumbVertical={({style, ...props}) => (
+                        //     <Box
+                        //         style={{
+                        //             ...style,
+                        //             borderRadius: 0,
+                        //             backgroundColor: highlightColor,
+                        //         }}
+                        //         //color="alt.100"
+                        //         {...props}
+                        //     />
+                        // )}
                     >
                         {items(filesList)}
                     </Scrollbars>
