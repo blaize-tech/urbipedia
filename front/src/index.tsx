@@ -558,6 +558,7 @@ export function GraphPage() {
                 onClose: onCloseFilesListSideBar,
                 windowWidth,
                 graphData: currentOrgRoamGraph.current,
+                visuals
               }}
           />
         </Box>

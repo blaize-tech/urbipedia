@@ -1,8 +1,8 @@
-import React, {useContext} from 'react'
+import React, {useContext, useState} from 'react'
 
 import {Toolbar} from './Toolbar'
 
-import {Flex, Box, IconButton} from '@chakra-ui/react'
+import {Flex, Box, IconButton, useTheme} from '@chakra-ui/react'
 import {Collapse} from './Collapse'
 import {Scrollbars} from 'react-custom-scrollbars-2'
 import {BiDotsVerticalRounded} from 'react-icons/bi'
@@ -11,6 +11,8 @@ import {ThemeContext} from '../../util/themecontext'
 import {Resizable} from 're-resizable'
 import {usePersistantState} from '../../util/persistant-state'
 import {OrgRoamGraphReponse} from "../../api";
+import {getThemeColor} from "../../util/getThemeColor";
+import {initialVisuals} from "../config";
 
 export interface SidebarProps {
     isOpen: boolean
@@ -18,6 +20,7 @@ export interface SidebarProps {
     onOpen: any
     windowWidth: number
     graphData: OrgRoamGraphReponse
+    visuals: typeof initialVisuals
 }
 
 const FilesListBar = (props: SidebarProps) => {
@@ -27,15 +30,30 @@ const FilesListBar = (props: SidebarProps) => {
         onClose,
         windowWidth,
         graphData,
+        visuals
     } = props;
 
-    const {highlightColor} = useContext(ThemeContext)
+    const theme = useTheme()
+    const {emacsTheme, highlightColor} = useContext(ThemeContext)
     const [sidebarWidth, setSidebarWidth] = usePersistantState<number>('sidebarWidth', 400)
+    const [selectedItemIndex, setSelectedItemIndex] = useState<number>(-1)
 
     const items = (list: Array<string>) => {
         return (
-            list.map((item) => {
-                return (<div>{item}</div>)
+            list.map((item, index) => {
+                return (<div
+                    onClick={() => {
+                        setSelectedItemIndex(index);
+                    }}
+                    style={{
+                        background: (index !== selectedItemIndex)
+                            ? getThemeColor(visuals.labelBackgroundColor, theme)
+                            : getThemeColor("base0", theme),
+                        color: (index === selectedItemIndex)
+                            ? getThemeColor(highlightColor, theme)
+                            : getThemeColor(visuals.labelTextColor, theme),
+                    }}
+                >{item}</div>)
             })
         )
     };
