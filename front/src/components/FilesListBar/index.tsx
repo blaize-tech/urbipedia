@@ -74,7 +74,18 @@ export const FilesListBar = (props: SidebarProps) => {
     });
 
     const createNewFile = async () => {
-        await urbitCreateFile("NewFile", "").catch(console.error);
+        const nameExist: Map<string, boolean> = new Map<string, boolean>;
+        for (let i = 0; i < graphData.nodes.length; i++) {
+            nameExist.set(graphData.nodes[i].file, true);
+        }
+        let defaultName = "New file";
+        for (let i = 0; i < 100; i++) {
+            if (!nameExist.has(defaultName + " " + String(i))) {
+                defaultName = defaultName + " " + String(i);
+                break;
+            }
+        }
+        await urbitCreateFile(defaultName, "").catch(console.error);
     };
 
     const onRenameFile = async (name: string) => {
