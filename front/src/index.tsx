@@ -534,12 +534,6 @@ export function GraphPage() {
     return
   }
 
-  // const [mainItem, setMainItem] = useState({
-  //   type: 'Graph',
-  //   title: 'Graph',
-  //   icon: <BiNetworkChart />,
-  // })
-
   const [mainWindowWidth, setMainWindowWidth] = usePersistantState<number>(
     'mainWindowWidth',
     windowWidth,
@@ -560,29 +554,8 @@ export function GraphPage() {
                 isOpen: isOpenFilesListSideBar,
                 onOpen: onOpenFilesListSideBar,
                 onClose: onCloseFilesListSideBar,
-                previewNode,
-                setPreviewNode,
-                canUndo,
-                canRedo,
-                previousPreviewNode,
-                nextPreviewNode,
-                resetPreviewNode,
-                setSidebarHighlightedNode,
-                openContextMenu,
-                scope,
-                setScope,
                 windowWidth,
-                tagColors,
-                setTagColors,
-                filter,
-                setFilter,
               }}
-              macros={emacsVariables.katexMacros}
-              attachDir={emacsVariables.attachDir || ''}
-              useInheritance={emacsVariables.useInheritance || false}
-              nodeById={nodeByIdRef.current!}
-              linksByNodeId={linksByNodeIdRef.current!}
-              nodeByCite={nodeByCiteRef.current!}
           />
         </Box>
         <Tooltip label={isOpenFilesListSideBar ? 'Close sidebar' : 'Open sidebar'}>
