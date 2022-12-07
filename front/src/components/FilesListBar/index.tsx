@@ -2,7 +2,7 @@ import React, {useContext, useState} from 'react'
 
 import {Toolbar} from './Toolbar'
 
-import {Flex, Box, useTheme} from '@chakra-ui/react'
+import {Flex, Box, useTheme, useDisclosure} from '@chakra-ui/react'
 import {Collapse} from './Collapse'
 import {Scrollbars} from 'react-custom-scrollbars-2'
 
@@ -38,8 +38,14 @@ export const FilesListBar = (props: SidebarProps) => {
     const {highlightColor} = useContext(ThemeContext)
     const [sidebarWidth, setSidebarWidth] = usePersistantState<number>('sidebarWidth', 400);
     const [selectedItemIndex, setSelectedItemIndex] = useState<number>(-1);
-    const [showRenameDialog, setShowRenameDialog] = useState<boolean>(false);
     const [currentFileName, setCurrentFileName] = useState<string>("");
+    let isOpenRenameDialog, onOpenRenameDialog: () => void, onCloseRenameDialog: () => void;
+    {
+        const {isOpen, onOpen, onClose} = useDisclosure({defaultIsOpen: false})
+        isOpenRenameDialog = isOpen;
+        onOpenRenameDialog = onOpen;
+        onCloseRenameDialog = onClose;
+    }
 
     const items = (list: Array<string>) => {
         return (
@@ -73,15 +79,11 @@ export const FilesListBar = (props: SidebarProps) => {
 
     const onRenameFile = async (name: string) => {
         setCurrentFileName(name.length ? name : "noname");
-        setShowRenameDialog(false);
-    };
-
-    const onCloseRenameFileDialog = async () => {
-        setShowRenameDialog(false);
+        onCloseRenameDialog();
     };
 
     const renameFile = async () => {
-        setShowRenameDialog(true);
+        onOpenRenameDialog();
     };
 
     return (
@@ -154,9 +156,9 @@ export const FilesListBar = (props: SidebarProps) => {
             </Resizable>
             <RenameModal
                 name={currentFileName}
-                showModal={showRenameDialog}
+                showModal={isOpenRenameDialog}
                 onRename={onRenameFile}
-                onClose={onCloseRenameFileDialog}
+                onClose={onCloseRenameDialog}
             />
         </Collapse>
     )

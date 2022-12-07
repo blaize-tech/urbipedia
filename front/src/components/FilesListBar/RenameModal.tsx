@@ -1,4 +1,5 @@
 import React, {useContext, useState} from 'react'
+import {Input} from '@chakra-ui/react'
 import {
     Flex,
     IconButton,
@@ -36,7 +37,7 @@ export const RenameModal = (props: ToolbarProps) => {
                 <ModalCloseButton/>
                 <ModalBody>
                     <VStack spacing={4} display="flex" alignItems="flex-start">
-                        <input type="text" value={value} onChange={(e) => {
+                        <Input type="text" value={value} onChange={(e) => {
                             setValue(e.target.value);
                         }}/>
                     </VStack>
