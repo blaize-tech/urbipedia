@@ -154,12 +154,12 @@ export const FilesListBar = (props: SidebarProps) => {
                     </Scrollbars>
                 </Flex>
             </Resizable>
-            <RenameModal
+            {isOpenRenameDialog && (<RenameModal
                 name={currentFileName}
                 showModal={isOpenRenameDialog}
                 onRename={onRenameFile}
                 onClose={onCloseRenameDialog}
-            />
+            />)}
         </Collapse>
     )
 }
