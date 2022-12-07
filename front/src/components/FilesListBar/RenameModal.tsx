@@ -30,7 +30,7 @@ export const RenameModal = (props: ToolbarProps) => {
     } = props;
     const [value, setValue] = useState(name);
     return (
-        <Modal isCentered isOpen={showModal} onClose={onClose}>
+        <Modal isCentered isOpen={showModal} onClose={() => onClose()}>
             <ModalOverlay/>
             <ModalContent zIndex="popover">
                 <ModalHeader>Rename file:</ModalHeader>

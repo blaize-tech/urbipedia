@@ -132,10 +132,10 @@ export function GraphPage() {
 
   let isOpenFilesListSideBar, onOpenFilesListSideBar, onCloseFilesListSideBar;
   {
-    const { isOpen, onOpen, onClose } = useDisclosure({defaultIsOpen: true})
-    isOpenFilesListSideBar=isOpen;
-    onOpenFilesListSideBar=onOpen;
-    onCloseFilesListSideBar=onClose;
+    const {isOpen, onOpen, onClose} = useDisclosure({defaultIsOpen: true})
+    isOpenFilesListSideBar = isOpen;
+    onOpenFilesListSideBar = onOpen;
+    onCloseFilesListSideBar = onClose;
   }
 
   const nodeByIdRef = useRef<NodeById>({})
