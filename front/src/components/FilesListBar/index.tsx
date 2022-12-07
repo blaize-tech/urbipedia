@@ -10,24 +10,39 @@ import {BiDotsVerticalRounded} from 'react-icons/bi'
 import {ThemeContext} from '../../util/themecontext'
 import {Resizable} from 're-resizable'
 import {usePersistantState} from '../../util/persistant-state'
+import {OrgRoamGraphReponse} from "../../api";
 
 export interface SidebarProps {
     isOpen: boolean
     onClose: any
     onOpen: any
     windowWidth: number
+    graphData: OrgRoamGraphReponse
 }
 
-const Sidebar = (props: SidebarProps) => {
+const FilesListBar = (props: SidebarProps) => {
     const {
         isOpen,
         onOpen,
         onClose,
         windowWidth,
+        graphData,
     } = props;
 
     const {highlightColor} = useContext(ThemeContext)
     const [sidebarWidth, setSidebarWidth] = usePersistantState<number>('sidebarWidth', 400)
+
+    const items = (list: Array<string>) => {
+        return (
+            list.map((item) => {
+                return (<div>{item}</div>)
+            })
+        )
+    };
+
+    const filesList = graphData.nodes.map((node) => {
+        return node.file;
+    });
 
     return (
         <Collapse
@@ -98,13 +113,7 @@ const Sidebar = (props: SidebarProps) => {
                             />
                         )}
                     >
-                        1515515
-                        <br/>
-                        455555555
-                        <br/>
-                        9999999
-
-
+                        {items(filesList)}
                     </Scrollbars>
                 </Flex>
             </Resizable>
@@ -112,4 +121,4 @@ const Sidebar = (props: SidebarProps) => {
     )
 }
 
-export default Sidebar
+export default FilesListBar

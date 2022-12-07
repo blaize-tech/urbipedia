@@ -147,8 +147,10 @@ export function GraphPage() {
   const clusterRef = useRef<{ [id: string]: number }>({})
 
   const currentGraphDataRef = useRef<GraphData>({ nodes: [], links: [] })
+  const currentOrgRoamGraph = useRef<OrgRoamGraphReponse>({nodes: [], links: [], tags: [],});
 
   const updateGraphData = (orgRoamGraphData: OrgRoamGraphReponse) => {
+    currentOrgRoamGraph.current = orgRoamGraphData;
     const oldNodeById = nodeByIdRef.current
     tagsRef.current = orgRoamGraphData.tags ?? []
     const importNodes = orgRoamGraphData.nodes ?? []
@@ -555,6 +557,7 @@ export function GraphPage() {
                 onOpen: onOpenFilesListSideBar,
                 onClose: onCloseFilesListSideBar,
                 windowWidth,
+                graphData: currentOrgRoamGraph.current,
               }}
           />
         </Box>
