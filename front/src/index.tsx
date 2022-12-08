@@ -52,7 +52,6 @@ import Sidebar from './components/Sidebar'
 import { Tweaks } from './components/Tweaks'
 import { usePersistantState } from './util/persistant-state'
 import { ThemeContext, ThemeContextProps } from './util/themecontext'
-import { openNodeInEmacs } from './util/webSocketFunctions'
 import { drawLabels } from './components/Graph/drawLabels'
 import { VariablesContext } from './util/variablesContext'
 import { findNthNeighbors } from './util/findNthNeighbour'
@@ -65,6 +64,7 @@ import { getLinkColor } from './util/getLinkColor'
 import {UrbitClientWrapper, connectUrbitClient} from "./util/urbit";
 import MyApp from './_app'
 import {FilesListBar} from './components/FilesListBar'
+import {openNodeInEmacs} from "./util/webSocketFunctions";
 
 const d3promise = import('d3-force-3d')
 
@@ -602,7 +602,7 @@ export function GraphPage() {
               //ref={graphRef}
               nodeById={nodeByIdRef.current!}
               linksByNodeId={linksByNodeIdRef.current!}
-              webSocket={urbitClient.current}
+              urbitClientWrapper={urbitClient.current}
               variables={emacsVariables}
               {...{
                 physics,
@@ -716,7 +716,7 @@ export function GraphPage() {
               coordinates={contextPos}
               handleLocal={handleLocal}
               menuClose={contextMenu.onClose.bind(contextMenu)}
-              webSocket={urbitClient.current}
+              urbitClientWrapper={urbitClient.current}
               setPreviewNode={setPreviewNode}
               setFilter={setFilter}
               filter={filter}
@@ -744,7 +744,7 @@ export interface GraphProps {
   local: typeof initialLocal
   scope: Scope
   setScope: any
-  webSocket: any
+  urbitClientWrapper: any
   tagColors: { [tag: string]: string }
   setPreviewNode: any
   sidebarHighlightedNode: OrgRoamNode | null
@@ -778,7 +778,7 @@ export const Graph = function (props: GraphProps) {
     scope,
     local,
     setScope,
-    webSocket,
+    urbitClientWrapper,
     tagColors,
     setPreviewNode,
     sidebarHighlightedNode,
@@ -812,7 +812,7 @@ export const Graph = function (props: GraphProps) {
         break
       }
       case mouse.follow: {
-        openNodeInEmacs(node, webSocket)
+        openNodeInEmacs(node, urbitClientWrapper)
         break
       }
       case mouse.context: {
