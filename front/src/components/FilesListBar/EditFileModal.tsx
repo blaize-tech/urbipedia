@@ -6,6 +6,8 @@ import {
     ModalContent,
     ModalHeader, ModalCloseButton, ModalBody, VStack, Text, ModalFooter, Button
 } from '@chakra-ui/react'
+import {CUIAutoComplete} from "chakra-ui-autocomplete";
+import {ThemeContext} from "../../util/themecontext";
 
 export interface ToolbarProps {
     fileName: string
@@ -23,7 +25,24 @@ export const EditFileModal = (props: ToolbarProps) => {
         onClose,
         showModal,
     } = props;
+    const {highlightColor} = useContext(ThemeContext)
     const [value, setValue] = useState(content);
+
+    const opt = ["t1", "t2", "t3"];
+    const optionArray =
+        opt.map((option) => {
+            return {value: option, label: option}
+        }) || [];
+
+    const [selectedItems, setSelectedItems] = useState<typeof optionArray>(
+        [opt[2]].map((option) => {
+            return {
+                value: option,
+                label: option,
+            }
+        }) || [],
+    )
+
     return (
         <Modal
             isCentered
@@ -40,9 +59,47 @@ export const EditFileModal = (props: ToolbarProps) => {
                         <Textarea value={value} onChange={(e) => {
                             setValue(e.target.value);
                         }}/>
-                        <Text>Add tags:</Text>
-                        <Text>Todo</Text>
-                        <Text>Tags:</Text>
+                        <CUIAutoComplete
+                            labelStyleProps={{fontWeight: 300, fontSize: 14}}
+                            items={optionArray}
+                            label={`Add tag:`}
+                            placeholder=" "
+                            onCreateItem={(item) => null}
+                            disableCreateItem={true}
+                            selectedItems={selectedItems}
+                            onSelectedItemsChange={(changes) => {
+                                if (changes.selectedItems) {
+                                    setSelectedItems(changes.selectedItems)
+                                }
+                            }}
+                            listItemStyleProps={{overflow: 'hidden'}}
+                            highlightItemBg="gray.400"
+                            toggleButtonStyleProps={{variant: 'outline'}}
+                            inputStyleProps={{
+                                mt: 2,
+                                height: 8,
+                                focusBorderColor: highlightColor,
+                                color: 'gray.800',
+                                borderColor: 'gray.500',
+                            }}
+                            tagStyleProps={{
+                                justifyContent: 'flex-start',
+                                //variant: 'subtle',
+                                fontSize: 10,
+                                borderColor: highlightColor,
+                                borderWidth: 1,
+                                borderRadius: 'md',
+                                color: highlightColor,
+                                bg: '',
+                                height: 4,
+                                mb: 2,
+                                //paddingLeft: 4,
+                                //fontWeight: 'bold',
+                            }}
+                            hideToggleButton
+                            itemRenderer={(selected) => selected.label}
+                        />
+                        <Text>Links:</Text>
                         <Text>Todo</Text>
                     </VStack>
                 </ModalBody>
