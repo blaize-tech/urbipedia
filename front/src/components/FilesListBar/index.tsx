@@ -117,7 +117,12 @@ export const FilesListBar = (props: SidebarProps) => {
         onCloseRenameDialog();
     };
 
-    const onEditFile = async (content: string, tags: Array<string>) => {
+    const onEditFile = async (
+        content: string,
+        tags: Array<string>,
+        parents: Array<string>,
+        children: Array<string>
+    ) => {
         urbitUpdateFile(graphData.nodes[selectedItemIndex].id, content)
             .catch(console.error);
         urbitUpdateTagsToFile(graphData.nodes[selectedItemIndex].id, tags)

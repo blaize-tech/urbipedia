@@ -62,23 +62,25 @@ export const EditFileModal = (props: ToolbarProps) => {
         }
     }
 
-    const selectedLinksOptionArray = new Array<Item>();
+    const selectedLinksOptionArrayParents = new Array<Item>();
+    const selectedLinksOptionArrayChildren = new Array<Item>();
     for (let i = 0; i < graphData.links.length; i++) {
         const link = graphData.links[i];
         if (link.source === nodeId) {
-            selectedLinksOptionArray.push({
+            selectedLinksOptionArrayParents.push({
                 value: link.target,
                 label: String(filesList.get(link.target)),
             });
         } else if (link.source === nodeId) {
-            selectedLinksOptionArray.push({
+            selectedLinksOptionArrayChildren.push({
                 value: link.source,
                 label: String(filesList.get(link.source)),
             });
         }
     }
 
-    const [selectedItemsLinks, setSelectedItemsLinks] = useState<typeof selectedLinksOptionArray>(selectedLinksOptionArray);
+    const [selectedItemsLinksParents, setSelectedItemsLinksParents] = useState<typeof selectedLinksOptionArrayParents>(selectedLinksOptionArrayParents);
+    const [selectedItemsLinksChildren, setSelectedItemsLinksChildren] = useState<typeof selectedLinksOptionArrayChildren>(selectedLinksOptionArrayChildren);
 
     return (
         <Modal
@@ -143,14 +145,53 @@ export const EditFileModal = (props: ToolbarProps) => {
                         <CUIAutoComplete
                             labelStyleProps={{fontWeight: 300, fontSize: 14}}
                             items={linksOptionArray}
-                            label={`Links:`}
-                            placeholder="Links"
+                            label={`Links parents:`}
+                            placeholder="parent"
                             onCreateItem={(item) => null}
                             disableCreateItem={true}
-                            selectedItems={selectedItemsLinks}
+                            selectedItems={selectedItemsLinksParents}
                             onSelectedItemsChange={(changes) => {
                                 if (changes.selectedItems) {
-
+                                    setSelectedItemsLinksParents(changes.selectedItems);
+                                }
+                            }}
+                            listItemStyleProps={{overflow: 'hidden'}}
+                            highlightItemBg="gray.400"
+                            toggleButtonStyleProps={{variant: 'outline'}}
+                            inputStyleProps={{
+                                mt: 2,
+                                height: 8,
+                                focusBorderColor: highlightColor,
+                                color: 'gray.800',
+                                borderColor: 'gray.500',
+                            }}
+                            tagStyleProps={{
+                                justifyContent: 'flex-start',
+                                //variant: 'subtle',
+                                fontSize: 10,
+                                borderColor: highlightColor,
+                                borderWidth: 1,
+                                borderRadius: 'md',
+                                color: highlightColor,
+                                bg: '',
+                                height: 4,
+                                mb: 2,
+                                //paddingLeft: 4,
+                                //fontWeight: 'bold',
+                            }}
+                            itemRenderer={(selected) => selected.label}
+                        />
+                        <CUIAutoComplete
+                            labelStyleProps={{fontWeight: 300, fontSize: 14}}
+                            items={linksOptionArray}
+                            label={`Links children:`}
+                            placeholder="children"
+                            onCreateItem={(item) => null}
+                            disableCreateItem={true}
+                            selectedItems={selectedItemsLinksChildren}
+                            onSelectedItemsChange={(changes) => {
+                                if (changes.selectedItems) {
+                                    setSelectedItemsLinksChildren(changes.selectedItems);
                                 }
                             }}
                             listItemStyleProps={{overflow: 'hidden'}}
@@ -194,9 +235,18 @@ export const EditFileModal = (props: ToolbarProps) => {
                         ml={3}
                         onClick={() => {
                             if (!!onEdit) {
-                                onEdit(newContent, selectedItemsTags.map((item) => {
-                                    return item.value;
-                                }));
+                                onEdit(
+                                    newContent,
+                                    selectedItemsTags.map((item) => {
+                                        return item.value;
+                                    }),
+                                    selectedItemsLinksParents.map((item) => {
+                                        return item.value;
+                                    }),
+                                    selectedItemsLinksChildren.map((item) => {
+                                        return item.value;
+                                    })
+                                );
                             }
                         }}
                     >
