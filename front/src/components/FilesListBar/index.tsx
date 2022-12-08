@@ -13,8 +13,8 @@ import {OrgRoamGraphReponse} from "../../api";
 import {getThemeColor} from "../../util/getThemeColor";
 import {initialVisuals} from "../config";
 import {
-    urbitCreateFile,
-    urbitDeleteFile,
+    urbitCreateFile, urbitCreateLinkFileToFile,
+    urbitDeleteFile, urbitDeleteLinkFileToFile,
     urbitRenameFile,
     urbitUpdateFile,
     urbitUpdateTagsToFile,
@@ -47,7 +47,6 @@ export const FilesListBar = (props: SidebarProps) => {
     const [selectedItemIndex, setSelectedItemIndex] = useState<number>(-1);
     const [currentFileName, setCurrentFileName] = useState<string>("");
     const [currentFileContent, setCurrentFileContent] = useState<string>("");
-    const [currentFileTags, setCurrentFileTags] = useState<Array<string>>(new Array<string>());
     let isOpenRenameDialog, onOpenRenameDialog: () => void, onCloseRenameDialog: () => void;
     {
         const {isOpen, onOpen, onClose} = useDisclosure({defaultIsOpen: false})
@@ -123,10 +122,24 @@ export const FilesListBar = (props: SidebarProps) => {
         parents: Array<string>,
         children: Array<string>
     ) => {
+        console.log('parents', parents);
+        console.log('children', children);
         urbitUpdateFile(graphData.nodes[selectedItemIndex].id, content)
             .catch(console.error);
         urbitUpdateTagsToFile(graphData.nodes[selectedItemIndex].id, tags)
             .catch(console.error);
+        const thisNode = graphData.nodes[selectedItemIndex].id;
+        graphData.links.map(link => {
+            if (link.source == thisNode || link.target == thisNode) {
+                urbitDeleteLinkFileToFile(String(link.id)).catch(console.error);
+            }
+        });
+        parents.map(idTo => {
+            urbitCreateLinkFileToFile(idTo, thisNode).catch(console.error);
+        });
+        children.map(idFrom => {
+            urbitCreateLinkFileToFile(thisNode, idFrom).catch(console.error);
+        });
         setCurrentFileContent(content);
         onCloseEditFileModal();
     };
@@ -143,8 +156,6 @@ export const FilesListBar = (props: SidebarProps) => {
     };
 
     const editFile = async () => {
-        setCurrentFileContent(graphData.nodes[selectedItemIndex].content || "");
-        setCurrentFileTags(graphData.nodes[selectedItemIndex].tags || "");
         onOpenEditFileModal();
     };
 
@@ -225,14 +236,11 @@ export const FilesListBar = (props: SidebarProps) => {
                 onClose={onCloseRenameDialog}
             />)}
             {isOpenEditFileModal && (<EditFileModal
-                content={currentFileContent}
-                fileName={currentFileName}
                 showModal={isOpenEditFileModal}
                 onEdit={onEditFile}
                 onClose={onCloseEditFileModal}
-                tags={currentFileTags}
                 graphData={graphData}
-                nodeId={graphData.nodes[selectedItemIndex].id}
+                node={graphData.nodes[selectedItemIndex]}
             />)}
         </Collapse>
     )

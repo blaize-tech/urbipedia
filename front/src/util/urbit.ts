@@ -136,12 +136,12 @@ export async function urbitRenameFile(id: string, name: string) {
     updateGraphData().catch(console.error);
 }
 
-export async function urbitCreateLinkFileToFile(fromId: string, toId: string, type: number) {
+export async function urbitCreateLinkFileToFile(fromId: string, toId: string) {
     allLinks.push({
         id: String(linksCounter++),
         source: fromId,
         target: toId,
-        type: type === 0 ? "heading" : "parent",
+        type: "heading"
     });
     updateGraphData().catch(console.error);
 }
@@ -161,6 +161,12 @@ export async function urbitDeleteFile(id: string) {
     for (let i = 0; i < allNodes.length; i++) {
         if (allNodes[i].id == id) {
             allNodes.splice(i, 1);
+            break;
+        }
+    }
+    for (let i = 0; i < allLinks.length; i++) {
+        if (allLinks[i].source == id || allLinks[i].target == id) {
+            allLinks.splice(i, 1);
             break;
         }
     }
@@ -200,13 +206,14 @@ export function urbitGetFileName(id: string): Promise<string> {
     });
 }
 
-export function urbitGetLinksList(id: string): Promise<Array<string>> {
+export function urbitGetLink(id: string): Promise<OrgRoamLink> {
     return new Promise((resolve, reject) => {
-        const res = Array<string>();
         for (let i = 0; i < allLinks.length; i++) {
-            res.push(String(allLinks[i].id));
+            if (allLinks[i].id == id) {
+                resolve(allLinks[i]);
+            }
         }
-        resolve(res);
+        reject("link not found");
     });
 }
 

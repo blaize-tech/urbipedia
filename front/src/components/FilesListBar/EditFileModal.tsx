@@ -8,32 +8,26 @@ import {
 } from '@chakra-ui/react'
 import {CUIAutoComplete, Item} from "chakra-ui-autocomplete";
 import {ThemeContext} from "../../util/themecontext";
-import {OrgRoamGraphReponse} from "../../api";
+import {OrgRoamGraphReponse, OrgRoamNode} from "../../api";
 
 export interface ToolbarProps {
-    nodeId: string
-    fileName: string
-    content: string
+    node: OrgRoamNode
     onEdit: any
     onClose: any
     showModal: boolean
-    tags: Array<string>
     graphData: OrgRoamGraphReponse
 }
 
 export const EditFileModal = (props: ToolbarProps) => {
     const {
-        fileName,
-        content,
         onEdit,
         onClose,
         showModal,
-        tags,
         graphData,
-        nodeId,
+        node,
     } = props;
     const {highlightColor} = useContext(ThemeContext)
-    const [newContent, setNewContent] = useState(content);
+    const [newContent, setNewContent] = useState(node.content);
 
     const tagsOptionArray =
         graphData.tags.map((option) => {
@@ -41,7 +35,7 @@ export const EditFileModal = (props: ToolbarProps) => {
         }) || [];
 
     const [selectedItemsTags, setSelectedItemsTags] = useState<typeof tagsOptionArray>(
-        tags.map((option) => {
+        node.tags.map((option) => {
             return {
                 value: option,
                 label: option,
@@ -56,9 +50,9 @@ export const EditFileModal = (props: ToolbarProps) => {
 
     const linksOptionArray = new Array<Item>();
     for (let i = 0; i < graphData.nodes.length; i++) {
-        const node = graphData.nodes[i];
-        if (nodeId !== node.id) {
-            linksOptionArray.push({value: node.id, label: node.file});
+        const target = graphData.nodes[i];
+        if (node.id !== target.id) {
+            linksOptionArray.push({value: target.id, label: target.file});
         }
     }
 
@@ -66,13 +60,13 @@ export const EditFileModal = (props: ToolbarProps) => {
     const selectedLinksOptionArrayChildren = new Array<Item>();
     for (let i = 0; i < graphData.links.length; i++) {
         const link = graphData.links[i];
-        if (link.source === nodeId) {
-            selectedLinksOptionArrayParents.push({
+        if (link.source === node.id) {
+            selectedLinksOptionArrayChildren.push({
                 value: link.target,
                 label: String(filesList.get(link.target)),
             });
-        } else if (link.source === nodeId) {
-            selectedLinksOptionArrayChildren.push({
+        } else if (link.target === node.id) {
+            selectedLinksOptionArrayParents.push({
                 value: link.source,
                 label: String(filesList.get(link.source)),
             });
@@ -90,7 +84,7 @@ export const EditFileModal = (props: ToolbarProps) => {
         >
             <ModalOverlay/>
             <ModalContent zIndex="popover">
-                <ModalHeader>{fileName}</ModalHeader>
+                <ModalHeader>{node.file}</ModalHeader>
                 <ModalCloseButton/>
                 <ModalBody>
                     <VStack spacing={4} display="flex" alignItems="flex-start">
