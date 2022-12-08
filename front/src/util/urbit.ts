@@ -78,7 +78,6 @@ const allTags = new Array<string>;
     allNodes.push(node3);
     allLinks.push(link1);
     allLinks.push(link2);
-    allLinks.push(link2);
     allTags.push("tag1");
     allTags.push("tag2");
 })();
