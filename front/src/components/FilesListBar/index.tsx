@@ -122,8 +122,6 @@ export const FilesListBar = (props: SidebarProps) => {
         parents: Array<string>,
         children: Array<string>
     ) => {
-        console.log('parents', parents);
-        console.log('children', children);
         urbitUpdateFile(graphData.nodes[selectedItemIndex].id, content)
             .catch(console.error);
         urbitUpdateTagsToFile(graphData.nodes[selectedItemIndex].id, tags)
