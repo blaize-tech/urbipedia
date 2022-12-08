@@ -80,50 +80,43 @@ export async function urbitCreateFile(name: string, text: string) {
         tags: [],
         content: text
     });
-    updateGraphData().catch();
+    updateGraphData().catch(console.error);
 }
 
-async function updateTagsToFile(id: string, tags: Array<string>) {
-}
-
-export async function addTagToFile(id: string, tag: string) {
+export async function urbitUpdateTagsToFile(id: string, tags: Array<string>) {
+    let oldTags = new Array<string>;
     for (let i = 0; i < allNodes.length; i++) {
         if (allNodes[i].id == id) {
-            if (!allNodes[i].tags.includes(tag)) {
-                allNodes[i].tags.push(tag);
-            }
+            oldTags = allNodes[i].tags;
+            allNodes[i].tags = tags;
             break;
         }
     }
-    if (!allTags.includes(tag)) {
-        allTags.push(tag);
-    }
-    updateGraphData().catch();
+    oldTags.map((tag) => {
+        let has = false;
+        for (let i = 0; i < allNodes.length; i++) {
+            const pos = allNodes[i].tags.indexOf(tag);
+            if (pos >= 0) {
+                has = true;
+                break;
+            }
+        }
+        if (!has) {
+            const pos = allTags.indexOf(tag);
+            if (pos >= 0) {
+                allTags.splice(pos, 1)
+            }
+        }
+    });
+
+    tags.map(tag => {
+        if (!allTags.includes(tag)) {
+            allTags.push(tag);
+        }
+    });
+    updateGraphData().catch(console.error);
 }
 
-export async function deleteTagFromFile(id: string, tag: string) {
-    let hasManyNodes = false;
-    for (let i = 0; i < allNodes.length; i++) {
-        if (allNodes[i].id == id) {
-            const pos = allNodes[i].tags.indexOf(tag);
-            if (pos >= 0) {
-                allNodes[i].tags.splice(pos, 1)
-            }
-        } else {
-            const pos = allNodes[i].tags.indexOf(tag);
-            if (pos >= 0) {
-                hasManyNodes = true;
-            }
-        }
-    }
-    if (!hasManyNodes) {
-        const pos = allTags.indexOf(tag);
-        if (pos >= 0) {
-            allTags.splice(pos, 1)
-        }
-    }
-    updateGraphData().catch();
-}
 
 export async function urbitUpdateFile(id: string, text: string) {
     for (let i = 0; i < allNodes.length; i++) {
@@ -131,7 +124,7 @@ export async function urbitUpdateFile(id: string, text: string) {
             allNodes[i].content = text;
         }
     }
-    updateGraphData().catch();
+    updateGraphData().catch(console.error);
 }
 
 export async function urbitRenameFile(id: string, name: string) {
@@ -140,7 +133,7 @@ export async function urbitRenameFile(id: string, name: string) {
             allNodes[i].file = name;
         }
     }
-    updateGraphData().catch();
+    updateGraphData().catch(console.error);
 }
 
 export async function urbitCreateLinkFileToFile(fromId: string, toId: string, type: number) {
@@ -150,7 +143,7 @@ export async function urbitCreateLinkFileToFile(fromId: string, toId: string, ty
         target: toId,
         type: type === 0 ? "heading" : "parent",
     });
-    updateGraphData().catch();
+    updateGraphData().catch(console.error);
 }
 
 export async function urbitDeleteLinkFileToFile(linkId: string) {
@@ -160,17 +153,18 @@ export async function urbitDeleteLinkFileToFile(linkId: string) {
             break;
         }
     }
-    updateGraphData().catch();
+    updateGraphData().catch(console.error);
 }
 
 export async function urbitDeleteFile(id: string) {
+    urbitUpdateTagsToFile(id, []).catch(console.error);
     for (let i = 0; i < allNodes.length; i++) {
         if (allNodes[i].id == id) {
             allNodes.splice(i, 1);
             break;
         }
     }
-    updateGraphData().catch();
+    updateGraphData().catch(console.error);
 }
 
 export function urbitGetNodesCountIds(): Promise<number> {

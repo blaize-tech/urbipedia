@@ -12,7 +12,13 @@ import {usePersistantState} from '../../util/persistant-state'
 import {OrgRoamGraphReponse} from "../../api";
 import {getThemeColor} from "../../util/getThemeColor";
 import {initialVisuals} from "../config";
-import {urbitCreateFile, urbitDeleteFile, urbitRenameFile, urbitUpdateFile} from "../../util/urbit";
+import {
+    urbitCreateFile,
+    urbitDeleteFile,
+    urbitRenameFile,
+    urbitUpdateFile,
+    urbitUpdateTagsToFile,
+} from "../../util/urbit";
 import {RenameModal} from "./RenameModal";
 import {EditFileModal} from "./EditFileModal";
 
@@ -111,8 +117,10 @@ export const FilesListBar = (props: SidebarProps) => {
         onCloseRenameDialog();
     };
 
-    const onEditFileContent = async (content: string, tags: string) => {
+    const onEditFile = async (content: string, tags: Array<string>) => {
         urbitUpdateFile(graphData.nodes[selectedItemIndex].id, content)
+            .catch(console.error);
+        urbitUpdateTagsToFile(graphData.nodes[selectedItemIndex].id, tags)
             .catch(console.error);
         setCurrentFileContent(content);
         onCloseEditFileModal();
@@ -215,7 +223,7 @@ export const FilesListBar = (props: SidebarProps) => {
                 content={currentFileContent}
                 fileName={currentFileName}
                 showModal={isOpenEditFileModal}
-                onEdit={onEditFileContent}
+                onEdit={onEditFile}
                 onClose={onCloseEditFileModal}
                 tags={currentFileTags}
                 allTags={graphData.tags}
