@@ -27,6 +27,7 @@ const allTags = new Array<string>;
             "key2": 234,
         },
         tags: ["tag1", "tag2"],
+        content: "dfdss",
     };
     const node2: OrgRoamNode = {
         id: "99",
@@ -40,6 +41,7 @@ const allTags = new Array<string>;
             "key2": 234,
         },
         tags: ["tag2", "tag3"],
+        content: "gfhfghf",
     };
     const node3: OrgRoamNode = {
         id: "77",
@@ -53,6 +55,7 @@ const allTags = new Array<string>;
             "key2": 444,
         },
         tags: ["tag3", "tag4"],
+        content: "hgfhfg",
     };
     const link1: OrgRoamLink = {
         source: "123",
