@@ -41,6 +41,7 @@ export const FilesListBar = (props: SidebarProps) => {
     const [selectedItemIndex, setSelectedItemIndex] = useState<number>(-1);
     const [currentFileName, setCurrentFileName] = useState<string>("");
     const [currentFileContent, setCurrentFileContent] = useState<string>("");
+    const [currentFileTags, setCurrentFileTags] = useState<Array<string>>(new Array<string>());
     let isOpenRenameDialog, onOpenRenameDialog: () => void, onCloseRenameDialog: () => void;
     {
         const {isOpen, onOpen, onClose} = useDisclosure({defaultIsOpen: false})
@@ -110,10 +111,10 @@ export const FilesListBar = (props: SidebarProps) => {
         onCloseRenameDialog();
     };
 
-    const onEditFileContent = async (value: string) => {
-        urbitUpdateFile(graphData.nodes[selectedItemIndex].id, value)
+    const onEditFileContent = async (content: string, tags: string) => {
+        urbitUpdateFile(graphData.nodes[selectedItemIndex].id, content)
             .catch(console.error);
-        setCurrentFileContent(value);
+        setCurrentFileContent(content);
         onCloseEditFileModal();
     };
 
@@ -130,6 +131,7 @@ export const FilesListBar = (props: SidebarProps) => {
 
     const editFile = async () => {
         setCurrentFileContent(graphData.nodes[selectedItemIndex].content || "");
+        setCurrentFileTags(graphData.nodes[selectedItemIndex].tags || "");
         onOpenEditFileModal();
     };
 
@@ -215,6 +217,8 @@ export const FilesListBar = (props: SidebarProps) => {
                 showModal={isOpenEditFileModal}
                 onEdit={onEditFileContent}
                 onClose={onCloseEditFileModal}
+                tags={currentFileTags}
+                allTags={graphData.tags}
             />)}
         </Collapse>
     )

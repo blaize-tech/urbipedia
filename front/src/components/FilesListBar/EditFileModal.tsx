@@ -15,6 +15,8 @@ export interface ToolbarProps {
     onEdit: any
     onClose: any
     showModal: boolean
+    tags: Array<string>
+    allTags: Array<string>
 }
 
 export const EditFileModal = (props: ToolbarProps) => {
@@ -24,24 +26,26 @@ export const EditFileModal = (props: ToolbarProps) => {
         onEdit,
         onClose,
         showModal,
+        tags,
+        allTags,
     } = props;
     const {highlightColor} = useContext(ThemeContext)
-    const [value, setValue] = useState(content);
+    const [newContent, setNewContent] = useState(content);
+    const [newTags, setNewTags] = useState(tags);
 
-    const opt = ["t1", "t2", "t3"];
     const optionArray =
-        opt.map((option) => {
+        allTags.map((option) => {
             return {value: option, label: option}
         }) || [];
 
     const [selectedItems, setSelectedItems] = useState<typeof optionArray>(
-        [opt[2]].map((option) => {
+        tags.map((option) => {
             return {
                 value: option,
                 label: option,
             }
         }) || [],
-    )
+    );
 
     return (
         <Modal
@@ -56,8 +60,8 @@ export const EditFileModal = (props: ToolbarProps) => {
                 <ModalBody>
                     <VStack spacing={4} display="flex" alignItems="flex-start">
                         <Text>Edit file:</Text>
-                        <Textarea value={value} onChange={(e) => {
-                            setValue(e.target.value);
+                        <Textarea value={newContent} onChange={(e) => {
+                            setNewContent(e.target.value);
                         }}/>
                         <CUIAutoComplete
                             labelStyleProps={{fontWeight: 300, fontSize: 14}}
@@ -69,7 +73,10 @@ export const EditFileModal = (props: ToolbarProps) => {
                             selectedItems={selectedItems}
                             onSelectedItemsChange={(changes) => {
                                 if (changes.selectedItems) {
-                                    setSelectedItems(changes.selectedItems)
+                                    setNewTags(changes.selectedItems.map((item)=>{
+                                        return item.value;
+                                    }));
+                                    setSelectedItems(changes.selectedItems);
                                 }
                             }}
                             listItemStyleProps={{overflow: 'hidden'}}
@@ -116,7 +123,7 @@ export const EditFileModal = (props: ToolbarProps) => {
                         ml={3}
                         onClick={() => {
                             if (!!onEdit) {
-                                onEdit(value);
+                                onEdit(newContent, newTags);
                             }
                         }}
                     >

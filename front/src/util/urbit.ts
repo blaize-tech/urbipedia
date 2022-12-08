@@ -83,27 +83,43 @@ export async function urbitCreateFile(name: string, text: string) {
     updateGraphData().catch();
 }
 
-async function updateTagsToFile(id: string, tags: string) {
+async function updateTagsToFile(id: string, tags: Array<string>) {
 }
 
 export async function addTagToFile(id: string, tag: string) {
     for (let i = 0; i < allNodes.length; i++) {
         if (allNodes[i].id == id) {
-            allNodes[i].tags.push(tag);
+            if (!allNodes[i].tags.includes(tag)) {
+                allNodes[i].tags.push(tag);
+            }
             break;
         }
+    }
+    if (!allTags.includes(tag)) {
+        allTags.push(tag);
     }
     updateGraphData().catch();
 }
 
 export async function deleteTagFromFile(id: string, tag: string) {
+    let hasManyNodes = false;
     for (let i = 0; i < allNodes.length; i++) {
         if (allNodes[i].id == id) {
             const pos = allNodes[i].tags.indexOf(tag);
             if (pos >= 0) {
                 allNodes[i].tags.splice(pos, 1)
             }
-            break;
+        } else {
+            const pos = allNodes[i].tags.indexOf(tag);
+            if (pos >= 0) {
+                hasManyNodes = true;
+            }
+        }
+    }
+    if (!hasManyNodes) {
+        const pos = allTags.indexOf(tag);
+        if (pos >= 0) {
+            allTags.splice(pos, 1)
         }
     }
     updateGraphData().catch();
