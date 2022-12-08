@@ -31,7 +31,6 @@ export const EditFileModal = (props: ToolbarProps) => {
     } = props;
     const {highlightColor} = useContext(ThemeContext)
     const [newContent, setNewContent] = useState(content);
-    const [newTags, setNewTags] = useState(tags);
 
     const optionArray =
         allTags.map((option) => {
@@ -67,15 +66,18 @@ export const EditFileModal = (props: ToolbarProps) => {
                             labelStyleProps={{fontWeight: 300, fontSize: 14}}
                             items={optionArray}
                             label={`Add tag:`}
-                            placeholder=" "
-                            onCreateItem={(item) => null}
-                            disableCreateItem={true}
+                            placeholder="Tag"
+                            onCreateItem={(item) => {
+                                console.log(item);
+                                if (!allTags.includes(item.value)) {
+                                    setSelectedItems((curr) => [...selectedItems, item]);
+                                    optionArray.push(item);
+                                }
+                            }}
+                            disableCreateItem={false}
                             selectedItems={selectedItems}
                             onSelectedItemsChange={(changes) => {
                                 if (changes.selectedItems) {
-                                    setNewTags(changes.selectedItems.map((item)=>{
-                                        return item.value;
-                                    }));
                                     setSelectedItems(changes.selectedItems);
                                 }
                             }}
@@ -103,7 +105,6 @@ export const EditFileModal = (props: ToolbarProps) => {
                                 //paddingLeft: 4,
                                 //fontWeight: 'bold',
                             }}
-                            hideToggleButton
                             itemRenderer={(selected) => selected.label}
                         />
                         <Text>Links:</Text>
@@ -123,7 +124,9 @@ export const EditFileModal = (props: ToolbarProps) => {
                         ml={3}
                         onClick={() => {
                             if (!!onEdit) {
-                                onEdit(newContent, newTags);
+                                onEdit(newContent, selectedItems.map((item) => {
+                                    return item.value;
+                                }));
                             }
                         }}
                     >
