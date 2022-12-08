@@ -226,7 +226,8 @@ export const FilesListBar = (props: SidebarProps) => {
                 onEdit={onEditFile}
                 onClose={onCloseEditFileModal}
                 tags={currentFileTags}
-                allTags={graphData.tags}
+                graphData={graphData}
+                nodeId={graphData.nodes[selectedItemIndex].id}
             />)}
         </Collapse>
     )
