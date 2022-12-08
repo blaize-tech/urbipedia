@@ -597,7 +597,7 @@ export function GraphPage() {
           haveOffset={isOpenFilesListSideBar}
         />
         <Box position="absolute">
-          {(graphData && scope.nodeIds.length) ? (
+          {(graphData && graphData.nodes.length) ? (
             <Graph
               //ref={graphRef}
               nodeById={nodeByIdRef.current!}
