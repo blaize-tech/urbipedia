@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react'
+import React, {useContext, useEffect, useState} from 'react'
 import {Textarea} from '@chakra-ui/react'
 import {
     Modal,
@@ -28,6 +28,11 @@ export const EditFileModal = (props: ToolbarProps) => {
     } = props;
     const {highlightColor} = useContext(ThemeContext)
     const [newContent, setNewContent] = useState(node.content);
+    const [showTrigger, setShowTrigger] = useState(false);
+
+    useEffect(() => {
+        setShowTrigger(showModal);
+    }, [showModal]);
 
     const tagsOptionArray =
         graphData.tags.map((option) => {
@@ -86,7 +91,7 @@ export const EditFileModal = (props: ToolbarProps) => {
             <ModalContent zIndex="popover">
                 <ModalHeader>{node.file}</ModalHeader>
                 <ModalCloseButton/>
-                <ModalBody>
+                <ModalBody style={{visibility: showTrigger ? "visible" : "collapse"}}>
                     <VStack spacing={4} display="flex" alignItems="flex-start">
                         <Text>Edit file:</Text>
                         <Textarea value={newContent} onChange={(e) => {
