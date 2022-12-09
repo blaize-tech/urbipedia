@@ -227,50 +227,6 @@ export async function urbitDeleteFile(id: string) {
     updateGraphData().catch(console.error);
 }
 
-export function urbitGetNodesCountIds(): Promise<number> {
-    return new Promise((resolve, reject) => {
-        resolve(nodesCounter);
-    });
-}
-
-export function urbitGetLinksCountIds(): Promise<number> {
-    return new Promise((resolve, reject) => {
-        resolve(linksCounter);
-    });
-}
-
-export function urbitGetFilesList(): Promise<Array<string>> {
-    return new Promise((resolve, reject) => {
-        const res = Array<string>();
-        for (let i = 0; i < allNodes.length; i++) {
-            res.push(allNodes[i].file);
-        }
-        resolve(res);
-    });
-}
-
-export function urbitGetFileName(id: string): Promise<string> {
-    return new Promise((resolve, reject) => {
-        for (let i = 0; i < allNodes.length; i++) {
-            if (allNodes[i].id == id) {
-                resolve(allNodes[i].file);
-            }
-        }
-        reject("id for node not found");
-    });
-}
-
-export function urbitGetLink(id: string): Promise<OrgRoamLink> {
-    return new Promise((resolve, reject) => {
-        for (let i = 0; i < allLinks.length; i++) {
-            if (allLinks[i].id == id) {
-                resolve(allLinks[i]);
-            }
-        }
-        reject("link not found");
-    });
-}
-
 export function getFileContent(id: string): Promise<string> {
     return new Promise((resolve, reject) => {
         for (let i = 0; i < allNodes.length; i++) {
