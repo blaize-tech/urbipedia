@@ -55,22 +55,89 @@ async function updateGraphData() {
     urbitClientWrapper.listener.onEvent(event);
 }
 
-async function prepareNewGraph(upd: any) {
-    console.log(upd);
+function createFile(name: string, id: string) {
+    allNodes.push({
+        id: id,
+        file: name,
+        title: name,
+        level: 0,
+        pos: Number.parseInt(id),
+        olp: [],
+        properties: {},
+        tags: [],
+        content: ""
+    });
+}
 
+function deleteFile(id: string) {
+    // urbitUpdateTagsToFile(id, []).catch(console.error);
+    for (let i = 0; i < allNodes.length; i++) {
+        if (allNodes[i].id == id) {
+            allNodes.splice(i, 1);
+            break;
+        }
+    }
+    for (let i = 0; i < allLinks.length; i++) {
+        if (allLinks[i].source == id || allLinks[i].target == id) {
+            allLinks.splice(i, 1);
+            break;
+        }
+    }
+}
 
+function updateFile(id: string, text: string) {
+    for (let i = 0; i < allNodes.length; i++) {
+        if (allNodes[i].id == id) {
+            allNodes[i].content = text;
+        }
+    }
+}
+
+async function updateNode(data: any) {
+    if (data.action == "create") {
+        const fileName = await urbitGetFileName(String(data.id));
+        createFile(fileName, data.id);
+        const content = await urbitGetFileContent(String(data.id));
+        updateFile(data.id, content);
+    } else if (data.action == "delete") {
+        deleteFile(data.id);
+    } else if (data.action == "change") {
+        const fileName = await urbitGetFileName(String(data.id));
+        createFile(fileName, data.id);
+        const content = await urbitGetFileContent(String(data.id));
+        updateFile(data.id, content);
+        // todo tags
+    }
+    updateGraphData().catch(console.error);
+}
+
+async function updateLink(data: any) {
+    if (data.action == "create") {
+    } else if (data.action == "delete") {
+    } else if (data.action == "change") {
+        throw new Error("unsupported");
+    }
     updateGraphData().catch(console.error);
 }
 
 async function syncGraphWithUrbit() {
-    if (!urbitClientWrapper.urbit || urbitClientWrapper.connectionState !== UrbitConnectionState.UCS_CONNECTED) {
-        throw new Error("not conneacted to urbit");
+    if (!urbitClientWrapper
+        || !urbitClientWrapper.urbit
+        || urbitClientWrapper.connectionState !== UrbitConnectionState.UCS_CONNECTED) {
+        throw new Error("not connected to urbit");
     }
     try {
         await urbitClientWrapper.urbit.subscribe({
             app: "zettelkasten",
-            path: "/updates",
-            event: prepareNewGraph,
+            path: "/update-nodes",
+            event: updateNode,
+            err: () => console.error("Subscription rejected"),
+            quit: () => console.error("Kicked from subscription"),
+        });
+        await urbitClientWrapper.urbit.subscribe({
+            app: "zettelkasten",
+            path: "/update-links",
+            event: updateLink,
             err: () => console.error("Subscription rejected"),
             quit: () => console.error("Kicked from subscription"),
         });
@@ -120,20 +187,22 @@ export function connectUrbitClient(listener: UrbitListener): UrbitClientWrapper 
     return urbitClientWrapper;
 }
 
-export async function urbitCreateFile(name: string, text: string) {
-    const newId = nodesCounter++;
-    allNodes.push({
-        id: String(newId),
-        file: name,
-        title: name,
-        level: 0,
-        pos: newId,
-        olp: [],
-        properties: {},
-        tags: [],
-        content: text
+export async function urbitCreateFile(name: string) {
+    return new Promise((resolve, reject) => {
+        if (!urbitClientWrapper
+            || !urbitClientWrapper.urbit
+            || urbitClientWrapper.connectionState !== UrbitConnectionState.UCS_CONNECTED) {
+            reject("not connected to urbit");
+            throw "error";
+        }
+        urbitClientWrapper.urbit.poke({
+            app: "zettelkasten",
+            mark: "zettelkasten-action",
+            json: {"create-file": {name: name}},
+            onSuccess: () => resolve({}),
+            onError: () => reject("cant create file"),
+        });
     });
-    updateGraphData().catch(console.error);
 }
 
 export async function urbitUpdateTagsToFile(id: string, tags: Array<string>) {
@@ -228,6 +297,26 @@ export async function urbitDeleteFile(id: string) {
 }
 
 export function getFileContent(id: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+        for (let i = 0; i < allNodes.length; i++) {
+            if (allNodes[i].id == id) {
+                resolve(String(allNodes[i].content));
+            }
+        }
+    });
+}
+
+export function urbitGetFileName(id: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+        for (let i = 0; i < allNodes.length; i++) {
+            if (allNodes[i].id == id) {
+                resolve(String(allNodes[i].file));
+            }
+        }
+    });
+}
+
+export function urbitGetFileContent(id: string): Promise<string> {
     return new Promise((resolve, reject) => {
         for (let i = 0; i < allNodes.length; i++) {
             if (allNodes[i].id == id) {
