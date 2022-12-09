@@ -1,4 +1,5 @@
 import {OrgRoamGraphReponse, OrgRoamLink, OrgRoamNode} from "../api";
+import {Urbit} from "@urbit/http-api";
 
 export interface UrbitListener {
     onEvent(event: any): void;
@@ -14,8 +15,18 @@ const allNodes = new Array<OrgRoamNode>;
 const allLinks = new Array<OrgRoamLink>;
 const allTags = new Array<string>;
 
+enum UrbitConnectionState {
+    UCS_NOT_CONNECTED = 1,
+    UCS_CONNECTED,
+    UCS_HAS_ERROR,
+    UCS_DISCONECTED,
+}
+
 class UrbitClientWrapperImpl implements UrbitClientWrapper {
     listener: UrbitListener | undefined;
+    urbit: Urbit | undefined;
+
+    connectionState: UrbitConnectionState | undefined;
 
     send(data: string): void {
         console.log("received data from ws mock", data);
@@ -44,11 +55,53 @@ async function updateGraphData() {
     urbitClientWrapper.listener.onEvent(event);
 }
 
+async function prepareNewGraph(upd: any) {
+    console.log(upd);
+
+
+    updateGraphData().catch(console.error);
+}
+
+async function syncGraphWithUrbit() {
+    if (!urbitClientWrapper.urbit || urbitClientWrapper.connectionState !== UrbitConnectionState.UCS_CONNECTED) {
+        throw new Error("not conneacted to urbit");
+    }
+    try {
+        await urbitClientWrapper.urbit.subscribe({
+            app: "zettelkasten",
+            path: "/updates",
+            event: prepareNewGraph,
+            err: () => console.error("Subscription rejected"),
+            quit: () => console.error("Kicked from subscription"),
+        });
+    } catch {
+        console.error("Subscription failed");
+    }
+}
+
 export function connectUrbitClient(listener: UrbitListener): UrbitClientWrapper {
     urbitClientWrapper.listener = listener;
-    setTimeout(() => {
-        updateGraphData().catch(console.error);
-    }, 1000);
+    urbitClientWrapper.connectionState = UrbitConnectionState.UCS_NOT_CONNECTED;
+
+    // @ts-ignore
+    if (!window.ship) {
+        throw new Error("window.ship not defined");
+    }
+
+    urbitClientWrapper.urbit = new Urbit("");
+    // @ts-ignore
+    urbitClientWrapper.urbit.ship = window?.ship;
+    urbitClientWrapper.urbit.onOpen = () => {
+        urbitClientWrapper.connectionState = UrbitConnectionState.UCS_CONNECTED;
+        syncGraphWithUrbit().catch(console.error);
+    };
+    urbitClientWrapper.urbit.onRetry = () => {
+        urbitClientWrapper.connectionState = UrbitConnectionState.UCS_NOT_CONNECTED;
+    };
+    urbitClientWrapper.urbit.onError = (err) => {
+        urbitClientWrapper.connectionState = UrbitConnectionState.UCS_HAS_ERROR;
+        console.error('urbit error', err);
+    };
 
     setTimeout(() => {
         const message = {
