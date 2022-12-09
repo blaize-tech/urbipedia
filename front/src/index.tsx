@@ -562,16 +562,18 @@ export function GraphPage() {
               }}
           />
         </Box>
-        <Tooltip label={isOpenFilesListSideBar ? 'Close sidebar' : 'Open sidebar'}>
-          <IconButton
-              m={1}
-              // eslint-disable-next-line react/jsx-no-undef
-              icon={<BsLayoutSidebarInset />}
-              aria-label="Close files-list"
-              variant="subtle"
-              onClick={isOpenFilesListSideBar ? onCloseFilesListSideBar : onOpenFilesListSideBar}
-          />
-        </Tooltip>
+        <Box position="relative" zIndex={4}>
+          <Tooltip label={isOpenFilesListSideBar ? 'Close sidebar' : 'Open sidebar'}>
+            <IconButton
+                m={1}
+                // eslint-disable-next-line react/jsx-no-undef
+                icon={<BsLayoutSidebarInset />}
+                aria-label="Close files-list"
+                variant="subtle"
+                onClick={isOpenFilesListSideBar ? onCloseFilesListSideBar : onOpenFilesListSideBar}
+            />
+          </Tooltip>
+        </Box>
         <Tweaks
           {...{
             physics,
