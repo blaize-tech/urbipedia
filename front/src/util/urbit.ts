@@ -83,6 +83,7 @@ const allTags = new Array<string>;
 
     nodesCounter = 3;
     linksCounter = 2;
+    updateGraphData().catch(console.error);
 })();
 
 class UrbitClientWrapperImpl implements UrbitClientWrapper {
