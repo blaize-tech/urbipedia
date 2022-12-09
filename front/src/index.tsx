@@ -26,13 +26,12 @@ import React, {
 import ReactDOM from 'react-dom/client';
 //@ts-expect-error
 import jLouvain from 'jlouvain.js'
-import type {
+import type, {
   ForceGraph2D as TForceGraph2D,
   ForceGraph3D as TForceGraph3D,
 } from 'react-force-graph'
 import { BiNetworkChart } from 'react-icons/bi'
-import { BsReverseLayoutSidebarInsetReverse } from 'react-icons/bs'
-import ReconnectingWebSocket from 'reconnecting-websocket'
+import { BsReverseLayoutSidebarInsetReverse, BsLayoutSidebarInset } from 'react-icons/bs'
 import SpriteText from 'three-spritetext'
 import useUndo from 'use-undo'
 import { OrgRoamGraphReponse, OrgRoamLink, OrgRoamNode } from './api'
@@ -53,7 +52,6 @@ import Sidebar from './components/Sidebar'
 import { Tweaks } from './components/Tweaks'
 import { usePersistantState } from './util/persistant-state'
 import { ThemeContext, ThemeContextProps } from './util/themecontext'
-import { openNodeInEmacs } from './util/webSocketFunctions'
 import { drawLabels } from './components/Graph/drawLabels'
 import { VariablesContext } from './util/variablesContext'
 import { findNthNeighbors } from './util/findNthNeighbour'
@@ -63,8 +61,10 @@ import { nodeSize } from './util/nodeSize'
 import { getNodeColor } from './util/getNodeColor'
 import { isLinkRelatedToNode } from './util/isLinkRelatedToNode'
 import { getLinkColor } from './util/getLinkColor'
-import {MockWS, mockWS} from "./util/dataSource";
+import {UrbitClientWrapper, connectUrbitClient} from "./util/urbit";
 import MyApp from './_app'
+import {FilesListBar} from './components/FilesListBar'
+import {openNodeInEmacs} from "./util/webSocketFunctions";
 
 const d3promise = import('d3-force-3d')
 
@@ -130,6 +130,14 @@ export function GraphPage() {
   const [sidebarHighlightedNode, setSidebarHighlightedNode] = useState<OrgRoamNode | null>(null)
   const { isOpen, onOpen, onClose } = useDisclosure()
 
+  let isOpenFilesListSideBar, onOpenFilesListSideBar, onCloseFilesListSideBar;
+  {
+    const {isOpen, onOpen, onClose} = useDisclosure({defaultIsOpen: true})
+    isOpenFilesListSideBar = isOpen;
+    onOpenFilesListSideBar = onOpen;
+    onCloseFilesListSideBar = onClose;
+  }
+
   const nodeByIdRef = useRef<NodeById>({})
   const linksByNodeIdRef = useRef<LinksByNodeId>({})
   const nodeByCiteRef = useRef<NodeByCite>({})
@@ -139,8 +147,10 @@ export function GraphPage() {
   const clusterRef = useRef<{ [id: string]: number }>({})
 
   const currentGraphDataRef = useRef<GraphData>({ nodes: [], links: [] })
+  const currentOrgRoamGraph = useRef<OrgRoamGraphReponse>({nodes: [], links: [], tags: [],});
 
   const updateGraphData = (orgRoamGraphData: OrgRoamGraphReponse) => {
+    currentOrgRoamGraph.current = orgRoamGraphData;
     const oldNodeById = nodeByIdRef.current
     tagsRef.current = orgRoamGraphData.tags ?? []
     const importNodes = orgRoamGraphData.nodes ?? []
@@ -157,7 +167,7 @@ export function GraphPage() {
     const headingLinks: OrgRoamLink[] = Object.keys(nodesByFile).flatMap((file) => {
       const nodesInFile = nodesByFile[file] ?? []
       // "file node" as opposed to "heading node"
-      const fileNode = nodesInFile.find((node) => node.level === 0)
+      const fileNode = nodesInFile.find((node) => node.level === 0);
       const headingNodes = nodesInFile.filter((node) => node.level !== 0)
 
       if (!fileNode) {
@@ -339,7 +349,7 @@ export function GraphPage() {
   const scopeRef = useRef<Scope>({ nodeIds: [], excludedNodeIds: [] })
   const behaviorRef = useRef(initialBehavior)
   behaviorRef.current = behavior
-  const WebSocketRef = useRef<MockWS | null>(null)
+  const urbitClient = useRef<UrbitClientWrapper | null>(null)
 
   scopeRef.current = scope
   const followBehavior = (
@@ -412,7 +422,7 @@ export function GraphPage() {
   }
 
   useEffect(() => {
-    WebSocketRef.current = mockWS({ onEvent:(event: any) => {
+    urbitClient.current = connectUrbitClient({ onEvent:(event: any) => {
       const bh = behaviorRef.current
       const message = JSON.parse(event.data)
       switch (message.type) {
@@ -526,12 +536,6 @@ export function GraphPage() {
     return
   }
 
-  // const [mainItem, setMainItem] = useState({
-  //   type: 'Graph',
-  //   title: 'Graph',
-  //   icon: <BiNetworkChart />,
-  // })
-
   const [mainWindowWidth, setMainWindowWidth] = usePersistantState<number>(
     'mainWindowWidth',
     windowWidth,
@@ -546,6 +550,30 @@ export function GraphPage() {
         height="100vh"
         overflow="clip"
       >
+        <Box position="relative" zIndex={4}>
+          <FilesListBar
+              {...{
+                isOpen: isOpenFilesListSideBar,
+                onOpen: onOpenFilesListSideBar,
+                onClose: onCloseFilesListSideBar,
+                windowWidth,
+                graphData: currentOrgRoamGraph.current,
+                visuals
+              }}
+          />
+        </Box>
+        <Box position="relative" zIndex={4}>
+          <Tooltip label={isOpenFilesListSideBar ? 'Close sidebar' : 'Open sidebar'}>
+            <IconButton
+                m={1}
+                // eslint-disable-next-line react/jsx-no-undef
+                icon={<BsLayoutSidebarInset />}
+                aria-label="Close files-list"
+                variant="subtle"
+                onClick={isOpenFilesListSideBar ? onCloseFilesListSideBar : onOpenFilesListSideBar}
+            />
+          </Tooltip>
+        </Box>
         <Tweaks
           {...{
             physics,
@@ -568,14 +596,15 @@ export function GraphPage() {
             setLocal,
           }}
           tags={tagsRef.current}
+          haveOffset={isOpenFilesListSideBar}
         />
         <Box position="absolute">
-          {graphData && (
+          {(graphData && graphData.nodes.length) ? (
             <Graph
               //ref={graphRef}
               nodeById={nodeByIdRef.current!}
               linksByNodeId={linksByNodeIdRef.current!}
-              webSocket={WebSocketRef.current}
+              urbitClientWrapper={urbitClient.current}
               variables={emacsVariables}
               {...{
                 physics,
@@ -605,7 +634,7 @@ export function GraphPage() {
                 local,
               }}
             />
-          )}
+          ) : (<div/>)}
         </Box>
         <Box position="relative" zIndex={4} width="100%">
           <Flex className="headerBar" h={10} flexDir="column">
@@ -689,7 +718,7 @@ export function GraphPage() {
               coordinates={contextPos}
               handleLocal={handleLocal}
               menuClose={contextMenu.onClose.bind(contextMenu)}
-              webSocket={WebSocketRef.current}
+              urbitClientWrapper={urbitClient.current}
               setPreviewNode={setPreviewNode}
               setFilter={setFilter}
               filter={filter}
@@ -717,7 +746,7 @@ export interface GraphProps {
   local: typeof initialLocal
   scope: Scope
   setScope: any
-  webSocket: any
+  urbitClientWrapper: any
   tagColors: { [tag: string]: string }
   setPreviewNode: any
   sidebarHighlightedNode: OrgRoamNode | null
@@ -751,7 +780,7 @@ export const Graph = function (props: GraphProps) {
     scope,
     local,
     setScope,
-    webSocket,
+    urbitClientWrapper,
     tagColors,
     setPreviewNode,
     sidebarHighlightedNode,
@@ -785,7 +814,7 @@ export const Graph = function (props: GraphProps) {
         break
       }
       case mouse.follow: {
-        openNodeInEmacs(node, webSocket)
+        openNodeInEmacs(node, urbitClientWrapper)
         break
       }
       case mouse.context: {

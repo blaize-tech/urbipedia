@@ -32,7 +32,7 @@ import { defaultNoteStyle, viewerNoteStyle, outlineNoteStyle } from './noteStyle
 import { Scrollbars } from 'react-custom-scrollbars-2'
 import { ExternalLinkIcon } from '@chakra-ui/icons'
 import { getThemeColor } from '../../util/getThemeColor'
-import {fetchNodeById} from "../../util/dataSource";
+import {getFileContent} from "../../util/urbit";
 
 export interface LinkProps {
   href: any
@@ -150,9 +150,8 @@ export const PreviewLink = (props: LinkProps) => {
   const type = href.replaceAll(/(.*?)\:.*/g, '$1')
 
   const extraNoteStyle = outline ? outlineNoteStyle : viewerNoteStyle
-  console.log(previewNode)
   const getText = () => {
-    fetchNodeById(id)
+    getFileContent(id)
       .then((res) => {
         return res
       })

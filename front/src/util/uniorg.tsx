@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { LinksByNodeId, NodeByCite, NodeById } from '../index'
 import { ProcessedOrg } from './processOrg'
-import {fetchNodeById} from "./dataSource";
+import {getFileContent} from "./urbit";
 
 export interface UniOrgProps {
   nodeById: NodeById
@@ -38,7 +38,7 @@ export const UniOrg = (props: UniOrgProps) => {
 
   const id = encodeURIComponent(encodeURIComponent(previewNode.id))
   useEffect(() => {
-    fetchNodeById(id)
+    getFileContent(id)
       .then((res) => {
         return res
       })

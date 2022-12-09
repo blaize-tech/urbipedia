@@ -2,7 +2,7 @@
   "name": "zettelkasten-ui",
   "version": "0.1.0",
   "private": true,
-  "homepage": "/apps/journal/",
+  "homepage": "/apps/zettelkasten/",
   "dependencies": {
     "@agentofuser/rehype-section": "^1.0.5",
     "@chakra-ui/icons": "^1.0.14",

@@ -57,7 +57,7 @@ export default interface ContextMenuProps {
   handleLocal: (node: OrgRoamNode, add: string) => void
   menuClose: () => void
   scope: { nodeIds: string[] }
-  webSocket: any
+  urbitClientWrapper: any
   setPreviewNode: any
   setTagColors: any
   tagColors: TagColors
@@ -74,7 +74,7 @@ export const ContextMenu = (props: ContextMenuProps) => {
     handleLocal,
     menuClose,
     scope,
-    webSocket,
+    urbitClientWrapper,
     setPreviewNode,
     setTagColors,
     tagColors,
@@ -128,12 +128,12 @@ export const ContextMenu = (props: ContextMenuProps) => {
               {!target?.properties?.FILELESS ? (
                 <MenuItem
                   icon={<EditIcon />}
-                  onClick={() => openNodeInEmacs(target as OrgRoamNode, webSocket)}
+                  onClick={() => openNodeInEmacs(target as OrgRoamNode, urbitClientWrapper)}
                 >
                   Open in Emacs
                 </MenuItem>
               ) : (
-                <MenuItem icon={<AddIcon />} onClick={() => createNodeInEmacs(target, webSocket)}>
+                <MenuItem icon={<AddIcon />} onClick={() => createNodeInEmacs(target, urbitClientWrapper)}>
                   Create node
                 </MenuItem>
               )}
@@ -222,7 +222,6 @@ export const ContextMenu = (props: ContextMenuProps) => {
               <Button
                 mr={3}
                 onClick={() => {
-                  console.log('closing')
                   onClose()
                   menuClose()
                 }}
@@ -234,8 +233,7 @@ export const ContextMenu = (props: ContextMenuProps) => {
                 colorScheme="red"
                 ml={3}
                 onClick={() => {
-                  console.log('aaaaa')
-                  deleteNodeInEmacs(target!, webSocket)
+                  deleteNodeInEmacs(target!, urbitClientWrapper)
                   onClose()
                   menuClose()
                 }}
