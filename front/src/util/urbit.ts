@@ -80,6 +80,9 @@ const allTags = new Array<string>;
     allLinks.push(link2);
     allTags.push("tag1");
     allTags.push("tag2");
+
+    nodesCounter = 3;
+    linksCounter = 2;
 })();
 
 class UrbitClientWrapperImpl implements UrbitClientWrapper {
@@ -140,7 +143,7 @@ export async function urbitCreateFile(name: string, text: string) {
     allNodes.push({
         id: String(newId),
         file: name,
-        title: "unknown" + String(newId),
+        title: name,
         level: 0,
         pos: newId,
         olp: [],
@@ -199,6 +202,7 @@ export async function urbitRenameFile(id: string, name: string) {
     for (let i = 0; i < allNodes.length; i++) {
         if (allNodes[i].id == id) {
             allNodes[i].file = name;
+            allNodes[i].title = name;
         }
     }
     updateGraphData().catch(console.error);
