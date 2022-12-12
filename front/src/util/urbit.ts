@@ -374,7 +374,7 @@ export async function urbitDeleteFile(id: string) {
     });
 }
 
-export function getFileContent(id: string): Promise<string> {
+export function urbitGetFileContent(id: string): Promise<string> {
     return new Promise((resolve, reject) => {
         if (!urbitClientWrapper
             || !urbitClientWrapper.urbit
@@ -417,7 +417,7 @@ export function urbitGetFileName(id: string): Promise<string> {
             })
             .then(
                 (data) => {
-                    renameFile(id, data.content);
+                    renameFile(id, data.name);
                 },
                 (err) => {
                     reject(err);
@@ -426,22 +426,28 @@ export function urbitGetFileName(id: string): Promise<string> {
     });
 }
 
-export function urbitGetFileContent(id: string): Promise<string> {
-    return new Promise((resolve, reject) => {
-        for (let i = 0; i < allNodes.length; i++) {
-            if (allNodes[i].id == id) {
-                resolve(String(allNodes[i].content));
-            }
-        }
-    });
-}
-
 export function urbitGetTags(id: string): Promise<string> {
     return new Promise((resolve, reject) => {
-        for (let i = 0; i < allNodes.length; i++) {
-            if (allNodes[i].id == id) {
-                resolve(String(allNodes[i].tags.join("#$")));
-            }
+        if (!urbitClientWrapper
+            || !urbitClientWrapper.urbit
+            || urbitClientWrapper.connectionState !== UrbitConnectionState.UCS_CONNECTED) {
+            reject("not connected to urbit");
+            throw "error";
         }
+
+        const path = `/files/tags/${id}`;
+        urbitClientWrapper.urbit
+            .scry({
+                app: "zettelkasten",
+                path: path,
+            })
+            .then(
+                (data) => {
+                    updateTagsToFile(id, data.tags.split("#$"));
+                },
+                (err) => {
+                    reject(err);
+                }
+            );
     });
 }
