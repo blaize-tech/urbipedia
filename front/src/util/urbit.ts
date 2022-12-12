@@ -376,11 +376,27 @@ export async function urbitDeleteFile(id: string) {
 
 export function getFileContent(id: string): Promise<string> {
     return new Promise((resolve, reject) => {
-        for (let i = 0; i < allNodes.length; i++) {
-            if (allNodes[i].id == id) {
-                resolve(String(allNodes[i].content));
-            }
+        if (!urbitClientWrapper
+            || !urbitClientWrapper.urbit
+            || urbitClientWrapper.connectionState !== UrbitConnectionState.UCS_CONNECTED) {
+            reject("not connected to urbit");
+            throw "error";
         }
+
+        const path = `/files/content/${id}`;
+        urbitClientWrapper.urbit
+            .scry({
+                app: "zettelkasten",
+                path: path,
+            })
+            .then(
+                (data) => {
+                    updateFile(id, data.content);
+                },
+                (err) => {
+                    reject(err);
+                }
+            );
     });
 }
 
