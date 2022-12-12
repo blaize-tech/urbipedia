@@ -149,12 +149,31 @@ async function updateNode(data: any) {
     } else if (data.action == "delete") {
         deleteFile(data.id);
     }
-    updateGraphData().catch(console.error);
+}
+
+function createLinkFileToFile(linkId: string, fromId: string, toId: string) {
+    allLinks.push({
+        id: linkId,
+        source: fromId,
+        target: toId,
+        type: "heading"
+    });
+}
+
+function deleteLinkFileToFile(linkId: string) {
+    for (let i = 0; i < allLinks.length; i++) {
+        if (allLinks[i].id == linkId) {
+            allLinks.splice(i, 1);
+            break;
+        }
+    }
 }
 
 async function updateLink(data: any) {
     if (data.action == "create") {
+        createLinkFileToFile(data["link-id"], data["from-id"], data["to-id"]);
     } else if (data.action == "delete") {
+        deleteLinkFileToFile(data["link-id"]);
     } else if (data.action == "change") {
         throw new Error("unsupported");
     }
@@ -240,7 +259,7 @@ export async function urbitCreateFile(name: string) {
             app: "zettelkasten",
             mark: "zettelkasten-action",
             json: {"create-file": {name: name}},
-            onSuccess: () => resolve({}),
+            onSuccess: () => resolve({status: "ok"}),
             onError: () => reject("can't create file"),
         });
     });
@@ -258,7 +277,7 @@ export async function urbitUpdateTagsToFile(id: string, tags: Array<string>) {
             app: "zettelkasten",
             mark: "zettelkasten-action",
             json: {"update-tags": {id: id, tags: tags.join("#$")}},
-            onSuccess: () => resolve({}),
+            onSuccess: () => resolve({status: "ok"}),
             onError: () => reject("can't update tags"),
         });
     });
@@ -277,7 +296,7 @@ export async function urbitUpdateFile(id: string, text: string) {
             app: "zettelkasten",
             mark: "zettelkasten-action",
             json: {"update-file": {id: id, text: text}},
-            onSuccess: () => resolve({}),
+            onSuccess: () => resolve({status: "ok"}),
             onError: () => reject("can't update file"),
         });
     });
@@ -295,20 +314,28 @@ export async function urbitRenameFile(id: string, name: string) {
             app: "zettelkasten",
             mark: "zettelkasten-action",
             json: {"rename-file": {id: id, name: name}},
-            onSuccess: () => resolve({}),
+            onSuccess: () => resolve({status: "ok"}),
             onError: () => reject("can't update name for file"),
         });
     });
 }
 
 export async function urbitCreateLinkFileToFile(fromId: string, toId: string) {
-    allLinks.push({
-        id: String(linksCounter++),
-        source: fromId,
-        target: toId,
-        type: "heading"
+    return new Promise((resolve, reject) => {
+        if (!urbitClientWrapper
+            || !urbitClientWrapper.urbit
+            || urbitClientWrapper.connectionState !== UrbitConnectionState.UCS_CONNECTED) {
+            reject("not connected to urbit");
+            throw "error";
+        }
+        urbitClientWrapper.urbit.poke({
+            app: "zettelkasten",
+            mark: "zettelkasten-action",
+            json: {"create-link": {fromId: fromId, toId: toId}},
+            onSuccess: () => resolve({status: "ok"}),
+            onError: () => reject("can't create link to file"),
+        });
     });
-    updateGraphData().catch(console.error);
 }
 
 export async function urbitDeleteLinkFileToFile(linkId: string) {
