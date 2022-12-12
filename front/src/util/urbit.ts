@@ -241,7 +241,7 @@ export async function urbitCreateFile(name: string) {
             mark: "zettelkasten-action",
             json: {"create-file": {name: name}},
             onSuccess: () => resolve({}),
-            onError: () => reject("cant create file"),
+            onError: () => reject("can't create file"),
         });
     });
 }
@@ -259,29 +259,46 @@ export async function urbitUpdateTagsToFile(id: string, tags: Array<string>) {
             mark: "zettelkasten-action",
             json: {"update-tags": {id: id, tags: tags.join("#$")}},
             onSuccess: () => resolve({}),
-            onError: () => reject("cant create file"),
+            onError: () => reject("can't update tags"),
         });
     });
 }
 
 
 export async function urbitUpdateFile(id: string, text: string) {
-    for (let i = 0; i < allNodes.length; i++) {
-        if (allNodes[i].id == id) {
-            allNodes[i].content = text;
+    return new Promise((resolve, reject) => {
+        if (!urbitClientWrapper
+            || !urbitClientWrapper.urbit
+            || urbitClientWrapper.connectionState !== UrbitConnectionState.UCS_CONNECTED) {
+            reject("not connected to urbit");
+            throw "error";
         }
-    }
-    updateGraphData().catch(console.error);
+        urbitClientWrapper.urbit.poke({
+            app: "zettelkasten",
+            mark: "zettelkasten-action",
+            json: {"update-file": {id: id, text: text}},
+            onSuccess: () => resolve({}),
+            onError: () => reject("can't update file"),
+        });
+    });
 }
 
 export async function urbitRenameFile(id: string, name: string) {
-    for (let i = 0; i < allNodes.length; i++) {
-        if (allNodes[i].id == id) {
-            allNodes[i].file = name;
-            allNodes[i].title = name;
+    return new Promise((resolve, reject) => {
+        if (!urbitClientWrapper
+            || !urbitClientWrapper.urbit
+            || urbitClientWrapper.connectionState !== UrbitConnectionState.UCS_CONNECTED) {
+            reject("not connected to urbit");
+            throw "error";
         }
-    }
-    updateGraphData().catch(console.error);
+        urbitClientWrapper.urbit.poke({
+            app: "zettelkasten",
+            mark: "zettelkasten-action",
+            json: {"rename-file": {id: id, name: name}},
+            onSuccess: () => resolve({}),
+            onError: () => reject("can't update name for file"),
+        });
+    });
 }
 
 export async function urbitCreateLinkFileToFile(fromId: string, toId: string) {
