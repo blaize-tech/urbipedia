@@ -339,30 +339,39 @@ export async function urbitCreateLinkFileToFile(fromId: string, toId: string) {
 }
 
 export async function urbitDeleteLinkFileToFile(linkId: string) {
-    for (let i = 0; i < allLinks.length; i++) {
-        if (allLinks[i].id == linkId) {
-            allLinks.splice(i, 1);
-            break;
+    return new Promise((resolve, reject) => {
+        if (!urbitClientWrapper
+            || !urbitClientWrapper.urbit
+            || urbitClientWrapper.connectionState !== UrbitConnectionState.UCS_CONNECTED) {
+            reject("not connected to urbit");
+            throw "error";
         }
-    }
-    updateGraphData().catch(console.error);
+        urbitClientWrapper.urbit.poke({
+            app: "zettelkasten",
+            mark: "zettelkasten-action",
+            json: {"delete-link": {id: linkId}},
+            onSuccess: () => resolve({status: "ok"}),
+            onError: () => reject("can't delete link to file"),
+        });
+    });
 }
 
 export async function urbitDeleteFile(id: string) {
-    urbitUpdateTagsToFile(id, []).catch(console.error);
-    for (let i = 0; i < allNodes.length; i++) {
-        if (allNodes[i].id == id) {
-            allNodes.splice(i, 1);
-            break;
+    return new Promise((resolve, reject) => {
+        if (!urbitClientWrapper
+            || !urbitClientWrapper.urbit
+            || urbitClientWrapper.connectionState !== UrbitConnectionState.UCS_CONNECTED) {
+            reject("not connected to urbit");
+            throw "error";
         }
-    }
-    for (let i = 0; i < allLinks.length; i++) {
-        if (allLinks[i].source == id || allLinks[i].target == id) {
-            allLinks.splice(i, 1);
-            break;
-        }
-    }
-    updateGraphData().catch(console.error);
+        urbitClientWrapper.urbit.poke({
+            app: "zettelkasten",
+            mark: "zettelkasten-action",
+            json: {"delete-file": {id: id}},
+            onSuccess: () => resolve({status: "ok"}),
+            onError: () => reject("can't delete file"),
+        });
+    });
 }
 
 export function getFileContent(id: string): Promise<string> {
