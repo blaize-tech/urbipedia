@@ -402,11 +402,27 @@ export function getFileContent(id: string): Promise<string> {
 
 export function urbitGetFileName(id: string): Promise<string> {
     return new Promise((resolve, reject) => {
-        for (let i = 0; i < allNodes.length; i++) {
-            if (allNodes[i].id == id) {
-                resolve(String(allNodes[i].file));
-            }
+        if (!urbitClientWrapper
+            || !urbitClientWrapper.urbit
+            || urbitClientWrapper.connectionState !== UrbitConnectionState.UCS_CONNECTED) {
+            reject("not connected to urbit");
+            throw "error";
         }
+
+        const path = `/files/name/${id}`;
+        urbitClientWrapper.urbit
+            .scry({
+                app: "zettelkasten",
+                path: path,
+            })
+            .then(
+                (data) => {
+                    renameFile(id, data.content);
+                },
+                (err) => {
+                    reject(err);
+                }
+            );
     });
 }
 
