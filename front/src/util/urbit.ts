@@ -55,11 +55,11 @@ async function updateGraphData() {
     urbitClientWrapper.listener.onEvent(event);
 }
 
-function createFile(name: string, id: string) {
+function createFile(id: string) {
     allNodes.push({
         id: id,
-        file: name,
-        title: name,
+        file: "noname" + String(id),
+        title: "noname" + String(id),
         level: 0,
         pos: Number.parseInt(id),
         olp: [],
@@ -69,8 +69,16 @@ function createFile(name: string, id: string) {
     });
 }
 
+function renameFile(id: string, name: string) {
+    for (let i = 0; i < allNodes.length; i++) {
+        if (allNodes[i].id == id) {
+            allNodes[i].file = name;
+            allNodes[i].title = name;
+        }
+    }
+}
+
 function deleteFile(id: string) {
-    // urbitUpdateTagsToFile(id, []).catch(console.error);
     for (let i = 0; i < allNodes.length; i++) {
         if (allNodes[i].id == id) {
             allNodes.splice(i, 1);
@@ -93,20 +101,53 @@ function updateFile(id: string, text: string) {
     }
 }
 
+function updateTagsToFile(id: string, tags: Array<string>) {
+    let oldTags = new Array<string>;
+    for (let i = 0; i < allNodes.length; i++) {
+        if (allNodes[i].id == id) {
+            oldTags = allNodes[i].tags;
+            allNodes[i].tags = tags;
+            break;
+        }
+    }
+    oldTags.map((tag) => {
+        let has = false;
+        for (let i = 0; i < allNodes.length; i++) {
+            const pos = allNodes[i].tags.indexOf(tag);
+            if (pos >= 0) {
+                has = true;
+                break;
+            }
+        }
+        if (!has) {
+            const pos = allTags.indexOf(tag);
+            if (pos >= 0) {
+                allTags.splice(pos, 1)
+            }
+        }
+    });
+
+    tags.map(tag => {
+        if (!allTags.includes(tag)) {
+            allTags.push(tag);
+        }
+    });
+    updateGraphData().catch(console.error);
+}
+
 async function updateNode(data: any) {
     if (data.action == "create") {
+        createFile(String(data.id));
+    }
+    if (data.action == "create" || data.action == "change") {
         const fileName = await urbitGetFileName(String(data.id));
-        createFile(fileName, data.id);
+        renameFile(data.id, fileName);
         const content = await urbitGetFileContent(String(data.id));
         updateFile(data.id, content);
+        const tagsAll = await urbitGetTags(String(data.id));
+        updateTagsToFile(data.id, tagsAll.split("#$"));
     } else if (data.action == "delete") {
         deleteFile(data.id);
-    } else if (data.action == "change") {
-        const fileName = await urbitGetFileName(String(data.id));
-        createFile(fileName, data.id);
-        const content = await urbitGetFileContent(String(data.id));
-        updateFile(data.id, content);
-        // todo tags
     }
     updateGraphData().catch(console.error);
 }
@@ -206,37 +247,21 @@ export async function urbitCreateFile(name: string) {
 }
 
 export async function urbitUpdateTagsToFile(id: string, tags: Array<string>) {
-    let oldTags = new Array<string>;
-    for (let i = 0; i < allNodes.length; i++) {
-        if (allNodes[i].id == id) {
-            oldTags = allNodes[i].tags;
-            allNodes[i].tags = tags;
-            break;
+    return new Promise((resolve, reject) => {
+        if (!urbitClientWrapper
+            || !urbitClientWrapper.urbit
+            || urbitClientWrapper.connectionState !== UrbitConnectionState.UCS_CONNECTED) {
+            reject("not connected to urbit");
+            throw "error";
         }
-    }
-    oldTags.map((tag) => {
-        let has = false;
-        for (let i = 0; i < allNodes.length; i++) {
-            const pos = allNodes[i].tags.indexOf(tag);
-            if (pos >= 0) {
-                has = true;
-                break;
-            }
-        }
-        if (!has) {
-            const pos = allTags.indexOf(tag);
-            if (pos >= 0) {
-                allTags.splice(pos, 1)
-            }
-        }
+        urbitClientWrapper.urbit.poke({
+            app: "zettelkasten",
+            mark: "zettelkasten-action",
+            json: {"update-tags": {id: id, tags: tags.join("#$")}},
+            onSuccess: () => resolve({}),
+            onError: () => reject("cant create file"),
+        });
     });
-
-    tags.map(tag => {
-        if (!allTags.includes(tag)) {
-            allTags.push(tag);
-        }
-    });
-    updateGraphData().catch(console.error);
 }
 
 
@@ -321,6 +346,16 @@ export function urbitGetFileContent(id: string): Promise<string> {
         for (let i = 0; i < allNodes.length; i++) {
             if (allNodes[i].id == id) {
                 resolve(String(allNodes[i].content));
+            }
+        }
+    });
+}
+
+export function urbitGetTags(id: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+        for (let i = 0; i < allNodes.length; i++) {
+            if (allNodes[i].id == id) {
+                resolve(String(allNodes[i].tags.join("#$")));
             }
         }
     });
