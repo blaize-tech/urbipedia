@@ -9,8 +9,6 @@ export interface UrbitClientWrapper {
     send(data: string): void;
 }
 
-let nodesCounter = 0;
-let linksCounter = 0;
 const allNodes = new Array<OrgRoamNode>;
 const allLinks = new Array<OrgRoamLink>;
 const allTags = new Array<string>;
@@ -155,7 +153,7 @@ async function updateNode(data: any) {
         const content = await urbitGetFileContent(String(data.id));
         updateFile(data.id, content);
         const tagsAll = await urbitGetTags(String(data.id));
-        updateTagsToFile(data.id, tagsAll.split("#$"));
+        updateTagsToFile(data.id, tagsAll);
     } else if (data.action == "delete") {
         deleteFile(data.id);
     }
@@ -190,7 +188,7 @@ async function updateLink(data: any) {
     updateGraphData().catch(console.error);
 }
 
-async function syncGraphWithUrbit() {
+async function watchGraphWithUrbit() {
     if (!urbitClientWrapper
         || !urbitClientWrapper.urbit
         || urbitClientWrapper.connectionState !== UrbitConnectionState.UCS_CONNECTED) {
@@ -216,6 +214,36 @@ async function syncGraphWithUrbit() {
     }
 }
 
+async function getFullGraph() {
+    if (!urbitClientWrapper
+        || !urbitClientWrapper.urbit
+        || urbitClientWrapper.connectionState !== UrbitConnectionState.UCS_CONNECTED) {
+        throw new Error("not connected to urbit");
+    }
+    try {
+        allLinks.splice(0, allLinks.length);
+        allNodes.splice(0, allLinks.length);
+        allTags.splice(0, allLinks.length);
+        const nodesIds = await urbitGetNodes();
+        nodesIds.map(async (id) => {
+            createFile(id);
+            const fileName = await urbitGetFileName(id);
+            renameFile(id, fileName);
+            const content = await urbitGetFileContent(id);
+            updateFile(id, content);
+            const tagsAll = await urbitGetTags(id);
+            updateTagsToFile(id, tagsAll);
+        });
+        const linksIds = await urbitGetLinks();
+        linksIds.map(async (id) => {
+            const data = await urbitGetLink(id);
+            createLinkFileToFile(data["link-id"], data["from-id"], data["to-id"]);
+        });
+    } catch {
+        console.error("Subscription failed");
+    }
+}
+
 export function connectUrbitClient(listener: UrbitListener): UrbitClientWrapper {
     urbitClientWrapper.listener = listener;
     urbitClientWrapper.connectionState = UrbitConnectionState.UCS_NOT_CONNECTED;
@@ -230,7 +258,9 @@ export function connectUrbitClient(listener: UrbitListener): UrbitClientWrapper 
     urbitClientWrapper.urbit.ship = window?.ship;
     urbitClientWrapper.urbit.onOpen = () => {
         urbitClientWrapper.connectionState = UrbitConnectionState.UCS_CONNECTED;
-        syncGraphWithUrbit().catch(console.error);
+        getFullGraph().finally(() => {
+            watchGraphWithUrbit().catch(console.error);
+        }).catch(console.error);
     };
     urbitClientWrapper.urbit.onRetry = () => {
         urbitClientWrapper.connectionState = UrbitConnectionState.UCS_NOT_CONNECTED;
@@ -436,7 +466,7 @@ export function urbitGetFileName(id: string): Promise<string> {
     });
 }
 
-export function urbitGetTags(id: string): Promise<string> {
+export function urbitGetTags(id: string): Promise<Array<string>> {
     return new Promise((resolve, reject) => {
         if (!urbitClientWrapper
             || !urbitClientWrapper.urbit
@@ -462,7 +492,7 @@ export function urbitGetTags(id: string): Promise<string> {
     });
 }
 
-export function urbitGetNodes(): Promise<string> {
+export function urbitGetNodes(): Promise<Array<string>> {
     return new Promise((resolve, reject) => {
         if (!urbitClientWrapper
             || !urbitClientWrapper.urbit
@@ -488,7 +518,7 @@ export function urbitGetNodes(): Promise<string> {
     });
 }
 
-export function urbitGetLinks(): Promise<string> {
+export function urbitGetLinks(): Promise<Array<string>> {
     return new Promise((resolve, reject) => {
         if (!urbitClientWrapper
             || !urbitClientWrapper.urbit
@@ -514,7 +544,7 @@ export function urbitGetLinks(): Promise<string> {
     });
 }
 
-export function urbitGetLink(id: string): Promise<string> {
+export function urbitGetLink(id: string): Promise<Array<string>> {
     return new Promise((resolve, reject) => {
         if (!urbitClientWrapper
             || !urbitClientWrapper.urbit
