@@ -249,7 +249,7 @@ export function connectUrbitClient(listener: UrbitListener): UrbitClientWrapper 
     urbitClientWrapper.connectionState = UrbitConnectionState.UCS_NOT_CONNECTED;
 
     // @ts-ignore
-    if (!window.ship) {
+    if (!window?.ship) {
         throw new Error("window.ship not defined");
     }
 
