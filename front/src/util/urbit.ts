@@ -544,7 +544,7 @@ export function urbitGetLinks(): Promise<Array<string>> {
     });
 }
 
-export function urbitGetLink(id: string): Promise<Array<string>> {
+export function urbitGetLink(id: string): Promise<any> {
     return new Promise((resolve, reject) => {
         if (!urbitClientWrapper
             || !urbitClientWrapper.urbit
