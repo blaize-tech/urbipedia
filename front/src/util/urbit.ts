@@ -487,3 +487,59 @@ export function urbitGetNodes(): Promise<string> {
             );
     });
 }
+
+export function urbitGetLinks(): Promise<string> {
+    return new Promise((resolve, reject) => {
+        if (!urbitClientWrapper
+            || !urbitClientWrapper.urbit
+            || urbitClientWrapper.connectionState !== UrbitConnectionState.UCS_CONNECTED) {
+            reject("not connected to urbit");
+            throw "error";
+        }
+
+        const path = `/links/ids/`;
+        urbitClientWrapper.urbit
+            .scry({
+                app: "zettelkasten",
+                path: path,
+            })
+            .then(
+                (data) => {
+                    resolve(data.ids);
+                },
+                (err) => {
+                    reject(err);
+                }
+            );
+    });
+}
+
+export function urbitGetLink(id: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+        if (!urbitClientWrapper
+            || !urbitClientWrapper.urbit
+            || urbitClientWrapper.connectionState !== UrbitConnectionState.UCS_CONNECTED) {
+            reject("not connected to urbit");
+            throw "error";
+        }
+
+        const path = `/links/ids/${id}`;
+        urbitClientWrapper.urbit
+            .scry({
+                app: "zettelkasten",
+                path: path,
+            })
+            .then(
+                (data) => {
+                    resolve({
+                        id: data["id"],
+                        fromId: data["from-id"],
+                        toId: data["to-id"],
+                    });
+                },
+                (err) => {
+                    reject(err);
+                }
+            );
+    });
+}
