@@ -55,6 +55,16 @@ async function updateGraphData() {
     urbitClientWrapper.listener.onEvent(event);
 }
 
+export function getFileContent(id: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+        for (let i = 0; i < allNodes.length; i++) {
+            if (allNodes[i].id == id) {
+                resolve(String(allNodes[i].content));
+            }
+        }
+    });
+}
+
 function createFile(id: string) {
     allNodes.push({
         id: id,
