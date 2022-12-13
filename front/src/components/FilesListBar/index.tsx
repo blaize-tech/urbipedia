@@ -106,7 +106,7 @@ export const FilesListBar = (props: SidebarProps) => {
                 break;
             }
         }
-        await urbitCreateFile(defaultName, "").catch(console.error);
+        await urbitCreateFile(defaultName).catch(console.error);
     };
 
     const onRenameFile = async (name: string) => {

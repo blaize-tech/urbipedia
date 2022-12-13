@@ -422,50 +422,62 @@ export function GraphPage() {
   }
 
   useEffect(() => {
-    urbitClient.current = connectUrbitClient({ onEvent:(event: any) => {
-      const bh = behaviorRef.current
-      const message = JSON.parse(event.data)
-      switch (message.type) {
-        case 'graphdata':
-          return updateGraphData(message.data)
-        case 'variables':
-          setEmacsVariables(message.data)
-          return
-        case 'theme':
-          return setEmacsTheme(['custom', message.data])
-        case 'command':
-          switch (message.data.commandName) {
-            case 'local':
-              const speed = behavior.zoomSpeed
-              const padding = behavior.zoomPadding
-              followBehavior('local', message.data.id, speed, padding)
-              setEmacsNodeId(message.data.id)
-              break
-            case 'zoom': {
-              const speed = message?.data?.speed || bh.zoomSpeed
-              const padding = message?.data?.padding || bh.zoomPadding
-              followBehavior('zoom', message.data.id, speed, padding)
-              setEmacsNodeId(message.data.id)
-              break
-            }
-            case 'follow': {
-              followBehavior(bh.follow, message.data.id, bh.zoomSpeed, bh.zoomPadding)
-              setEmacsNodeId(message.data.id)
-              break
-            }
-            case 'change-local-graph': {
-              const node = nodeByIdRef.current[message.data.id as string]
-              if (!node) break
-              console.log(message)
-              handleLocal(node, message.data.manipulation)
-              break
-            }
-            default:
-              return console.error('unknown message type', message.type)
+    const tryInitUrbit = () => {
+      urbitClient.current = connectUrbitClient({ onEvent:(event: any) => {
+          const bh = behaviorRef.current
+          const message = JSON.parse(event.data)
+          switch (message.type) {
+            case 'graphdata':
+              return updateGraphData(message.data)
+            case 'variables':
+              setEmacsVariables(message.data)
+              return
+            case 'theme':
+              return setEmacsTheme(['custom', message.data])
+            case 'command':
+              switch (message.data.commandName) {
+                case 'local':
+                  const speed = behavior.zoomSpeed
+                  const padding = behavior.zoomPadding
+                  followBehavior('local', message.data.id, speed, padding)
+                  setEmacsNodeId(message.data.id)
+                  break
+                case 'zoom': {
+                  const speed = message?.data?.speed || bh.zoomSpeed
+                  const padding = message?.data?.padding || bh.zoomPadding
+                  followBehavior('zoom', message.data.id, speed, padding)
+                  setEmacsNodeId(message.data.id)
+                  break
+                }
+                case 'follow': {
+                  followBehavior(bh.follow, message.data.id, bh.zoomSpeed, bh.zoomPadding)
+                  setEmacsNodeId(message.data.id)
+                  break
+                }
+                case 'change-local-graph': {
+                  const node = nodeByIdRef.current[message.data.id as string]
+                  if (!node) break
+                  console.log(message)
+                  handleLocal(node, message.data.manipulation)
+                  break
+                }
+                default:
+                  return console.error('unknown message type', message.type)
+              }
           }
+        }});
+    };
+
+    const loop = () => {
+      try {
+        tryInitUrbit();
+      } catch (e) {
+        setTimeout(loop, 5000);
       }
-    }})
-  }, [])
+    };
+
+    loop();
+  }, []);
 
   useEffect(() => {
     const fg = graphRef.current
