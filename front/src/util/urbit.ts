@@ -401,7 +401,7 @@ export function urbitGetFileContent(id: string): Promise<string> {
             })
             .then(
                 (data) => {
-                    updateFile(id, data.content);
+                    resolve(data.content);
                 },
                 (err) => {
                     reject(err);
@@ -427,7 +427,7 @@ export function urbitGetFileName(id: string): Promise<string> {
             })
             .then(
                 (data) => {
-                    renameFile(id, data.name);
+                    resolve(data.name);
                 },
                 (err) => {
                     reject(err);
@@ -453,7 +453,33 @@ export function urbitGetTags(id: string): Promise<string> {
             })
             .then(
                 (data) => {
-                    updateTagsToFile(id, data.tags.split("#$"));
+                    resolve(data.tags.split("#$"));
+                },
+                (err) => {
+                    reject(err);
+                }
+            );
+    });
+}
+
+export function urbitGetNodes(): Promise<string> {
+    return new Promise((resolve, reject) => {
+        if (!urbitClientWrapper
+            || !urbitClientWrapper.urbit
+            || urbitClientWrapper.connectionState !== UrbitConnectionState.UCS_CONNECTED) {
+            reject("not connected to urbit");
+            throw "error";
+        }
+
+        const path = `/files/ids/`;
+        urbitClientWrapper.urbit
+            .scry({
+                app: "zettelkasten",
+                path: path,
+            })
+            .then(
+                (data) => {
+                    resolve(data.ids);
                 },
                 (err) => {
                     reject(err);
