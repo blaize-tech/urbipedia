@@ -1,11 +1,7 @@
 |%
 +$  id  @
-+$  name  @t
 +$  txt  @t
-+$  count  @ta
-+$  link  [=id type=@]
-+$  links  (list link)
-+$  tag  @t
++$  name  @t
 +$  zettel
   $:  =name
       =txt
@@ -13,11 +9,11 @@
       :: tags=(list tag)
   ==
 +$  action
-  $%  [%add =id =name =txt]
-      [%edit =id =name =txt]
+  $%  [%add =id =txt]
+      [%edit =id =txt]
       [%del =id]
   ==
-+$  entry  [=id =zettel]
++$  entry  [=id =txt]
 +$  logged  (pair @ action)
 +$  update
   %+  pair  @
@@ -25,6 +21,6 @@
       [%zttl list=(list entry)]
       [%logs list=(list logged)]
   ==
-+$  zettels  ((mop id zettel) gth)
++$  journal  ((mop id txt) gth)
 +$  log  ((mop @ action) lth)
 --

@@ -4,9 +4,9 @@
 +$  versioned-state
     $%  state-0
     ==
-+$  state-0  [%0 =zettels =log =count]
++$  state-0  [%0 =journal =log]
 +$  card  card:agent:gall
-++  zettel-orm  ((on id zettel) gth)
+++  j-orm  ((on id txt) gth)
 ++  log-orm  ((on @ action) lth)
 ++  unique-time
   |=  [=time =log]
@@ -27,44 +27,42 @@
     def   ~(. (default-agent this %|) bowl)
     io    ~(. agentio bowl)
 ++  on-init  on-init:def
-++  on-save  on-save:def
-  :: ^-  vase
-  :: !>(state)
+++  on-save
+  ^-  vase
+  !>(state)
 ::
-++  on-load  on-load:def
-  :: |=  old-vase=vase
-  :: ^-  (quip card _this)
-  :: `this(state !<(versioned-state old-vase))
+++  on-load
+  |=  old-vase=vase
+  ^-  (quip card _this)
+  `this(state !<(versioned-state old-vase))
 ::
 ++  on-poke
   |=  [=mark =vase]
   ^-  (quip card _this)
   |^
   ?>  (team:title our.bowl src.bowl)
-  ?.  ?=(%zettels-action mark)  (on-poke:def mark vase)
+  ?.  ?=(%zettelkasten-action mark)  (on-poke:def mark vase)
   =/  now=@  (unique-time now.bowl log)
   =/  act  !<(action vase)
   =.  state  (poke-action act)
   :_  this(log (put:log-orm log now act))
-  ~[(fact:io zettels-update+!>(`update`[now act]) ~[/updates])]
+  ~[(fact:io zettelkasten-update+!>(`update`[now act]) ~[/updates])]
   ::
   ++  poke-action
     |=  act=action
     ^-  _state
     ?-    -.act
         %add
-      ?<  (has:zettel-orm zettels id.act)
-      =/  =zettel  [name.act txt.act]
-      state(zettels (put:zettel-orm zettels id.act zettel))
+      ?<  (has:j-orm journal id.act)
+      state(journal (put:j-orm journal id.act txt.act))
     ::
         %edit
-      ?>  (has:zettel-orm zettels id.act)
-      =/  =zettel  [name.act txt.act]
-      state(zettels (put:zettel-orm zettels id.act zettel))
+      ?>  (has:j-orm journal id.act)
+      state(journal (put:j-orm journal id.act txt.act))
     ::
         %del
-      ?>  (has:zettel-orm zettels id.act)
-      state(zettels +:(del:zettel-orm zettels id.act))
+      ?>  (has:j-orm journal id.act)
+      state(journal +:(del:j-orm journal id.act))
     ==
   --
 ::
@@ -85,37 +83,37 @@
       [%x %entries *]
     ?+    t.t.path  (on-peek:def path)
         [%all ~]
-      :^  ~  ~  %zettels-update
+      :^  ~  ~  %zettelkasten-update
       !>  ^-  update
-      [now %zttl (tap:zettel-orm zettels)]
+      [now %zttl (tap:j-orm journal)]
     ::
         [%before @ @ ~]
       =/  before=@  (rash i.t.t.t.path dem)
       =/  max=@  (rash i.t.t.t.t.path dem)
-      :^  ~  ~  %zettels-update
+      :^  ~  ~  %zettelkasten-update
       !>  ^-  update
-      [now %zttl (tab:zettel-orm zettels `before max)]
+      [now %zttl (tab:j-orm journal `before max)]
     ::
         [%between @ @ ~]
       =/  start=@
         =+  (rash i.t.t.t.path dem)
         ?:(=(0 -) - (sub - 1))
       =/  end=@  (add 1 (rash i.t.t.t.t.path dem))
-      :^  ~  ~  %zettels-update
+      :^  ~  ~  %zettelkasten-update
       !>  ^-  update
-      [now %zttl (tap:zettel-orm (lot:zettel-orm zettels `end `start))]
+      [now %zttl (tap:j-orm (lot:j-orm journal `end `start))]
     ==
   ::
       [%x %updates *]
     ?+    t.t.path  (on-peek:def path)
         [%all ~]
-      :^  ~  ~  %zettels-update
+      :^  ~  ~  %zettelkasten-update
       !>  ^-  update
       [now %logs (tap:log-orm log)]
     ::
         [%since @ ~]
       =/  since=@  (rash i.t.t.t.path dem)
-      :^  ~  ~  %zettels-update
+      :^  ~  ~  %zettelkasten-update
       !>  ^-  update
       [now %logs (tap:log-orm (lot:log-orm log `since ~))]
     ==
