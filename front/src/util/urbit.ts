@@ -258,14 +258,14 @@ export function connectUrbitClient(listener: UrbitListener): UrbitClientWrapper 
     urbitClientWrapper.listener = listener;
     urbitClientWrapper.connectionState = UrbitConnectionState.UCS_NOT_CONNECTED;
 
-    // @ts-ignore
-    if (!window?.ship) {
+    urbitClientWrapper.urbit = new Urbit("");
+    (window as any).urbit = urbitClientWrapper.urbit;
+
+    if (!(window as any)?.ship) {
         throw new Error("window.ship not defined");
     }
-
-    urbitClientWrapper.urbit = new Urbit("");
-    // @ts-ignore
-    urbitClientWrapper.urbit.ship = window?.ship;
+    
+    urbitClientWrapper.urbit.ship = (window as any)?.ship;
     urbitClientWrapper.urbit.onOpen = () => {
         urbitClientWrapper.connectionState = UrbitConnectionState.UCS_CONNECTED;
         getFullGraph().finally(() => {
