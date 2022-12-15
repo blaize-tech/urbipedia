@@ -16,25 +16,31 @@
   ^-  json
   |^
   ?+    -.q.upd  (logged upd)
+      %lnks
+    (pairs ~[['time' (numb p.upd)] ["links" a+(turn list.q.upd elink)]])
+  ::
       %zttl
-    %-  pairs
-    :~  ['time' (numb p.upd)]
-        ['entries' a+(turn list.q.upd entry)]
-    ==
+    (pairs ~[['time' (numb p.upd)] ['entries' a+(turn list.q.upd entry)]])
   ::
       %logs
-    %-  pairs
-    :~  ['time' (numb p.upd)]
-        ['logs' a+(turn list.q.upd logged)]
-    ==
+    (pairs ~[['time' (numb p.upd)] ['logs' a+(turn list.q.upd logged)]])
   ==
+  ++  link
+    |=  lnk=^link
+    ^-  json
+    (pairs ~[['from' (numb from.lnk)] ['to' (numb to.lnk)]])
+  ++  elink
+    |=  ent=^elink
+    ^-  json
+    (pairs ~[['id' (numb id.ent)] ['link' (link link.ent)]])
+  ++  zettel
+    |=  ztl=^zettel
+    ^-  json
+    (pairs ~[['name' s+name.ztl] ['txt' s+txt.ztl] ['tags' s+tags.ztl]])
   ++  entry
     |=  ent=^entry
     ^-  json
-    %-  pairs
-    :~  ['id' (numb id.ent)]
-        ['txt' s+txt.ent]
-    ==
+    (pairs ~[['id' (numb id.ent)] ['zettel' (zettel zettel.ent)]])
   ++  logged
     |=  lgd=^logged
     ^-  json

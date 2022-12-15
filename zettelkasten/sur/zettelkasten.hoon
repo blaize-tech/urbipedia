@@ -2,25 +2,31 @@
 +$  id  @
 +$  txt  @t
 +$  name  @t
++$  link
+  $:  from=id
+      to=id
+  ==
 +$  zettel
   $:  =name
       =txt
-      :: =links
-      :: tags=(list tag)
+      tags=@t
   ==
 +$  action
   $%  [%add =id =txt]
       [%edit =id =txt]
       [%del =id]
   ==
-+$  entry  [=id =txt]
++$  entry  [=id =zettel]
++$  elink  [=id =link]
 +$  logged  (pair @ action)
 +$  update
   %+  pair  @
   $%  action
+      [%lnks list=(list elink)]
       [%zttl list=(list entry)]
       [%logs list=(list logged)]
   ==
-+$  journal  ((mop id txt) gth)
++$  nodes  ((mop id zettel) gth)
++$  links  ((mop id link) gth)
 +$  log  ((mop @ action) lth)
 --

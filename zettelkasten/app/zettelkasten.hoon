@@ -4,9 +4,10 @@
 +$  versioned-state
     $%  state-0
     ==
-+$  state-0  [%0 =journal =log]
++$  state-0  [%0 =nodes =log =links]
 +$  card  card:agent:gall
-++  j-orm  ((on id txt) gth)
+++  z-orm  ((on id zettel) gth)
+++  link-orm  ((on id link) gth)
 ++  log-orm  ((on @ action) lth)
 ++  unique-time
   |=  [=time =log]
@@ -53,16 +54,18 @@
     ^-  _state
     ?-    -.act
         %add
-      ?<  (has:j-orm journal id.act)
-      state(journal (put:j-orm journal id.act txt.act))
+      ?<  (has:z-orm nodes id.act)
+      =/  =zettel  [txt.act txt.act txt.act]
+      state(nodes (put:z-orm nodes id.act zettel))
     ::
         %edit
-      ?>  (has:j-orm journal id.act)
-      state(journal (put:j-orm journal id.act txt.act))
+      ?>  (has:z-orm nodes id.act)
+      =/  =zettel  [txt.act txt.act txt.act]
+      state(nodes (put:z-orm nodes id.act zettel))
     ::
         %del
-      ?>  (has:j-orm journal id.act)
-      state(journal +:(del:j-orm journal id.act))
+      ?>  (has:z-orm nodes id.act)
+      state(nodes +:(del:z-orm nodes id.act))
     ==
   --
 ::
@@ -80,19 +83,27 @@
   ?>  (team:title our.bowl src.bowl)
   =/  now=@  (unm:chrono:userlib now.bowl)
   ?+    path  (on-peek:def path)
+      [%x %links *]
+    ?+    t.t.path  (on-peek:def path)
+        [%all ~]
+      :^  ~  ~  %zettelkasten-update
+      !>  ^-  update
+      [now %lnks (tap:link-orm links)]
+    ==
+  ::
       [%x %entries *]
     ?+    t.t.path  (on-peek:def path)
         [%all ~]
       :^  ~  ~  %zettelkasten-update
       !>  ^-  update
-      [now %zttl (tap:j-orm journal)]
+      [now %zttl (tap:z-orm nodes)]
     ::
         [%before @ @ ~]
       =/  before=@  (rash i.t.t.t.path dem)
       =/  max=@  (rash i.t.t.t.t.path dem)
       :^  ~  ~  %zettelkasten-update
       !>  ^-  update
-      [now %zttl (tab:j-orm journal `before max)]
+      [now %zttl (tab:z-orm nodes `before max)]
     ::
         [%between @ @ ~]
       =/  start=@
@@ -101,7 +112,7 @@
       =/  end=@  (add 1 (rash i.t.t.t.t.path dem))
       :^  ~  ~  %zettelkasten-update
       !>  ^-  update
-      [now %zttl (tap:j-orm (lot:j-orm journal `end `start))]
+      [now %zttl (tap:z-orm (lot:z-orm nodes `end `start))]
     ==
   ::
       [%x %updates *]
