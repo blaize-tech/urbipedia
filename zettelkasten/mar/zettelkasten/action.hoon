@@ -1,5 +1,5 @@
 /-  *zettelkasten
-/+  *zettelkasten
+/+  *decode-json
 |_  act=action
 ++  grow
   |%

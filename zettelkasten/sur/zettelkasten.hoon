@@ -1,20 +1,25 @@
 |%
 +$  id  @
-+$  txt  @t
++$  content  @t
 +$  name  @t
++$  tags  @t
 +$  link
   $:  from=id
       to=id
   ==
 +$  zettel
   $:  =name
-      =txt
-      tags=@t
+      =content
+      =tags
   ==
 +$  action
-  $%  [%add =id =txt]
-      [%edit =id =txt]
-      [%del =id]
+  $%  [%create-node =name]
+      [%create-link =link]
+      [%delete-node =id]
+      [%delete-link =id]
+      [%rename-node =id =name]
+      [%update-content =id =content]
+      [%update-tags =id =tags]
   ==
 +$  entry  [=id =zettel]
 +$  elink  [=id =link]
@@ -22,9 +27,11 @@
 +$  update
   %+  pair  @
   $%  action
-      [%lnks list=(list elink)]
-      [%zttl list=(list entry)]
+      [%zttls list=(list entry)]
       [%logs list=(list logged)]
+      [%lnks list=(list elink)]
+      [%lnk lnk=link]
+      [%zttl zttl=zettel]
   ==
 +$  nodes  ((mop id zettel) gth)
 +$  links  ((mop id link) gth)

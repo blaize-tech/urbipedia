@@ -1,5 +1,5 @@
 /-  *zettelkasten
-/+  *zettelkasten
+/+  *encode-json
 |_  upd=update
 ++  grow
   |%

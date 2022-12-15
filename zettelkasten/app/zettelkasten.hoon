@@ -53,19 +53,52 @@
     |=  act=action
     ^-  _state
     ?-    -.act
-        %add
-      ?<  (has:z-orm nodes id.act)
-      =/  =zettel  [txt.act txt.act txt.act]
-      state(nodes (put:z-orm nodes id.act zettel))
+        %create-node
+      =/  =id
+        =/  rng  ~(. og eny.bowl)
+        |-
+        =^  n  rng  (rads:rng (bex 256))
+        ?.  (has:z-orm nodes n)
+          n
+        $(rng rng)
+      =/  =zettel  [name.act name.act name.act]
+      state(nodes (put:z-orm nodes id zettel))
     ::
-        %edit
-      ?>  (has:z-orm nodes id.act)
-      =/  =zettel  [txt.act txt.act txt.act]
-      state(nodes (put:z-orm nodes id.act zettel))
+        %create-link
+      =/  =id
+        =/  rng  ~(. og eny.bowl)
+        |-
+        =^  n  rng  (rads:rng (bex 256))
+        ?.  (has:link-orm links n)
+          n
+        $(rng rng)
+      state(links (put:link-orm links id link.act))
     ::
-        %del
+        %delete-node
       ?>  (has:z-orm nodes id.act)
       state(nodes +:(del:z-orm nodes id.act))
+    ::
+        %delete-link
+      ?>  (has:link-orm links id.act)
+      state(links +:(del:link-orm links id.act))
+    ::
+        %rename-node
+      ?>  (has:z-orm nodes id.act)
+      =/  old=zettel  (got:z-orm nodes id.act)
+      =/  new=zettel  [name.act content.old tags.old]
+      state(nodes (put:z-orm nodes id.act new))
+    ::
+        %update-content
+      ?>  (has:z-orm nodes id.act)
+      =/  old=zettel  (got:z-orm nodes id.act)
+      =/  new=zettel  [name.old content.act tags.old]
+      state(nodes (put:z-orm nodes id.act new))
+    ::
+        %update-tags
+      ?>  (has:z-orm nodes id.act)
+      =/  old=zettel  (got:z-orm nodes id.act)
+      =/  new=zettel  [name.old content.old tags.act]
+      state(nodes (put:z-orm nodes id.act new))
     ==
   --
 ::
@@ -83,36 +116,25 @@
   ?>  (team:title our.bowl src.bowl)
   =/  now=@  (unm:chrono:userlib now.bowl)
   ?+    path  (on-peek:def path)
-      [%x %links *]
-    ?+    t.t.path  (on-peek:def path)
-        [%all ~]
-      :^  ~  ~  %zettelkasten-update
-      !>  ^-  update
-      [now %lnks (tap:link-orm links)]
-    ==
-  ::
       [%x %entries *]
     ?+    t.t.path  (on-peek:def path)
         [%all ~]
       :^  ~  ~  %zettelkasten-update
       !>  ^-  update
-      [now %zttl (tap:z-orm nodes)]
+      [now %zttls (tap:z-orm nodes)]
     ::
         [%before @ @ ~]
       =/  before=@  (rash i.t.t.t.path dem)
       =/  max=@  (rash i.t.t.t.t.path dem)
       :^  ~  ~  %zettelkasten-update
       !>  ^-  update
-      [now %zttl (tab:z-orm nodes `before max)]
+      [now %zttls (tab:z-orm nodes `before max)]
     ::
-        [%between @ @ ~]
-      =/  start=@
-        =+  (rash i.t.t.t.path dem)
-        ?:(=(0 -) - (sub - 1))
-      =/  end=@  (add 1 (rash i.t.t.t.t.path dem))
+        [%ids @ ~]
+      =/  =id  (rash i.t.t.t.path dem)
       :^  ~  ~  %zettelkasten-update
       !>  ^-  update
-      [now %zttl (tap:z-orm (lot:z-orm nodes `end `start))]
+      [now %zttl (need (get:z-orm nodes id))]
     ==
   ::
       [%x %updates *]
@@ -128,6 +150,21 @@
       !>  ^-  update
       [now %logs (tap:log-orm (lot:log-orm log `since ~))]
     ==
+  ::
+      [%x %links *]
+    ?+    t.t.path  (on-peek:def path)
+        [%all ~]
+      :^  ~  ~  %zettelkasten-update
+      !>  ^-  update
+      [now %lnks (tap:link-orm links)]
+    ::
+        [%ids @ ~]
+      =/  =id  (rash i.t.t.t.path dem)
+      :^  ~  ~  %zettelkasten-update
+      !>  ^-  update
+      [now %lnk (need (get:link-orm links id))]
+    ==
+  ::
   ==
 ::
 ++  on-leave  on-leave:def
