@@ -140,23 +140,32 @@ function updateTagsToFile(id: string, tags: Array<string>) {
             allTags.push(tag);
         }
     });
-    updateGraphData().catch(console.error);
 }
 
 async function updateNode(data: any) {
-    if (data.action == "create") {
-        createFile(String(data.id));
+    if ("create" in data) {
+        const {create} = data;
+        createFile(String(create.id));
+        const fileName = await urbitGetFileName(String(create.id));
+        renameFile(create.id, fileName);
+        const content = await urbitGetFileContent(String(create.id));
+        updateFile(create.id, content);
+        const tagsAll = await urbitGetTags(String(create.id));
+        updateTagsToFile(create.id, tagsAll);
+    } else if ("change" in data) {
+        const {change} = data;
+        const fileName = await urbitGetFileName(String(change.id));
+        renameFile(change.id, fileName);
+        const content = await urbitGetFileContent(String(change.id));
+        updateFile(change.id, content);
+        const tagsAll = await urbitGetTags(String(change.id));
+        updateTagsToFile(change.id, tagsAll);
+    } else if ("delete" in data) {
+        deleteFile(data.delete.id);
+    } else {
+        throw new Error("unsupported");
     }
-    if (data.action == "create" || data.action == "change") {
-        const fileName = await urbitGetFileName(String(data.id));
-        renameFile(data.id, fileName);
-        const content = await urbitGetFileContent(String(data.id));
-        updateFile(data.id, content);
-        const tagsAll = await urbitGetTags(String(data.id));
-        updateTagsToFile(data.id, tagsAll);
-    } else if (data.action == "delete") {
-        deleteFile(data.id);
-    }
+    updateGraphData().catch(console.error);
 }
 
 function createLinkFileToFile(linkId: string, fromId: string, toId: string) {
@@ -178,11 +187,12 @@ function deleteLinkFileToFile(linkId: string) {
 }
 
 async function updateLink(data: any) {
-    if (data.action == "create") {
-        createLinkFileToFile(data["link-id"], data["from-id"], data["to-id"]);
-    } else if (data.action == "delete") {
-        deleteLinkFileToFile(data["link-id"]);
-    } else if (data.action == "change") {
+    if ("create" in data) {
+        const {create} = data;
+        createLinkFileToFile(create["link-id"], create["from-id"], create["to-id"]);
+    } else if ("delete" in data) {
+        deleteLinkFileToFile(data.delete["link-id"]);
+    } else {
         throw new Error("unsupported");
     }
     updateGraphData().catch(console.error);
