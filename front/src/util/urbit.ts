@@ -261,9 +261,9 @@ export function connectUrbitClient(listener: UrbitListener): UrbitClientWrapper 
     urbitClientWrapper.urbit = new Urbit("");
     (window as any).urbit = urbitClientWrapper.urbit;
 
-    if (!(window as any)?.ship) {
-        throw new Error("window.ship not defined");
-    }
+    // if (!(window as any)?.ship) {
+    //     throw new Error("window.ship not defined");
+    // }
     
     urbitClientWrapper.urbit.ship = (window as any)?.ship;
     urbitClientWrapper.urbit.onOpen = () => {
