@@ -472,6 +472,7 @@ export function GraphPage() {
       try {
         tryInitUrbit();
       } catch (e) {
+        console.error(e);
         setTimeout(loop, 5000);
       }
     };
