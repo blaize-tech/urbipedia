@@ -142,26 +142,38 @@ function updateTagsToFile(id: string, tags: Array<string>) {
     });
 }
 
-async function updateNode(data: any) {
-    if ("create" in data) {
-        const {create} = data;
-        createFile(String(create.id));
-        const fileName = await urbitGetFileName(String(create.id));
-        renameFile(create.id, fileName);
-        const content = await urbitGetFileContent(String(create.id));
-        updateFile(create.id, content);
-        const tagsAll = await urbitGetTags(String(create.id));
-        updateTagsToFile(create.id, tagsAll);
-    } else if ("change" in data) {
-        const {change} = data;
-        const fileName = await urbitGetFileName(String(change.id));
-        renameFile(change.id, fileName);
-        const content = await urbitGetFileContent(String(change.id));
-        updateFile(change.id, content);
-        const tagsAll = await urbitGetTags(String(change.id));
-        updateTagsToFile(change.id, tagsAll);
-    } else if ("delete" in data) {
-        deleteFile(data.delete.id);
+async function handleUpdateUrbit(event: any) {
+    console.log('event', JSON.stringify(event, null, 4));
+    if (
+        "create-node" in event
+        || "update-content" in event
+        || "rename-node" in event
+        || "create-node" in event
+        || "update-tags" in event
+    ) {
+        const data = event["create-node"]
+            || event["update-content"]
+            || event["rename-node"]
+            || event["create-node"]
+            || event["update-tags"];
+        if ("create-node" in event) {
+            createFile(String(data.id));
+        }
+        const fileName = await urbitGetFileName(String(data.id));
+        renameFile(data.id, fileName);
+        const content = await urbitGetFileContent(String(data.id));
+        updateFile(data.id, content);
+        const tagsAll = await urbitGetTags(String(data.id));
+        updateTagsToFile(data.id, tagsAll);
+    } else if ("delete-node" in event) {
+        const data = event["delete-node"];
+        deleteFile(data.id);
+    } else if ("create-link" in event) {
+        const data = event["create-link"];
+        createLinkFileToFile(data["link-id"], data["from-id"], data["to-id"]);
+    } else if ("delete-link" in event) {
+        const data = event["delete-link"];
+        deleteLinkFileToFile(data.id);
     } else {
         throw new Error("unsupported");
     }
@@ -186,18 +198,6 @@ function deleteLinkFileToFile(linkId: string) {
     }
 }
 
-async function updateLink(data: any) {
-    if ("create" in data) {
-        const {create} = data;
-        createLinkFileToFile(create["link-id"], create["from-id"], create["to-id"]);
-    } else if ("delete" in data) {
-        deleteLinkFileToFile(data.delete["link-id"]);
-    } else {
-        throw new Error("unsupported");
-    }
-    updateGraphData().catch(console.error);
-}
-
 async function watchGraphWithUrbit() {
     if (!urbitClientWrapper
         || !urbitClientWrapper.urbit
@@ -207,15 +207,8 @@ async function watchGraphWithUrbit() {
     try {
         await urbitClientWrapper.urbit.subscribe({
             app: "zettelkasten",
-            path: "/update-nodes",
-            event: updateNode,
-            err: () => console.error("Subscription rejected"),
-            quit: () => console.error("Kicked from subscription"),
-        });
-        await urbitClientWrapper.urbit.subscribe({
-            app: "zettelkasten",
-            path: "/update-links",
-            event: updateLink,
+            path: "/updates",
+            event: handleUpdateUrbit,
             err: () => console.error("Subscription rejected"),
             quit: () => console.error("Kicked from subscription"),
         });
@@ -256,7 +249,8 @@ async function getFullGraph() {
 
 export function connectUrbitClient(listener: UrbitListener): UrbitClientWrapper {
     urbitClientWrapper.listener = listener;
-    urbitClientWrapper.connectionState = UrbitConnectionState.UCS_NOT_CONNECTED;
+    // urbitClientWrapper.connectionState = UrbitConnectionState.UCS_NOT_CONNECTED;
+    urbitClientWrapper.connectionState = UrbitConnectionState.UCS_CONNECTED;
 
     urbitClientWrapper.urbit = new Urbit("");
     (window as any).urbit = urbitClientWrapper.urbit;
@@ -264,7 +258,7 @@ export function connectUrbitClient(listener: UrbitListener): UrbitClientWrapper 
     // if (!(window as any)?.ship) {
     //     throw new Error("window.ship not defined");
     // }
-    
+
     urbitClientWrapper.urbit.ship = (window as any)?.ship;
     urbitClientWrapper.urbit.onOpen = () => {
         urbitClientWrapper.connectionState = UrbitConnectionState.UCS_CONNECTED;
@@ -308,7 +302,7 @@ export async function urbitCreateFile(name: string) {
         urbitClientWrapper.urbit.poke({
             app: "zettelkasten",
             mark: "zettelkasten-action",
-            json: {"create-file": {name: name}},
+            json: {"create-node": {name: name}},
             onSuccess: () => resolve({status: "ok"}),
             onError: () => reject("can't create file"),
         });
@@ -345,7 +339,7 @@ export async function urbitUpdateFile(id: string, text: string) {
         urbitClientWrapper.urbit.poke({
             app: "zettelkasten",
             mark: "zettelkasten-action",
-            json: {"update-file": {id: id, text: text}},
+            json: {"update-node": {id: id, text: text}},
             onSuccess: () => resolve({status: "ok"}),
             onError: () => reject("can't update file"),
         });
@@ -363,7 +357,7 @@ export async function urbitRenameFile(id: string, name: string) {
         urbitClientWrapper.urbit.poke({
             app: "zettelkasten",
             mark: "zettelkasten-action",
-            json: {"rename-file": {id: id, name: name}},
+            json: {"rename-node": {id: id, name: name}},
             onSuccess: () => resolve({status: "ok"}),
             onError: () => reject("can't update name for file"),
         });
@@ -417,7 +411,7 @@ export async function urbitDeleteFile(id: string) {
         urbitClientWrapper.urbit.poke({
             app: "zettelkasten",
             mark: "zettelkasten-action",
-            json: {"delete-file": {id: id}},
+            json: {"delete-node": {id: id}},
             onSuccess: () => resolve({status: "ok"}),
             onError: () => reject("can't delete file"),
         });
