@@ -251,16 +251,16 @@ export function connectUrbitClient(listener: UrbitListener): UrbitClientWrapper 
     urbitClientWrapper.urbit = new Urbit("");
     (window as any).urbit = urbitClientWrapper.urbit;
 
-    // if (!(window as any)?.ship) {
-    //     throw new Error("window.ship not defined");
-    // }
-
-    watchGraphWithUrbit().catch(console.error);
-    getFullGraph().catch(console.error);
+    if (!(window as any)?.ship) {
+        throw new Error("window.ship not defined");
+    }
 
     urbitClientWrapper.urbit.ship = (window as any)?.ship;
     urbitClientWrapper.urbit.onOpen = () => {
         urbitClientWrapper.connectionState = UrbitConnectionState.UCS_CONNECTED;
+        getFullGraph().finally(() => {
+            watchGraphWithUrbit().catch(console.error);
+        }).catch(console.error);
     };
     urbitClientWrapper.urbit.onRetry = () => {
         urbitClientWrapper.connectionState = UrbitConnectionState.UCS_NOT_CONNECTED;
@@ -269,6 +269,34 @@ export function connectUrbitClient(listener: UrbitListener): UrbitClientWrapper 
         urbitClientWrapper.connectionState = UrbitConnectionState.UCS_HAS_ERROR;
         console.error('urbit error', err);
     };
+
+    const loop = () => {
+        try {
+            console.log("loop");
+            const path = `/entries/ids/${0}`;
+            if (urbitClientWrapper.urbit) {
+                urbitClientWrapper.urbit
+                    .scry({
+                        app: "zettelkasten",
+                        path: path,
+                    })
+                    .then(
+                        (data) => {
+                            console.log('urbitGetFileEntries data', JSON.stringify(data, null, 4));
+                        },
+                        (err) => {
+                            throw new Error(err);
+                        }
+                    );
+            } else {
+                throw new Error("sfsd");
+            }
+        } catch (e) {
+            console.error(e);
+            setTimeout(loop, 1000);
+        }
+    };
+    // loop();
 
     setTimeout(() => {
         const message = {
