@@ -159,12 +159,10 @@ async function handleUpdateUrbit(event: any) {
         if ("create-node" in event) {
             createFile(String(data.id));
         }
-        const fileName = await urbitGetFileName(String(data.id));
-        renameFile(data.id, fileName);
-        const content = await urbitGetFileContent(String(data.id));
-        updateFile(data.id, content);
-        const tagsAll = await urbitGetTags(String(data.id));
-        updateTagsToFile(data.id, tagsAll);
+        const nodeEntries = await urbitGetFileEntries(String(data.id));
+        renameFile(data.id, nodeEntries.name);
+        updateFile(data.id, nodeEntries.content);
+        updateTagsToFile(data.id, nodeEntries.tags.split("#$"));
     } else if ("delete-node" in event) {
         const data = event["delete-node"];
         deleteFile(data.id);
@@ -230,12 +228,10 @@ async function getFullGraph() {
         const nodesIds = await urbitGetNodes();
         nodesIds.map(async (id) => {
             createFile(id);
-            const fileName = await urbitGetFileName(id);
-            renameFile(id, fileName);
-            const content = await urbitGetFileContent(id);
-            updateFile(id, content);
-            const tagsAll = await urbitGetTags(id);
-            updateTagsToFile(id, tagsAll);
+            const nodeEntries = await urbitGetFileEntries(String(id));
+            renameFile(id, nodeEntries.name);
+            updateFile(id, nodeEntries.content);
+            updateTagsToFile(id, nodeEntries.tags.split("#$"));
         });
         const linksIds = await urbitGetLinks();
         linksIds.map(async (id) => {
@@ -259,12 +255,12 @@ export function connectUrbitClient(listener: UrbitListener): UrbitClientWrapper 
     //     throw new Error("window.ship not defined");
     // }
 
+    watchGraphWithUrbit().catch(console.error);
+    getFullGraph().catch(console.error);
+
     urbitClientWrapper.urbit.ship = (window as any)?.ship;
     urbitClientWrapper.urbit.onOpen = () => {
         urbitClientWrapper.connectionState = UrbitConnectionState.UCS_CONNECTED;
-        getFullGraph().finally(() => {
-            watchGraphWithUrbit().catch(console.error);
-        }).catch(console.error);
     };
     urbitClientWrapper.urbit.onRetry = () => {
         urbitClientWrapper.connectionState = UrbitConnectionState.UCS_NOT_CONNECTED;
@@ -418,7 +414,7 @@ export async function urbitDeleteFile(id: string) {
     });
 }
 
-export function urbitGetFileContent(id: string): Promise<string> {
+export function urbitGetFileEntries(id: string): Promise<any> {
     return new Promise((resolve, reject) => {
         if (!urbitClientWrapper
             || !urbitClientWrapper.urbit
@@ -427,7 +423,7 @@ export function urbitGetFileContent(id: string): Promise<string> {
             throw "error";
         }
 
-        const path = `/files/content/${id}`;
+        const path = `/entries/content/${id}`;
         urbitClientWrapper.urbit
             .scry({
                 app: "zettelkasten",
@@ -435,59 +431,8 @@ export function urbitGetFileContent(id: string): Promise<string> {
             })
             .then(
                 (data) => {
-                    resolve(data.content);
-                },
-                (err) => {
-                    reject(err);
-                }
-            );
-    });
-}
-
-export function urbitGetFileName(id: string): Promise<string> {
-    return new Promise((resolve, reject) => {
-        if (!urbitClientWrapper
-            || !urbitClientWrapper.urbit
-            || urbitClientWrapper.connectionState !== UrbitConnectionState.UCS_CONNECTED) {
-            reject("not connected to urbit");
-            throw "error";
-        }
-
-        const path = `/files/name/${id}`;
-        urbitClientWrapper.urbit
-            .scry({
-                app: "zettelkasten",
-                path: path,
-            })
-            .then(
-                (data) => {
-                    resolve(data.name);
-                },
-                (err) => {
-                    reject(err);
-                }
-            );
-    });
-}
-
-export function urbitGetTags(id: string): Promise<Array<string>> {
-    return new Promise((resolve, reject) => {
-        if (!urbitClientWrapper
-            || !urbitClientWrapper.urbit
-            || urbitClientWrapper.connectionState !== UrbitConnectionState.UCS_CONNECTED) {
-            reject("not connected to urbit");
-            throw "error";
-        }
-
-        const path = `/files/tags/${id}`;
-        urbitClientWrapper.urbit
-            .scry({
-                app: "zettelkasten",
-                path: path,
-            })
-            .then(
-                (data) => {
-                    resolve(data.tags.split("#$"));
+                    console.log('urbitGetFileEntries data', JSON.stringify(data, null, 4));
+                    resolve(data);
                 },
                 (err) => {
                     reject(err);
@@ -505,7 +450,7 @@ export function urbitGetNodes(): Promise<Array<string>> {
             throw "error";
         }
 
-        const path = `/files/ids/`;
+        const path = `/entries/ids/`;
         urbitClientWrapper.urbit
             .scry({
                 app: "zettelkasten",
