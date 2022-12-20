@@ -1,6 +1,7 @@
 |%
 +$  id  @
 +$  content  @t
++$  txt  @t
 +$  name  @t
 +$  tags  @t
 +$  link
@@ -20,6 +21,7 @@
       [%rename-node =id =name]
       [%update-content =id =content]
       [%update-tags =id =tags]
+      [%add =id =txt]
   ==
 +$  entry  [=id =zettel]
 +$  elink  [=id =link]
