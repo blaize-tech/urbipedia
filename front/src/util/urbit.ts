@@ -142,7 +142,7 @@ function updateTagsToFile(id: string, tags: Array<string>) {
     });
 }
 
-async function handleUpdateUrbit(event: any) {
+async function handleUpdateUrbit(event: any) {  // TODO
     console.log('event', JSON.stringify(event, null, 4));
     if (
         "create-node" in event
@@ -451,7 +451,7 @@ export function urbitGetFileEntries(id: string): Promise<any> {
             throw "error";
         }
 
-        const path = `/entries/content/${id}`;
+        const path = `/entries/ids/${id}`;
         urbitClientWrapper.urbit
             .scry({
                 app: "zettelkasten",
@@ -478,7 +478,7 @@ export function urbitGetNodes(): Promise<Array<string>> {
             throw "error";
         }
 
-        const path = `/entries/ids/`;
+        const path = `/entries/all/`;
         urbitClientWrapper.urbit
             .scry({
                 app: "zettelkasten",
@@ -504,7 +504,7 @@ export function urbitGetLinks(): Promise<Array<string>> {
             throw "error";
         }
 
-        const path = `/links/ids/`;
+        const path = `/links/all/`;
         urbitClientWrapper.urbit
             .scry({
                 app: "zettelkasten",

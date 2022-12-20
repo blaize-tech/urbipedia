@@ -3,7 +3,7 @@
 ++  dejs-action
   =,  dejs:format
   |=  jon=json
-  ^-  action
+  |^  ^-  action
   %.  jon
   %-  of
   :~  [%create-node (ot ~[name+so])]
@@ -13,6 +13,9 @@
       [%rename-node (ot ~[id+ni name+so])]
       [%update-content (ot ~[id+ni content+so])]
       [%update-tags (ot ~[id+ni tags+so])]
+      [%add (ot ~[id+ni txt+so])]
   ==
   ++  de-link  (ot ~[from+ni to+ni])
+  --
 --
+
