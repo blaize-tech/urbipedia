@@ -99,11 +99,6 @@
       =/  old=zettel  (got:z-orm nodes id.act)
       =/  new=zettel  [name.old content.old tags.act]
       state(nodes (put:z-orm nodes id.act new))
-    ::
-        %add
-      ?<  (has:z-orm nodes id.act)
-      =/  =zettel  [txt.act txt.act txt.act]
-      state(nodes (put:z-orm nodes id.act zettel))
     ==
   --
 ::

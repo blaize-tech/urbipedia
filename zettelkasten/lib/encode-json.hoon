@@ -79,14 +79,6 @@
           :-  'update-tags'
           (pairs ~[['id' (numb id.q.lgd)] ['tags' s+tags.q.lgd]])
       ==
-        %add
-      %-  pairs
-      :~  ['time' (numb p.lgd)]
-          :-  'add'
-          %-  pairs
-          :~  ['id' (numb id.q.lgd)]
-              ['txt' s+txt.q.lgd]
-      ==  ==
     ==
   --
 --
