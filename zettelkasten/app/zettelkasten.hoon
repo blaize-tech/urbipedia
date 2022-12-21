@@ -27,7 +27,11 @@
 +*  this  .
     def   ~(. (default-agent this %|) bowl)
     io    ~(. agentio bowl)
-++  on-init  on-init:def
+++  on-init
+  ^-  (quip card _this)
+  :_  this
+  :~  (~(arvo pass:io /bind) %e %connect `/'updates' %zettelkasten)
+  ==
 ++  on-save
   ^-  vase
   !>(state)
@@ -39,19 +43,17 @@
 ::
 ++  on-poke
   |=  [=mark =vase]
-  ^-  (quip card _this)
-  |^
+  |^  ^-  (quip card _this)
   ?>  (team:title our.bowl src.bowl)
-  ?.  ?=(%zettelkasten-action mark)  (on-poke:def mark vase)
-  =/  now=@  (unique-time now.bowl log)
-  =/  act  !<(action vase)
-  =.  state  (poke-action act)
-  :_  this(log (put:log-orm log now act))
-  ~[(fact:io zettelkasten-update+!>(`update`[now act]) ~[/updates])]
-  ::
+  =^  cards  state
+    ?+  mark  (on-poke:def mark vase)
+      %zettelkasten-action  (poke-action !<(action vase))
+    ==
+  [cards this]
   ++  poke-action
     |=  act=action
-    ^-  _state
+    ^-  (quip card _state)
+    =/  now=@  (unique-time now.bowl log)
     ?-    -.act
         %create-node
       =/  =id
@@ -62,7 +64,9 @@
           n
         $(rng rng)
       =/  =zettel  [name.act name.act name.act]
-      state(nodes (put:z-orm nodes id zettel))
+      :_  state(nodes (put:z-orm nodes id zettel))
+      :~  (fact:io zettelkasten-update+!>(`update`[now [%zttl zettel]]) ~[/updates])
+      ==
     ::
         %create-link
       =/  =id
@@ -72,33 +76,45 @@
         ?.  (has:link-orm links n)
           n
         $(rng rng)
-      state(links (put:link-orm links id link.act))
+      :_  state(links (put:link-orm links id link.act))
+      :~  (fact:io zettelkasten-update+!>(`update`[now [%zttl ['' '' '']]]) ~[/updates])
+      ==
     ::
         %delete-node
       ?>  (has:z-orm nodes id.act)
-      state(nodes +:(del:z-orm nodes id.act))
+      :_  state(nodes +:(del:z-orm nodes id.act))
+      :~  (fact:io zettelkasten-update+!>(`update`[now [%zttl ['' '' '']]]) ~[/updates])
+      ==
     ::
         %delete-link
       ?>  (has:link-orm links id.act)
-      state(links +:(del:link-orm links id.act))
+      :_  state(links +:(del:link-orm links id.act))
+      :~  (fact:io zettelkasten-update+!>(`update`[now [%zttl ['' '' '']]]) ~[/updates])
+      ==
     ::
         %rename-node
       ?>  (has:z-orm nodes id.act)
       =/  old=zettel  (got:z-orm nodes id.act)
       =/  new=zettel  [name.act content.old tags.old]
-      state(nodes (put:z-orm nodes id.act new))
+      :_  state(nodes (put:z-orm nodes id.act new))
+      :~  (fact:io zettelkasten-update+!>(`update`[now [%zttl ['' '' '']]]) ~[/updates])
+      ==
     ::
         %update-content
       ?>  (has:z-orm nodes id.act)
       =/  old=zettel  (got:z-orm nodes id.act)
       =/  new=zettel  [name.old content.act tags.old]
-      state(nodes (put:z-orm nodes id.act new))
+      :_  state(nodes (put:z-orm nodes id.act new))
+      :~  (fact:io zettelkasten-update+!>(`update`[now [%zttl ['' '' '']]]) ~[/updates])
+      ==
     ::
         %update-tags
       ?>  (has:z-orm nodes id.act)
       =/  old=zettel  (got:z-orm nodes id.act)
       =/  new=zettel  [name.old content.old tags.act]
-      state(nodes (put:z-orm nodes id.act new))
+      :_  state(nodes (put:z-orm nodes id.act new))
+      :~  (fact:io zettelkasten-update+!>(`update`[now [%zttl ['' '' '']]]) ~[/updates])
+      ==
     ==
   --
 ::
