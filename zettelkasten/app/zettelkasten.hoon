@@ -65,7 +65,7 @@
         $(rng rng)
       =/  =zettel  [name.act name.act name.act]
       :_  state(nodes (put:z-orm nodes id zettel))
-      :~  (fact:io zettelkasten-update+!>(`update`[now [%zttl zettel]]) ~[/updates])
+      :~  (fact:io zettelkasten-update+!>(`update`[now [%node id]]) ~[/updates])
       ==
     ::
         %create-link

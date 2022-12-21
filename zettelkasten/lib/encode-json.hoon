@@ -16,6 +16,8 @@
     (pairs ~[['time' (numb p.upd)] ['link' (link lnk.q.upd)]])
       %zttl
     (pairs ~[['time' (numb p.upd)] ['zettel' (zettel zttl.q.upd)]])
+      %node
+    (pairs ~[['time' (numb p.upd)] ['id' (en-id id.q.upd)]])
   ==
   ++  en-id
     |=  =id

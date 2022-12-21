@@ -32,6 +32,7 @@
       [%lnks list=(list id)]
       [%lnk lnk=link]
       [%zttl zttl=zettel]
+      [%node =id]
   ==
 +$  nodes  ((mop id zettel) gth)
 +$  links  ((mop id link) gth)
