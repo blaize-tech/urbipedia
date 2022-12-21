@@ -8,16 +8,6 @@
 +$  card  card:agent:gall
 ++  z-orm  ((on id zettel) gth)
 ++  link-orm  ((on id link) gth)
-++  log-orm  ((on @ action) lth)
-++  unique-time
-  |=  [=time =log]
-  ^-  @
-  =/  unix-ms=@
-    (unm:chrono:userlib time)
-  |-
-  ?.  (has:log-orm log unix-ms)
-    unix-ms
-  $(time (add unix-ms 1))
 --
 %-  agent:dbug
 =|  state-0
@@ -53,43 +43,42 @@
   ++  poke-action
     |=  act=action
     ^-  (quip card _state)
-    =/  now=@  (unique-time now.bowl log)
     ?-    -.act
         %create-node
       =/  =id
         =/  rng  ~(. og eny.bowl)
         |-
-        =^  n  rng  (rads:rng (bex 256))
+        =^  n  rng  (rads:rng (bex 32))
         ?.  (has:z-orm nodes n)
           n
         $(rng rng)
       =/  =zettel  [name.act name.act name.act]
       :_  state(nodes (put:z-orm nodes id zettel))
-      :~  (fact:io zettelkasten-update+!>(`update`[now [%node id]]) ~[/updates])
+      :~  (fact:io zettelkasten-update+!>(`update`[%node id]) ~[/updates])
       ==
     ::
         %create-link
       =/  =id
         =/  rng  ~(. og eny.bowl)
         |-
-        =^  n  rng  (rads:rng (bex 256))
+        =^  n  rng  (rads:rng (bex 32))
         ?.  (has:link-orm links n)
           n
         $(rng rng)
       :_  state(links (put:link-orm links id link.act))
-      :~  (fact:io zettelkasten-update+!>(`update`[now [%zttl ['' '' '']]]) ~[/updates])
+      :~  (fact:io zettelkasten-update+!>(`update`[%zttl ['' '' '']]) ~[/updates])
       ==
     ::
         %delete-node
       ?>  (has:z-orm nodes id.act)
       :_  state(nodes +:(del:z-orm nodes id.act))
-      :~  (fact:io zettelkasten-update+!>(`update`[now [%zttl ['' '' '']]]) ~[/updates])
+      :~  (fact:io zettelkasten-update+!>(`update`[%zttl ['' '' '']]) ~[/updates])
       ==
     ::
         %delete-link
       ?>  (has:link-orm links id.act)
       :_  state(links +:(del:link-orm links id.act))
-      :~  (fact:io zettelkasten-update+!>(`update`[now [%zttl ['' '' '']]]) ~[/updates])
+      :~  (fact:io zettelkasten-update+!>(`update`[%zttl ['' '' '']]) ~[/updates])
       ==
     ::
         %rename-node
@@ -97,7 +86,7 @@
       =/  old=zettel  (got:z-orm nodes id.act)
       =/  new=zettel  [name.act content.old tags.old]
       :_  state(nodes (put:z-orm nodes id.act new))
-      :~  (fact:io zettelkasten-update+!>(`update`[now [%zttl ['' '' '']]]) ~[/updates])
+      :~  (fact:io zettelkasten-update+!>(`update`[%zttl ['' '' '']]) ~[/updates])
       ==
     ::
         %update-content
@@ -105,7 +94,7 @@
       =/  old=zettel  (got:z-orm nodes id.act)
       =/  new=zettel  [name.old content.act tags.old]
       :_  state(nodes (put:z-orm nodes id.act new))
-      :~  (fact:io zettelkasten-update+!>(`update`[now [%zttl ['' '' '']]]) ~[/updates])
+      :~  (fact:io zettelkasten-update+!>(`update`[%zttl ['' '' '']]) ~[/updates])
       ==
     ::
         %update-tags
@@ -113,7 +102,7 @@
       =/  old=zettel  (got:z-orm nodes id.act)
       =/  new=zettel  [name.old content.old tags.act]
       :_  state(nodes (put:z-orm nodes id.act new))
-      :~  (fact:io zettelkasten-update+!>(`update`[now [%zttl ['' '' '']]]) ~[/updates])
+      :~  (fact:io zettelkasten-update+!>(`update`[%zttl ['' '' '']]) ~[/updates])
       ==
     ==
   --
@@ -130,20 +119,19 @@
   |=  =path
   ^-  (unit (unit cage))
   ?>  (team:title our.bowl src.bowl)
-  =/  now=@  (unm:chrono:userlib now.bowl)
   ?+    path  (on-peek:def path)
       [%x %entries *]
     ?+    t.t.path  (on-peek:def path)
         [%all ~]
       :^  ~  ~  %zettelkasten-update
       !>  ^-  update
-      [now %zttls (turn (tap:z-orm nodes) head)]
+      [%zttls (turn (tap:z-orm nodes) head)]
     ::
         [%ids @ ~]
       =/  =id  (rash i.t.t.t.path dem)
       :^  ~  ~  %zettelkasten-update
       !>  ^-  update
-      [now %zttl (need (get:z-orm nodes id))]
+      [%zttl (need (get:z-orm nodes id))]
     ==
   ::
       [%x %updates *]
@@ -151,7 +139,7 @@
         [%all ~]
       :^  ~  ~  %zettelkasten-update
       !>  ^-  update
-      [now %logs (tap:log-orm log)]
+      [%logs log]
     ==
   ::
       [%x %links *]
@@ -159,13 +147,13 @@
         [%all ~]
       :^  ~  ~  %zettelkasten-update
       !>  ^-  update
-      [now %lnks (turn (tap:link-orm links) head)]
+      [%lnks (turn (tap:link-orm links) head)]
     ::
         [%ids @ ~]
       =/  =id  (rash i.t.t.t.path dem)
       :^  ~  ~  %zettelkasten-update
       !>  ^-  update
-      [now %lnk (need (get:link-orm links id))]
+      [%lnk (need (get:link-orm links id))]
     ==
   ::
   ==

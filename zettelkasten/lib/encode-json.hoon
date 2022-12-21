@@ -5,19 +5,19 @@
   |=  upd=update
   ^-  json
   |^
-  ?+    -.q.upd  (logged upd)
+  ?+    -.upd  (logged upd)
       %zttls
-    (pairs ~[['time' (numb p.upd)] ['entries' a+(turn list.q.upd en-id)]])
+    (frond 'entries' a+(turn list.upd |=(a=@ (numb a))))
       %logs
-    (pairs ~[['time' (numb p.upd)] ['logs' a+(turn list.q.upd logged)]])
+    (frond 'logs' a+(turn list.upd logged))
       %lnks
-    (pairs ~[['time' (numb p.upd)] ['links' a+(turn list.q.upd en-id)]])
+    (frond 'links' a+(turn list.upd en-id))
       %lnk
-    (pairs ~[['time' (numb p.upd)] ['link' (link lnk.q.upd)]])
+    (frond 'link' (link lnk.upd))
       %zttl
-    (pairs ~[['time' (numb p.upd)] ['zettel' (zettel zttl.q.upd)]])
+    (frond 'zettel' (zettel zttl.upd))
       %node
-    (pairs ~[['time' (numb p.upd)] ['id' (en-id id.q.upd)]])
+    (frond 'id' (numb id.upd))
   ==
   ++  en-id
     |=  =id
@@ -42,49 +42,21 @@
   ++  logged
     |=  lgd=^logged
     ^-  json
-    ?-    -.q.lgd
+    ?-    -.lgd
         %create-node
-      %-  pairs
-      :~  ['time' (numb p.lgd)]
-          :-  'create-node'
-          (frond 'name' s+name.q.lgd)
-      ==
+      (frond 'create-node' (frond 'name' s+name.lgd))
         %create-link
-      %-  pairs
-      :~  ['time' (numb p.lgd)]
-          :-  'create-link'
-          (frond 'link' (link link.q.lgd))
-      ==
+      (frond 'create-link' (frond 'link' (link link.lgd)))
         %delete-node
-      %-  pairs
-      :~  ['time' (numb p.lgd)]
-          :-  'delete-node'
-          (frond 'id' (numb id.q.lgd))
-      ==
+      (frond 'delete-node' (frond 'id' (numb id.lgd)))
         %delete-link
-      %-  pairs
-      :~  ['time' (numb p.lgd)]
-          :-  'delete-link'
-          (frond 'id' (numb id.q.lgd))
-      ==
+      (frond 'delete-link' (frond 'id' (numb id.lgd)))
         %rename-node
-      %-  pairs
-      :~  ['time' (numb p.lgd)]
-          :-  'rename-node'
-          (pairs ~[['id' (numb id.q.lgd)] ['name' s+name.q.lgd]])
-      ==
+      (frond 'rename-node' (pairs ~[['id' (numb id.lgd)] ['name' s+name.lgd]]))
         %update-content
-      %-  pairs
-      :~  ['time' (numb p.lgd)]
-          :-  'update-node'
-          (pairs ~[['id' (numb id.q.lgd)] ['content' s+content.q.lgd]])
-      ==
+      (frond 'update-content' (pairs ~[['id' (numb id.lgd)] ['content' s+content.lgd]]))
         %update-tags
-      %-  pairs
-      :~  ['time' (numb p.lgd)]
-          :-  'update-tags'
-          (pairs ~[['id' (numb id.q.lgd)] ['tags' s+tags.q.lgd]])
-      ==
+      (frond 'update-tags' (pairs ~[['id' (numb id.lgd)] ['tags' s+tags.lgd]]))
     ==
   --
 --
