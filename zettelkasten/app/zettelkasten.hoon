@@ -121,14 +121,7 @@
         [%all ~]
       :^  ~  ~  %zettelkasten-update
       !>  ^-  update
-      [now %zttls (tap:z-orm nodes)]
-    ::
-        [%before @ @ ~]
-      =/  before=@  (rash i.t.t.t.path dem)
-      =/  max=@  (rash i.t.t.t.t.path dem)
-      :^  ~  ~  %zettelkasten-update
-      !>  ^-  update
-      [now %zttls (tab:z-orm nodes `before max)]
+      [now %zttls (turn (tap:z-orm nodes) head)]
     ::
         [%ids @ ~]
       =/  =id  (rash i.t.t.t.path dem)
@@ -143,12 +136,6 @@
       :^  ~  ~  %zettelkasten-update
       !>  ^-  update
       [now %logs (tap:log-orm log)]
-    ::
-        [%since @ ~]
-      =/  since=@  (rash i.t.t.t.path dem)
-      :^  ~  ~  %zettelkasten-update
-      !>  ^-  update
-      [now %logs (tap:log-orm (lot:log-orm log `since ~))]
     ==
   ::
       [%x %links *]
@@ -156,7 +143,7 @@
         [%all ~]
       :^  ~  ~  %zettelkasten-update
       !>  ^-  update
-      [now %lnks (tap:link-orm links)]
+      [now %lnks (turn (tap:link-orm links) head)]
     ::
         [%ids @ ~]
       =/  =id  (rash i.t.t.t.path dem)

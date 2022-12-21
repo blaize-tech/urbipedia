@@ -7,16 +7,20 @@
   |^
   ?+    -.q.upd  (logged upd)
       %zttls
-    (pairs ~[['time' (numb p.upd)] ['entries' a+(turn list.q.upd entry)]])
+    (pairs ~[['time' (numb p.upd)] ['entries' a+(turn list.q.upd en-id)]])
       %logs
     (pairs ~[['time' (numb p.upd)] ['logs' a+(turn list.q.upd logged)]])
       %lnks
-    (pairs ~[['time' (numb p.upd)] ['links' a+(turn list.q.upd elink)]])
+    (pairs ~[['time' (numb p.upd)] ['links' a+(turn list.q.upd en-id)]])
       %lnk
     (pairs ~[['time' (numb p.upd)] ['link' (link lnk.q.upd)]])
       %zttl
     (pairs ~[['time' (numb p.upd)] ['zettel' (zettel zttl.q.upd)]])
   ==
+  ++  en-id
+    |=  =id
+    ^-  json
+    (frond 'id' (numb id))
   ++  link
     |=  lnk=^link
     ^-  json

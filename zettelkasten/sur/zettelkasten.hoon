@@ -27,9 +27,9 @@
 +$  update
   %+  pair  @
   $%  action
-      [%zttls list=(list entry)]
+      [%zttls list=(list id)]
       [%logs list=(list logged)]
-      [%lnks list=(list elink)]
+      [%lnks list=(list id)]
       [%lnk lnk=link]
       [%zttl zttl=zettel]
   ==
