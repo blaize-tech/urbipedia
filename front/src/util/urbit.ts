@@ -508,7 +508,11 @@ export function urbitGetNodes(): Promise<Array<string>> {
                     resolve(data.entries.map((item: any) => String(item)));
                 },
                 (err) => {
-                    reject(err);
+                    if(err.status === 404) {
+                        resolve([]);
+                    } else {
+                        reject(err);
+                    }
                 }
             ).catch(reject);
     });
@@ -534,7 +538,11 @@ export function urbitGetLinks(): Promise<Array<string>> {
                     resolve(data.links.map((item: any) => String(item)));
                 },
                 (err) => {
-                    reject(err);
+                    if(err.status === 404) {
+                        resolve([]);
+                    } else {
+                        reject(err);
+                    }
                 }
             );
     });
