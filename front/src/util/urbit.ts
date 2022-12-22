@@ -352,7 +352,7 @@ export async function urbitUpdateFile(id: string, text: string) {
         urbitClientWrapper.urbit.poke({
             app: "zettelkasten",
             mark: "zettelkasten-action",
-            json: {"update-node": {id: id, content: text}},
+            json: {"update-content": {id: id, content: text}},
             onSuccess: () => resolve({status: "ok"}),
             onError: () => reject("can't update file"),
         });
@@ -388,7 +388,7 @@ export async function urbitCreateLinkFileToFile(from: string, to: string) {
         urbitClientWrapper.urbit.poke({
             app: "zettelkasten",
             mark: "zettelkasten-action",
-            json: {"create-link": {from, to}},
+            json: {"create-link":{link: {from: from, to: to}}},
             onSuccess: () => resolve({status: "ok"}),
             onError: () => reject("can't create link to file"),
         });
