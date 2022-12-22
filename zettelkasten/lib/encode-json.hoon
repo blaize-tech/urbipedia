@@ -11,7 +11,7 @@
       %logs
     (frond 'logs' a+(turn list.upd logged))
       %lnks
-    (frond 'links' a+(turn list.upd en-id))
+    (frond 'links' a+(turn list.upd |=(a=@ (numb a))))
       %lnk
     (frond 'link' (link lnk.upd))
       %zttl
