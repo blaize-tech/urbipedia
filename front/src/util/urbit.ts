@@ -464,7 +464,6 @@ export function urbitGetFileEntries(id: string): Promise<any> {
             })
             .then(
                 (data) => {
-                    console.log('urbitGetFileEntries data', JSON.stringify(data, null, 4));
                     resolve(data.zettel);
                 },
                 (err) => {
