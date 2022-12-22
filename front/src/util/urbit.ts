@@ -359,7 +359,7 @@ export async function urbitUpdateTagsToFile(id: string, tags: Array<string>) {
         urbitClientWrapper.urbit.poke({
             app: "zettelkasten",
             mark: "zettelkasten-action",
-            json: {"update-tags": {id: id, tags: tags.join("#$")}},
+            json: {"update-tags": {id: Number.parseInt(id), tags: tags.join("#$")}},
             onSuccess: () => resolve({status: "ok"}),
             onError: () => reject("can't update tags"),
         });
@@ -378,7 +378,7 @@ export async function urbitUpdateFile(id: string, text: string) {
         urbitClientWrapper.urbit.poke({
             app: "zettelkasten",
             mark: "zettelkasten-action",
-            json: {"update-content": {id: id, content: text}},
+            json: {"update-content": {id: Number.parseInt(id), content: text}},
             onSuccess: () => resolve({status: "ok"}),
             onError: () => reject("can't update file"),
         });
@@ -396,7 +396,7 @@ export async function urbitRenameFile(id: string, name: string) {
         urbitClientWrapper.urbit.poke({
             app: "zettelkasten",
             mark: "zettelkasten-action",
-            json: {"rename-node": {id: id, name: name}},
+            json: {"rename-node": {id: Number.parseInt(id), name: name}},
             onSuccess: () => resolve({status: "ok"}),
             onError: () => reject("can't update name for file"),
         });
@@ -414,7 +414,7 @@ export async function urbitCreateLinkFileToFile(from: string, to: string) {
         urbitClientWrapper.urbit.poke({
             app: "zettelkasten",
             mark: "zettelkasten-action",
-            json: {"create-link":{link: {from: from, to: to}}},
+            json: {"create-link":{link: {from: Number.parseInt(from), to: Number.parseInt(to)}}},
             onSuccess: () => resolve({status: "ok"}),
             onError: () => reject("can't create link to file"),
         });
@@ -432,7 +432,7 @@ export async function urbitDeleteLinkFileToFile(linkId: string) {
         urbitClientWrapper.urbit.poke({
             app: "zettelkasten",
             mark: "zettelkasten-action",
-            json: {"delete-link": {id: linkId}},
+            json: {"delete-link": {id: Number.parseInt(linkId)}},
             onSuccess: () => resolve({status: "ok"}),
             onError: () => reject("can't delete link to file"),
         });
@@ -450,7 +450,7 @@ export async function urbitDeleteFile(id: string) {
         urbitClientWrapper.urbit.poke({
             app: "zettelkasten",
             mark: "zettelkasten-action",
-            json: {"delete-node": {id: id}},
+            json: {"delete-node": {id: Number.parseInt(id)}},
             onSuccess: () => resolve({status: "ok"}),
             onError: () => reject("can't delete file"),
         });
