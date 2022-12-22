@@ -243,8 +243,8 @@ async function getFullGraph() {
             const data = await urbitGetLink(id);
             createLinkFileToFile(data["link-id"], data["from-id"], data["to-id"]);
         });
-    } catch {
-        console.error("Subscription failed");
+    } catch (e) {
+        console.error("Subscription failed", e);
     }
 }
 
