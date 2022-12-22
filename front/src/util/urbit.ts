@@ -173,7 +173,8 @@ async function handleUpdateUrbit(event: any) {  // TODO
         deleteFile(data.id);
     } else if ("create-link" in event) {
         const data = event["create-link"];
-        createLinkFileToFile(data.id, data.from, data.to);
+        const linkEntries = await urbitGetLink(data.id);
+        createLinkFileToFile(linkEntries.id, linkEntries.from, linkEntries.to);
     } else if ("delete-link" in event) {
         const data = event["delete-link"];
         deleteLinkFileToFile(data.id);
