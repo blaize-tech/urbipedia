@@ -33,6 +33,13 @@ class UrbitClientWrapperImpl implements UrbitClientWrapper {
 
 const urbitClientWrapper = new UrbitClientWrapperImpl();
 
+function parseTags(tags: string) : Array<string> {
+    if (!tags || tags.length === 0) {
+        return [];
+    }
+    return tags.split("#$");
+}
+
 async function updateGraphData() {
     const graphdata: OrgRoamGraphReponse = {
         nodes: allNodes,
@@ -145,24 +152,22 @@ function updateTagsToFile(id: string, tags: Array<string>) {
 async function handleUpdateUrbit(event: any) {  // TODO
     console.log('event', JSON.stringify(event, null, 4));
     if (
-        "create-node" in event
+        "node-created" in event
         || "update-content" in event
         || "rename-node" in event
-        || "create-node" in event
         || "update-tags" in event
     ) {
-        const data = event["create-node"]
+        const data = event["node-created"]
             || event["update-content"]
             || event["rename-node"]
-            || event["create-node"]
             || event["update-tags"];
-        if ("create-node" in event) {
+        if ("node-created" in event) {
             createFile(String(data.id));
         }
         const nodeEntries = await urbitGetFileEntries(String(data.id));
         renameFile(data.id, nodeEntries.name);
         updateFile(data.id, nodeEntries.content);
-        updateTagsToFile(data.id, nodeEntries.tags.split("#$"));
+        updateTagsToFile(data.id, parseTags(nodeEntries.tags));
     } else if ("delete-node" in event) {
         const data = event["delete-node"];
         deleteFile(data.id);
@@ -231,7 +236,7 @@ async function getFullGraph() {
             const nodeEntries = await urbitGetFileEntries(String(id));
             renameFile(id, nodeEntries.name);
             updateFile(id, nodeEntries.content);
-            updateTagsToFile(id, nodeEntries.tags.split("#$"));
+            updateTagsToFile(id, parseTags(nodeEntries.tags));
         });
         const linksIds = await urbitGetLinks();
         linksIds.map(async (id) => {
@@ -460,7 +465,7 @@ export function urbitGetFileEntries(id: string): Promise<any> {
             .then(
                 (data) => {
                     console.log('urbitGetFileEntries data', JSON.stringify(data, null, 4));
-                    resolve(data);
+                    resolve(data.zettel);
                 },
                 (err) => {
                     reject(err);
@@ -486,7 +491,7 @@ export function urbitGetNodes(): Promise<Array<string>> {
             })
             .then(
                 (data) => {
-                    resolve(data.ids);
+                    resolve(data.entries);
                 },
                 (err) => {
                     reject(err);
@@ -539,9 +544,9 @@ export function urbitGetLink(id: string): Promise<any> {
             .then(
                 (data) => {
                     resolve({
-                        id: data["id"],
-                        fromId: data["from-id"],
-                        toId: data["to-id"],
+                        id: id,
+                        fromId: data["from"],
+                        toId: data["to"],
                     });
                 },
                 (err) => {
