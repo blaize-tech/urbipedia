@@ -244,15 +244,15 @@ async function getFullGraph() {
             const data = await urbitGetLink(id);
             createLinkFileToFile(id, data["from"], data["to"]);
         });
+        updateGraphData().catch(console.error);
     } catch (e) {
-        console.error("Subscription failed", e);
+        console.error("Sync full graph failed", e);
     }
 }
 
 export function connectUrbitClient(listener: UrbitListener): UrbitClientWrapper {
     urbitClientWrapper.listener = listener;
-    // urbitClientWrapper.connectionState = UrbitConnectionState.UCS_NOT_CONNECTED;
-    urbitClientWrapper.connectionState = UrbitConnectionState.UCS_CONNECTED;
+    urbitClientWrapper.connectionState = UrbitConnectionState.UCS_NOT_CONNECTED;
 
     urbitClientWrapper.urbit = new Urbit("");
     (window as any).urbit = urbitClientWrapper.urbit;
@@ -264,9 +264,6 @@ export function connectUrbitClient(listener: UrbitListener): UrbitClientWrapper 
     urbitClientWrapper.urbit.ship = (window as any)?.ship;
     urbitClientWrapper.urbit.onOpen = () => {
         urbitClientWrapper.connectionState = UrbitConnectionState.UCS_CONNECTED;
-        getFullGraph().finally(() => {
-            watchGraphWithUrbit().catch(console.error);
-        }).catch(console.error);
     };
     urbitClientWrapper.urbit.onRetry = () => {
         urbitClientWrapper.connectionState = UrbitConnectionState.UCS_NOT_CONNECTED;
@@ -278,8 +275,28 @@ export function connectUrbitClient(listener: UrbitListener): UrbitClientWrapper 
 
     const forceTestConnection = () => {
         try {
-            console.log("loop");
-            urbitGetNodes().then((args: Array<string>) => args);
+            console.log("forceTestConnection");
+            const path = `/entries/all/`;
+            if (urbitClientWrapper.urbit) {
+                urbitClientWrapper.urbit
+                    .scry({
+                        app: "zettelkasten",
+                        path: path,
+                    })
+                    .then(
+                        (data) => {
+                            urbitClientWrapper.connectionState = UrbitConnectionState.UCS_CONNECTED;
+                            getFullGraph().then(()=>{
+                                watchGraphWithUrbit().catch(console.error);
+                            }).catch(console.error);
+                        },
+                        (err) => {
+                            throw new Error(err);
+                        }
+                    );
+            } else {
+                throw new Error("not connected to urbit");
+            }
         } catch (e) {
             console.error(e);
             setTimeout(forceTestConnection, 1000);
@@ -528,8 +545,8 @@ export function urbitGetLink(id: string): Promise<any> {
                 (data) => {
                     resolve({
                         id: id,
-                        fromId: data["from"],
-                        toId: data["to"],
+                        from: data.link.from,
+                        to: data.link.to,
                     });
                 },
                 (err) => {
