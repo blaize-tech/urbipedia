@@ -279,7 +279,7 @@ export function connectUrbitClient(listener: UrbitListener): UrbitClientWrapper 
     const forceTestConnection = () => {
         try {
             console.log("loop");
-            urbitGetNodes();
+            urbitGetNodes().then((args: Array<string>) => args);
         } catch (e) {
             console.error(e);
             setTimeout(forceTestConnection, 1000);
