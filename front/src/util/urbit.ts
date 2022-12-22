@@ -352,7 +352,7 @@ export async function urbitUpdateFile(id: string, text: string) {
         urbitClientWrapper.urbit.poke({
             app: "zettelkasten",
             mark: "zettelkasten-action",
-            json: {"update-node": {id: id, text: text}},
+            json: {"update-node": {id: id, content: text}},
             onSuccess: () => resolve({status: "ok"}),
             onError: () => reject("can't update file"),
         });
