@@ -18,6 +18,18 @@
     (frond 'zettel' (zettel zttl.upd))
       %node-created
     (frond 'node-created' (frond 'id' (numb id.upd)))
+      %node-renamed
+    (frond 'node-renamed' (frond 'id' (numb id.upd)))
+      %content-updated
+    (frond 'content-updated' (frond 'id' (numb id.upd)))
+      %tags-updated
+    (frond 'tags-updated' (frond 'id' (numb id.upd)))
+      %link-created
+    (frond 'link-created' (frond 'id' (numb id.upd)))
+      %node-deleted
+    (frond 'node-deleted' (frond 'id' (numb id.upd)))
+      %link-deleted
+    (frond 'link-deleted' (frond 'id' (numb id.upd)))
   ==
   ++  en-id
     |=  =id

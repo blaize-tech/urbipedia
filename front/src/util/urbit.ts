@@ -149,18 +149,18 @@ function updateTagsToFile(id: string, tags: Array<string>) {
     });
 }
 
-async function handleUpdateUrbit(event: any) {  // TODO
+async function handleUpdateUrbit(event: any) {
     console.log('event', JSON.stringify(event, null, 4));
     if (
         "node-created" in event
-        || "update-content" in event
-        || "rename-node" in event
-        || "update-tags" in event
+        || "content-updated" in event
+        || "node-renamed" in event
+        || "tags-updated" in event
     ) {
         const data = event["node-created"]
-            || event["update-content"]
-            || event["rename-node"]
-            || event["update-tags"];
+            || event["content-updated"]
+            || event["node-renamed"]
+            || event["tags-updated"];
         if ("node-created" in event) {
             createFile(String(data.id));
         }
@@ -168,15 +168,15 @@ async function handleUpdateUrbit(event: any) {  // TODO
         renameFile(data.id, nodeEntries.name);
         updateFile(data.id, nodeEntries.content);
         updateTagsToFile(data.id, parseTags(nodeEntries.tags));
-    } else if ("delete-node" in event) {
-        const data = event["delete-node"];
+    } else if ("node-deleted" in event) {
+        const data = event["node-deleted"];
         deleteFile(data.id);
-    } else if ("create-link" in event) {
-        const data = event["create-link"];
+    } else if ("link-created" in event) {
+        const data = event["link-created"];
         const linkEntries = await urbitGetLink(data.id);
         createLinkFileToFile(linkEntries.id, linkEntries.from, linkEntries.to);
-    } else if ("delete-link" in event) {
-        const data = event["delete-link"];
+    } else if ("link-deleted" in event) {
+        const data = event["link-deleted"];
         deleteLinkFileToFile(data.id);
     } else {
         throw new Error("unsupported");

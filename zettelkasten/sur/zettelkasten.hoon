@@ -32,6 +32,12 @@
       [%lnk lnk=link]
       [%zttl zttl=zettel]
       [%node-created =id]
+      [%node-renamed =id]
+      [%content-updated =id]
+      [%tags-updated =id]
+      [%link-created =id]
+      [%node-deleted =id]
+      [%link-deleted =id]
   ==
 +$  nodes  ((mop id zettel) gth)
 +$  links  ((mop id link) gth)

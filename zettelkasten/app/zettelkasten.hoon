@@ -66,19 +66,19 @@
           n
         $(rng rng)
       :_  state(links (put:link-orm links id link.act))
-      :~  (fact:io zettelkasten-update+!>(`update`[%zttl ['' '' '']]) ~[/updates])
+      :~  (fact:io zettelkasten-update+!>(`update`[%link-created id]) ~[/updates])
       ==
     ::
         %delete-node
       ?>  (has:z-orm nodes id.act)
       :_  state(nodes +:(del:z-orm nodes id.act))
-      :~  (fact:io zettelkasten-update+!>(`update`[%zttl ['' '' '']]) ~[/updates])
+      :~  (fact:io zettelkasten-update+!>(`update`[%node-deleted id.act]) ~[/updates])
       ==
     ::
         %delete-link
       ?>  (has:link-orm links id.act)
       :_  state(links +:(del:link-orm links id.act))
-      :~  (fact:io zettelkasten-update+!>(`update`[%zttl ['' '' '']]) ~[/updates])
+      :~  (fact:io zettelkasten-update+!>(`update`[%link-deleted id.act]) ~[/updates])
       ==
     ::
         %rename-node
@@ -86,7 +86,7 @@
       =/  old=zettel  (got:z-orm nodes id.act)
       =/  new=zettel  [name.act content.old tags.old]
       :_  state(nodes (put:z-orm nodes id.act new))
-      :~  (fact:io zettelkasten-update+!>(`update`[%zttl ['' '' '']]) ~[/updates])
+      :~  (fact:io zettelkasten-update+!>(`update`[%node-renamed id.act]) ~[/updates])
       ==
     ::
         %update-content
@@ -94,7 +94,7 @@
       =/  old=zettel  (got:z-orm nodes id.act)
       =/  new=zettel  [name.old content.act tags.old]
       :_  state(nodes (put:z-orm nodes id.act new))
-      :~  (fact:io zettelkasten-update+!>(`update`[%zttl ['' '' '']]) ~[/updates])
+      :~  (fact:io zettelkasten-update+!>(`update`[%content-updated id.act]) ~[/updates])
       ==
     ::
         %update-tags
@@ -102,7 +102,7 @@
       =/  old=zettel  (got:z-orm nodes id.act)
       =/  new=zettel  [name.old content.old tags.act]
       :_  state(nodes (put:z-orm nodes id.act new))
-      :~  (fact:io zettelkasten-update+!>(`update`[%zttl ['' '' '']]) ~[/updates])
+      :~  (fact:io zettelkasten-update+!>(`update`[%tags-updated id.act]) ~[/updates])
       ==
     ==
   --
