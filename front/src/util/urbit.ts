@@ -280,6 +280,12 @@ export function connectUrbitClient(listener: UrbitListener): UrbitClientWrapper 
             console.log("forceTestConnection");
             const path = `/entries/all/`;
             if (urbitClientWrapper.urbit) {
+                const init = () => {
+                    urbitClientWrapper.connectionState = UrbitConnectionState.UCS_CONNECTED;
+                    getFullGraph().then(()=>{
+                        watchGraphWithUrbit().catch(console.error);
+                    }).catch(console.error);
+                };
                 urbitClientWrapper.urbit
                     .scry({
                         app: "zettelkasten",
@@ -287,13 +293,14 @@ export function connectUrbitClient(listener: UrbitListener): UrbitClientWrapper 
                     })
                     .then(
                         (data) => {
-                            urbitClientWrapper.connectionState = UrbitConnectionState.UCS_CONNECTED;
-                            getFullGraph().then(()=>{
-                                watchGraphWithUrbit().catch(console.error);
-                            }).catch(console.error);
+                            init();
                         },
                         (err) => {
-                            throw new Error(err);
+                            if(err.status === 404) {
+                                init();
+                            } else {
+                                throw new Error(err.statusText);
+                            }
                         }
                     );
             } else {
