@@ -241,7 +241,7 @@ async function getFullGraph() {
         const linksIds = await urbitGetLinks();
         linksIds.map(async (id) => {
             const data = await urbitGetLink(id);
-            createLinkFileToFile(data["link-id"], data["from-id"], data["to-id"]);
+            createLinkFileToFile(id, data["from"], data["to"]);
         });
     } catch (e) {
         console.error("Subscription failed", e);
@@ -517,7 +517,7 @@ export function urbitGetLinks(): Promise<Array<string>> {
             })
             .then(
                 (data) => {
-                    resolve(data.ids);
+                    resolve(data.links);
                 },
                 (err) => {
                     reject(err);
