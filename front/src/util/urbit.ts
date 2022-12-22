@@ -276,33 +276,16 @@ export function connectUrbitClient(listener: UrbitListener): UrbitClientWrapper 
         console.error('urbit error', err);
     };
 
-    const loop = () => {
+    const forceTestConnection = () => {
         try {
             console.log("loop");
-            const path = `/entries/ids/${0}`;
-            if (urbitClientWrapper.urbit) {
-                urbitClientWrapper.urbit
-                    .scry({
-                        app: "zettelkasten",
-                        path: path,
-                    })
-                    .then(
-                        (data) => {
-                            console.log('urbitGetFileEntries data', JSON.stringify(data, null, 4));
-                        },
-                        (err) => {
-                            throw new Error(err);
-                        }
-                    );
-            } else {
-                throw new Error("sfsd");
-            }
+            urbitGetNodes();
         } catch (e) {
             console.error(e);
-            setTimeout(loop, 1000);
+            setTimeout(forceTestConnection, 1000);
         }
     };
-    // loop();
+    forceTestConnection();
 
     setTimeout(() => {
         const message = {
