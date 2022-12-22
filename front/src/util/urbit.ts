@@ -377,7 +377,7 @@ export async function urbitRenameFile(id: string, name: string) {
     });
 }
 
-export async function urbitCreateLinkFileToFile(fromId: string, toId: string) {
+export async function urbitCreateLinkFileToFile(from: string, to: string) {
     return new Promise((resolve, reject) => {
         if (!urbitClientWrapper
             || !urbitClientWrapper.urbit
@@ -388,7 +388,7 @@ export async function urbitCreateLinkFileToFile(fromId: string, toId: string) {
         urbitClientWrapper.urbit.poke({
             app: "zettelkasten",
             mark: "zettelkasten-action",
-            json: {"create-link": {fromId: fromId, toId: toId}},
+            json: {"create-link": {from, to}},
             onSuccess: () => resolve({status: "ok"}),
             onError: () => reject("can't create link to file"),
         });
