@@ -31,7 +31,7 @@
       [%lnks list=(list id)]
       [%lnk lnk=link]
       [%zttl zttl=zettel]
-      [%node =id]
+      [%node-created =id]
   ==
 +$  nodes  ((mop id zettel) gth)
 +$  links  ((mop id link) gth)

@@ -48,20 +48,20 @@
       =/  =id
         =/  rng  ~(. og eny.bowl)
         |-
-        =^  n  rng  (rads:rng (bex 32))
+        =^  n  rng  (rads:rng (bex 32)):: $TODO
         ?.  (has:z-orm nodes n)
           n
         $(rng rng)
-      =/  =zettel  [name.act name.act name.act]
+      =/  =zettel  [name.act '' '']
       :_  state(nodes (put:z-orm nodes id zettel))
-      :~  (fact:io zettelkasten-update+!>(`update`[%node id]) ~[/updates])
+      :~  (fact:io zettelkasten-update+!>(`update`[%node-created id]) ~[/updates])
       ==
     ::
         %create-link
       =/  =id
         =/  rng  ~(. og eny.bowl)
         |-
-        =^  n  rng  (rads:rng (bex 32))
+        =^  n  rng  (rads:rng (bex 32)):: $TODO
         ?.  (has:link-orm links n)
           n
         $(rng rng)

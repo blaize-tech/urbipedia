@@ -16,8 +16,8 @@
     (frond 'link' (link lnk.upd))
       %zttl
     (frond 'zettel' (zettel zttl.upd))
-      %node
-    (frond 'id' (numb id.upd))
+      %node-created
+    (frond 'node-created' (frond 'id' (numb id.upd)))
   ==
   ++  en-id
     |=  =id
