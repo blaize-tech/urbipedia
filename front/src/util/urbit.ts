@@ -545,8 +545,8 @@ export function urbitGetLink(id: string): Promise<any> {
                 (data) => {
                     resolve({
                         id: id,
-                        from: data["from"],
-                        to: data["to"],
+                        from: data.link.from,
+                        to: data.link.to,
                     });
                 },
                 (err) => {
