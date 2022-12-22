@@ -278,7 +278,7 @@ export function connectUrbitClient(listener: UrbitListener): UrbitClientWrapper 
     const forceTestConnection = () => {
         try {
             console.log("forceTestConnection");
-            const path = `/entries/all/`;
+            const path = `/entries/all`;
             if (urbitClientWrapper.urbit) {
                 const init = () => {
                     urbitClientWrapper.connectionState = UrbitConnectionState.UCS_CONNECTED;
@@ -497,7 +497,7 @@ export function urbitGetNodes(): Promise<Array<string>> {
             throw "error";
         }
 
-        const path = `/entries/all/`;
+        const path = `/entries/all`;
         urbitClientWrapper.urbit
             .scry({
                 app: "zettelkasten",
@@ -527,7 +527,7 @@ export function urbitGetLinks(): Promise<Array<string>> {
             throw "error";
         }
 
-        const path = `/links/all/`;
+        const path = `/links/all`;
         urbitClientWrapper.urbit
             .scry({
                 app: "zettelkasten",
