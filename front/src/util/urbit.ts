@@ -496,7 +496,7 @@ export function urbitGetNodes(): Promise<Array<string>> {
                 (err) => {
                     reject(err);
                 }
-            );
+            ).catch(reject);
     });
 }
 
