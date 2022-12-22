@@ -241,8 +241,10 @@ async function getFullGraph() {
         });
         const linksIds = await urbitGetLinks();
         linksIds.map(async (id) => {
-            const data = await urbitGetLink(id);
-            createLinkFileToFile(id, data["from"], data["to"]);
+            console.log("urbitGetLink", id);
+            const dataLink = await urbitGetLink(id);
+            console.log("dataLink", dataLink);
+            createLinkFileToFile(id, dataLink.from, dataLink.to);
         });
         updateGraphData().catch(console.error);
     } catch (e) {
@@ -465,7 +467,12 @@ export function urbitGetFileEntries(id: string): Promise<any> {
             })
             .then(
                 (data) => {
-                    resolve(data.zettel);
+                    resolve({
+                        id: String(id),
+                        tags: data.zettel.tags,
+                        name: data.zettel.name,
+                        content: data.zettel.content,
+                    });
                 },
                 (err) => {
                     reject(err);
@@ -491,7 +498,7 @@ export function urbitGetNodes(): Promise<Array<string>> {
             })
             .then(
                 (data) => {
-                    resolve(data.entries);
+                    resolve(data.entries.map((item: any) => String(item)));
                 },
                 (err) => {
                     reject(err);
@@ -517,7 +524,7 @@ export function urbitGetLinks(): Promise<Array<string>> {
             })
             .then(
                 (data) => {
-                    resolve(data.links);
+                    resolve(data.links.map((item: any) => String(item)));
                 },
                 (err) => {
                     reject(err);
@@ -544,9 +551,9 @@ export function urbitGetLink(id: string): Promise<any> {
             .then(
                 (data) => {
                     resolve({
-                        id: id,
-                        from: data.link.from,
-                        to: data.link.to,
+                        id: String(id),
+                        from: String(data.link.from),
+                        to: String(data.link.to),
                     });
                 },
                 (err) => {
