@@ -232,20 +232,20 @@ async function getFullGraph() {
         allNodes.splice(0, allLinks.length);
         allTags.splice(0, allLinks.length);
         const nodesIds = await urbitGetNodes();
-        nodesIds.map(async (id) => {
+        for (let i = 0; i < nodesIds.length; i++) {
+            const id = nodesIds[i];
             createFile(id);
             const nodeEntries = await urbitGetFileEntries(String(id));
             renameFile(id, nodeEntries.name);
             updateFile(id, nodeEntries.content);
             updateTagsToFile(id, parseTags(nodeEntries.tags));
-        });
+        }
         const linksIds = await urbitGetLinks();
-        linksIds.map(async (id) => {
-            console.log("urbitGetLink", id);
+        for (let i = 0; i < linksIds.length; i++) {
+            const id = linksIds[i];
             const dataLink = await urbitGetLink(id);
-            console.log("dataLink", dataLink);
             createLinkFileToFile(id, dataLink.from, dataLink.to);
-        });
+        }
         updateGraphData().catch(console.error);
     } catch (e) {
         console.error("Sync full graph failed", e);
