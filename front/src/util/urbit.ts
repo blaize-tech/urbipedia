@@ -263,9 +263,7 @@ export function connectUrbitClient(listener: UrbitListener): UrbitClientWrapper 
 
     urbitClientWrapper.urbit.ship = (window as any)?.ship;
     urbitClientWrapper.urbit.onOpen = () => {
-        console.log("onOpen");
         urbitClientWrapper.connectionState = UrbitConnectionState.UCS_CONNECTED;
-        watchGraphWithUrbit().catch(console.error);
     };
     urbitClientWrapper.urbit.onRetry = () => {
         urbitClientWrapper.connectionState = UrbitConnectionState.UCS_NOT_CONNECTED;
@@ -287,9 +285,10 @@ export function connectUrbitClient(listener: UrbitListener): UrbitClientWrapper 
                     })
                     .then(
                         (data) => {
-                            console.log("data", data);
                             urbitClientWrapper.connectionState = UrbitConnectionState.UCS_CONNECTED;
-                            getFullGraph().catch(console.error);
+                            getFullGraph().then(()=>{
+                                watchGraphWithUrbit().catch(console.error);
+                            }).catch(console.error);
                         },
                         (err) => {
                             throw new Error(err);
