@@ -5,11 +5,11 @@
   |=  upd=update
   ^-  json
   |^
-  ?+    -.upd  (logged upd)
+  ?-    -.upd
       %zttls
     (frond 'entries' a+(turn list.upd |=(a=@ (numb a))))
-      %logs
-    (frond 'logs' a+(turn list.upd logged))
+      %acts
+    (frond 'acts' a+(turn list.upd action))
       %lnks
     (frond 'links' a+(turn list.upd |=(a=@ (numb a))))
       %lnk
@@ -51,24 +51,24 @@
     |=  ent=^entry
     ^-  json
     (pairs ~[['id' (numb id.ent)] ['zettel' (zettel zettel.ent)]])
-  ++  logged
-    |=  lgd=^logged
+  ++  action
+    |=  act=^action
     ^-  json
-    ?-    -.lgd
+    ?-    -.act
         %create-node
-      (frond 'create-node' (frond 'name' s+name.lgd))
+      (frond 'create-node' (frond 'name' s+name.act))
         %create-link
-      (frond 'create-link' (frond 'link' (link link.lgd)))
+      (frond 'create-link' (frond 'link' (link link.act)))
         %delete-node
-      (frond 'delete-node' (frond 'id' (numb id.lgd)))
+      (frond 'delete-node' (frond 'id' (numb id.act)))
         %delete-link
-      (frond 'delete-link' (frond 'id' (numb id.lgd)))
+      (frond 'delete-link' (frond 'id' (numb id.act)))
         %rename-node
-      (frond 'rename-node' (pairs ~[['id' (numb id.lgd)] ['name' s+name.lgd]]))
+      (frond 'rename-node' (pairs ~[['id' (numb id.act)] ['name' s+name.act]]))
         %update-content
-      (frond 'update-content' (pairs ~[['id' (numb id.lgd)] ['content' s+content.lgd]]))
+      (frond 'update-content' (pairs ~[['id' (numb id.act)] ['content' s+content.act]]))
         %update-tags
-      (frond 'update-tags' (pairs ~[['id' (numb id.lgd)] ['tags' s+tags.lgd]]))
+      (frond 'update-tags' (pairs ~[['id' (numb id.act)] ['tags' s+tags.act]]))
     ==
   --
 --

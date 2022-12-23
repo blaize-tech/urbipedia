@@ -23,11 +23,9 @@
   ==
 +$  entry  [=id =zettel]
 +$  elink  [=id =link]
-+$  logged  action
 +$  update
-  $%  action
-      [%zttls list=(list id)]
-      [%logs list=(list logged)]
+  $%  [%zttls list=(list id)]
+      [%acts list=actions]
       [%lnks list=(list id)]
       [%lnk lnk=link]
       [%zttl zttl=zettel]
@@ -41,5 +39,5 @@
   ==
 +$  nodes  ((mop id zettel) gth)
 +$  links  ((mop id link) gth)
-+$  log  (list action)
++$  actions  (list action)
 --

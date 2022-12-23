@@ -4,7 +4,7 @@
 +$  versioned-state
     $%  state-0
     ==
-+$  state-0  [%0 =nodes =log =links]
++$  state-0  [%0 =nodes =actions =links]
 +$  card  card:agent:gall
 ++  z-orm  ((on id zettel) gth)
 ++  link-orm  ((on id link) gth)
@@ -139,7 +139,7 @@
         [%all ~]
       :^  ~  ~  %zettelkasten-update
       !>  ^-  update
-      [%logs log]
+      [%acts actions]
     ==
   ::
       [%x %links *]
