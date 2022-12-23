@@ -70,10 +70,17 @@ export const EditFileModal = (props: ToolbarProps) => {
     const selectedLinksOptionArrayLinks = new Array<Item>();
     for (let i = 0; i < graphData.links.length; i++) {
         const link = graphData.links[i];
-        selectedLinksOptionArrayLinks.push({
-            value: link.source,
-            label: String(filesList.get(link.source)),
-        });
+        if (link.target === node.id) {
+            selectedLinksOptionArrayLinks.push({
+                value: link.source,
+                label: String(filesList.get(link.source)),
+            });
+        } else if (link.source === node.id) {
+            selectedLinksOptionArrayLinks.push({
+                value: link.source,
+                label: String(filesList.get(link.target)),
+            });
+        }
     }
 
     const [selectedItemsLinks, setSelectedItemsLinks] = useState<typeof selectedLinksOptionArrayLinks>(selectedLinksOptionArrayLinks);
