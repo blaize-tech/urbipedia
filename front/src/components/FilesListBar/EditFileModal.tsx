@@ -4,7 +4,13 @@ import {
     Modal,
     ModalOverlay,
     ModalContent,
-    ModalHeader, ModalCloseButton, ModalBody, VStack, Text, ModalFooter, Button
+    ModalHeader,
+    ModalCloseButton,
+    ModalBody,
+    VStack,
+    Text,
+    ModalFooter,
+    Button
 } from '@chakra-ui/react'
 import {CUIAutoComplete, Item} from "chakra-ui-autocomplete";
 import {ThemeContext} from "../../util/themecontext";
@@ -61,25 +67,16 @@ export const EditFileModal = (props: ToolbarProps) => {
         }
     }
 
-    const selectedLinksOptionArrayParents = new Array<Item>();
-    const selectedLinksOptionArrayChildren = new Array<Item>();
+    const selectedLinksOptionArrayLinks = new Array<Item>();
     for (let i = 0; i < graphData.links.length; i++) {
         const link = graphData.links[i];
-        if (link.source === node.id) {
-            selectedLinksOptionArrayChildren.push({
-                value: link.target,
-                label: String(filesList.get(link.target)),
-            });
-        } else if (link.target === node.id) {
-            selectedLinksOptionArrayParents.push({
-                value: link.source,
-                label: String(filesList.get(link.source)),
-            });
-        }
+        selectedLinksOptionArrayLinks.push({
+            value: link.source,
+            label: String(filesList.get(link.source)),
+        });
     }
 
-    const [selectedItemsLinksParents, setSelectedItemsLinksParents] = useState<typeof selectedLinksOptionArrayParents>(selectedLinksOptionArrayParents);
-    const [selectedItemsLinksChildren, setSelectedItemsLinksChildren] = useState<typeof selectedLinksOptionArrayChildren>(selectedLinksOptionArrayChildren);
+    const [selectedItemsLinks, setSelectedItemsLinks] = useState<typeof selectedLinksOptionArrayLinks>(selectedLinksOptionArrayLinks);
 
     return (
         <Modal
@@ -144,53 +141,14 @@ export const EditFileModal = (props: ToolbarProps) => {
                         <CUIAutoComplete
                             labelStyleProps={{fontWeight: 300, fontSize: 14}}
                             items={linksOptionArray}
-                            label={`Links parents:`}
-                            placeholder="parent"
+                            label={`Links:`}
+                            placeholder="links"
                             onCreateItem={(item) => null}
                             disableCreateItem={true}
-                            selectedItems={selectedItemsLinksParents}
+                            selectedItems={selectedItemsLinks}
                             onSelectedItemsChange={(changes) => {
                                 if (changes.selectedItems) {
-                                    setSelectedItemsLinksParents(changes.selectedItems);
-                                }
-                            }}
-                            listItemStyleProps={{overflow: 'hidden'}}
-                            highlightItemBg="gray.400"
-                            toggleButtonStyleProps={{variant: 'outline'}}
-                            inputStyleProps={{
-                                mt: 2,
-                                height: 8,
-                                focusBorderColor: highlightColor,
-                                color: 'gray.800',
-                                borderColor: 'gray.500',
-                            }}
-                            tagStyleProps={{
-                                justifyContent: 'flex-start',
-                                //variant: 'subtle',
-                                fontSize: 10,
-                                borderColor: highlightColor,
-                                borderWidth: 1,
-                                borderRadius: 'md',
-                                color: highlightColor,
-                                bg: '',
-                                height: 4,
-                                mb: 2,
-                                //paddingLeft: 4,
-                                //fontWeight: 'bold',
-                            }}
-                            itemRenderer={(selected) => selected.label}
-                        />
-                        <CUIAutoComplete
-                            labelStyleProps={{fontWeight: 300, fontSize: 14}}
-                            items={linksOptionArray}
-                            label={`Links children:`}
-                            placeholder="children"
-                            onCreateItem={(item) => null}
-                            disableCreateItem={true}
-                            selectedItems={selectedItemsLinksChildren}
-                            onSelectedItemsChange={(changes) => {
-                                if (changes.selectedItems) {
-                                    setSelectedItemsLinksChildren(changes.selectedItems);
+                                    setSelectedItemsLinks(changes.selectedItems);
                                 }
                             }}
                             listItemStyleProps={{overflow: 'hidden'}}
@@ -239,10 +197,7 @@ export const EditFileModal = (props: ToolbarProps) => {
                                     selectedItemsTags.map((item) => {
                                         return item.value;
                                     }),
-                                    selectedItemsLinksParents.map((item) => {
-                                        return item.value;
-                                    }),
-                                    selectedItemsLinksChildren.map((item) => {
+                                    selectedItemsLinks.map((item) => {
                                         return item.value;
                                     })
                                 );

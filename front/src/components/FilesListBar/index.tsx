@@ -46,7 +46,6 @@ export const FilesListBar = (props: SidebarProps) => {
     const [sidebarWidth, setSidebarWidth] = usePersistantState<number>('sidebarWidth', 400);
     const [selectedItemIndex, setSelectedItemIndex] = useState<number>(-1);
     const [currentFileName, setCurrentFileName] = useState<string>("");
-    const [currentFileContent, setCurrentFileContent] = useState<string>("");
     let isOpenRenameDialog, onOpenRenameDialog: () => void, onCloseRenameDialog: () => void;
     {
         const {isOpen, onOpen, onClose} = useDisclosure({defaultIsOpen: false})
@@ -119,8 +118,7 @@ export const FilesListBar = (props: SidebarProps) => {
     const onEditFile = async (
         content: string,
         tags: Array<string>,
-        parents: Array<string>,
-        children: Array<string>
+        links: Array<string>
     ) => {
         urbitUpdateFile(graphData.nodes[selectedItemIndex].id, content)
             .catch(console.error);
@@ -132,13 +130,9 @@ export const FilesListBar = (props: SidebarProps) => {
                 urbitDeleteLinkFileToFile(String(link.id)).catch(console.error);
             }
         });
-        parents.map(idTo => {
+        links.map(idTo => {
             urbitCreateLinkFileToFile(idTo, thisNode).catch(console.error);
         });
-        children.map(idFrom => {
-            urbitCreateLinkFileToFile(thisNode, idFrom).catch(console.error);
-        });
-        setCurrentFileContent(content);
         onCloseEditFileModal();
     };
 
