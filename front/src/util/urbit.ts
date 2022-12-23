@@ -139,7 +139,7 @@ export function connectUrbitClient(listener: UrbitListener): UrbitClientWrapper 
     return urbitClientWrapper;
 }
 
-export async function urbitCreateFile(name: string, text: string) {
+export async function urbitCreateFile(name: string) {
     const newId = nodesCounter++;
     allNodes.push({
         id: String(newId),
@@ -150,7 +150,7 @@ export async function urbitCreateFile(name: string, text: string) {
         olp: [],
         properties: {},
         tags: [],
-        content: text
+        content: ""
     });
     updateGraphData().catch(console.error);
 }
