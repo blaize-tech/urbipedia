@@ -142,6 +142,12 @@ export const FilesListBar = (props: SidebarProps) => {
     };
 
     const deleteFile = async () => {
+        graphData.links.map(link => {
+            if (link.source == graphData.nodes[selectedItemIndex].id
+                || link.target == graphData.nodes[selectedItemIndex].id) {
+                urbitDeleteLinkFileToFile(String(link.id)).catch(console.error);
+            }
+        });
         urbitDeleteFile(graphData.nodes[selectedItemIndex].id)
             .catch(console.error);
         setSelectedItemIndex(-1);
