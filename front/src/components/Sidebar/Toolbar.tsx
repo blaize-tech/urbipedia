@@ -3,6 +3,8 @@ import { Tooltip } from '@chakra-ui/react'
 import { BiAlignJustify, BiAlignLeft, BiAlignMiddle, BiAlignRight } from 'react-icons/bi'
 import { ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons'
 
+import styles from './Toolbar.module.scss';
+
 interface ToolbarProps {
   setJustification: any
   justification: number
@@ -21,7 +23,7 @@ const Toolbar: FC<ToolbarProps> = ({
   canRedo,
 }) => {
   return (
-    <div>
+    <div className={styles.container}>
       <Tooltip label="Go backward">
         <button
           aria-label="Previous node"
