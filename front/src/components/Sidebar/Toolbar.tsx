@@ -4,6 +4,10 @@ import { BiAlignJustify, BiAlignLeft, BiAlignMiddle, BiAlignRight } from 'react-
 
 import IconUndo from '../../images/icon-undo.svg';
 import IconRedo from '../../images/icon-redo.svg';
+import IconAlignJustify from '../../images/icon-align-justify.svg';
+import IconAlignLeft from '../../images/icon-align-left.svg';
+import IconAlignRight from '../../images/icon-align-right.svg';
+import IconAlignCenter from '../../images/icon-align-center.svg';
 
 import styles from './Toolbar.module.scss';
 
@@ -59,10 +63,10 @@ const Toolbar: FC<ToolbarProps> = ({
         >
           {
             [
-              <BiAlignJustify key="justify" />,
-              <BiAlignLeft key="left" />,
-              <BiAlignRight key="right" />,
-              <BiAlignMiddle key="center" />,
+              <img key="justify" src={IconAlignJustify} alt="Justify content" height="16" width="16" />,
+              <img key="left" src={IconAlignLeft} alt="Justify content" height="16" width="16" />,
+              <img key="right" src={IconAlignRight} alt="Justify content" height="16" width="16" />,
+              <img key="center" src={IconAlignCenter} alt="Justify content" height="16" width="16" />,
             ][justification]
           }
         </button>
