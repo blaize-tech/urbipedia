@@ -27,6 +27,7 @@ const Toolbar: FC<ToolbarProps> = ({
       <Tooltip label="Go backward">
         <button
           aria-label="Previous node"
+          className={styles.button}
           disabled={!canUndo}
           onClick={previousPreviewNode}
           type="button"
@@ -38,6 +39,7 @@ const Toolbar: FC<ToolbarProps> = ({
       <Tooltip label="Go forward">
         <button
           aria-label="Next node"
+          className={styles.button}
           disabled={!canRedo}
           onClick={nextPreviewNode}
           type="button"
@@ -49,6 +51,7 @@ const Toolbar: FC<ToolbarProps> = ({
       <Tooltip label="Justify content">
         <button
           aria-label="Justify content"
+          className={styles.button}
           onClick={() => setJustification((curr: number) => (curr + 1) % 4)}
           type="button"
         >
