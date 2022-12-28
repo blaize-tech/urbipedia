@@ -81,42 +81,6 @@ export const Toolbar = (props: ToolbarProps) => {
             onClick={() => setJustification((curr: number) => (curr + 1) % 4)}
           />
         </Tooltip>
-        <Tooltip label="Toggle outline view">
-          <IconButton
-            variant="subtle"
-            aria-label="Justify content"
-            icon={outline ? <IoIosListBox /> : <IoMdListBox />}
-            onClick={() => setOutline((curr: boolean) => !curr)}
-          />
-        </Tooltip>
-        <Tooltip label="Toggle headers">
-          <IconButton
-            variant="subtle"
-            aria-label="Toggle headers"
-            icon={collapse ? <MdOutlineExpand /> : <MdOutlineCompress />}
-            onClick={() => setCollapse((curr: boolean) => !curr)}
-          />
-        </Tooltip>
-        {/* <Tooltip label="Indent trees">
-          <IconButton
-            variant="subtle"
-            aria-label="Indent Text"
-            icon={<BiRightIndent />}
-            onClick={() => {
-              setIndent((curr: number) => (curr ? 0 : 1))
-            }}
-          />
-        </Tooltip>
-        <Tooltip label="Switch betwwen sans and serif">
-          <IconButton
-            variant="subtle"
-            aria-label="Change font"
-            icon={<BiFont />}
-            onClick={() => {
-              setFont((curr: string) => (curr === 'sans serif' ? 'serif' : 'sans serif'))
-            }}
-          />
-        </Tooltip> */}
       </Flex>
     </Flex>
   )
