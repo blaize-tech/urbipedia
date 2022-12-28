@@ -1,44 +1,26 @@
-import React from 'react'
+import { FC } from 'react';
 import { Flex, IconButton, ButtonGroup, Tooltip } from '@chakra-ui/react'
 import { BiAlignJustify, BiAlignLeft, BiAlignMiddle, BiAlignRight } from 'react-icons/bi'
-import { MdOutlineExpand, MdOutlineCompress } from 'react-icons/md'
 import { ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons'
 import { IoIosListBox, IoMdListBox } from 'react-icons/io'
 
-export interface ToolbarProps {
+interface ToolbarProps {
   setJustification: any
   justification: number
-  setIndent: any
-  setFont: any
-  setPreviewNode: any
-  canUndo: any
-  canRedo: any
-  resetPreviewNode: any
   previousPreviewNode: any
+  canUndo: any
   nextPreviewNode: any
-  outline: boolean
-  setOutline: any
-  collapse: boolean
-  setCollapse: any
+  canRedo: any
 }
 
-export const Toolbar = (props: ToolbarProps) => {
-  const {
-    setJustification,
-    setIndent,
-    setFont,
-    justification,
-    setPreviewNode,
-    canUndo,
-    canRedo,
-    resetPreviewNode,
-    previousPreviewNode,
-    nextPreviewNode,
-    outline,
-    setOutline,
-    collapse,
-    setCollapse,
-  } = props
+const Toolbar: FC<ToolbarProps> = ({
+  setJustification,
+  justification,
+  previousPreviewNode,
+  canUndo,
+  nextPreviewNode,
+  canRedo,
+}) => {
   return (
     <Flex flex="0 1 40px" pb={3} alignItems="center" justifyContent="space-between" pr={1}>
       <Flex>
@@ -83,5 +65,7 @@ export const Toolbar = (props: ToolbarProps) => {
         </Tooltip>
       </Flex>
     </Flex>
-  )
-}
+  );
+};
+
+export default Toolbar;

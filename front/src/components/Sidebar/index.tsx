@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
 
-import { Toolbar } from './Toolbar'
+import Toolbar from './Toolbar'
 import { TagBar } from './TagBar'
 import { Note } from './Note'
 import { Title } from './Title'
@@ -144,22 +144,12 @@ const Sidebar = (props: SidebarProps) => {
           >
             <Flex pt={1} flexShrink={0}>
               <Toolbar
-                {...{
-                  setJustification,
-                  setIndent,
-                  setFont,
-                  justification,
-                  setPreviewNode,
-                  canUndo,
-                  canRedo,
-                  resetPreviewNode,
-                  previousPreviewNode,
-                  nextPreviewNode,
-                  outline,
-                  setOutline,
-                  collapse,
-                  setCollapse,
-                }}
+                setJustification={setJustification}
+                justification={justification}
+                previousPreviewNode={previousPreviewNode}
+                canUndo={canUndo}
+                nextPreviewNode={nextPreviewNode}
+                canRedo={canRedo}
               />
             </Flex>
             <Flex
