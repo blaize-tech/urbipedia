@@ -1,7 +1,9 @@
 import { FC } from 'react';
-import { Tooltip } from '@chakra-ui/react'
+import { Tooltip } from '@chakra-ui/react';
 import { BiAlignJustify, BiAlignLeft, BiAlignMiddle, BiAlignRight } from 'react-icons/bi'
-import { ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons'
+
+import IconUndo from '../../images/icon-undo.svg';
+import IconRedo from '../../images/icon-redo.svg';
 
 import styles from './Toolbar.module.scss';
 
@@ -32,7 +34,7 @@ const Toolbar: FC<ToolbarProps> = ({
           onClick={previousPreviewNode}
           type="button"
         >
-          <ChevronLeftIcon />
+          <img src={IconUndo} alt="Go backward" height="16" width="16" />
         </button>
       </Tooltip>
 
@@ -44,7 +46,7 @@ const Toolbar: FC<ToolbarProps> = ({
           onClick={nextPreviewNode}
           type="button"
         >
-          <ChevronRightIcon />
+          <img src={IconRedo} alt="Go forward" height="16" width="16" />
         </button>
       </Tooltip>
 
