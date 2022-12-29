@@ -18,6 +18,7 @@ import {
   urbitUpdateTagsToFile,
 } from "../../util/urbit";
 
+import Logo from './Logo';
 import { Toolbar } from './Toolbar';
 import { Collapse } from './Collapse';
 import { RenameModal } from "./RenameModal";
@@ -173,6 +174,8 @@ const FilesListBar: FC<FilesListBarProps> = ({
       }}
       size={{ height: '100vh', width: sidebarWidth }}
     >
+      <Logo />
+
       <Toolbar
         {...{
           createNewFile,
