@@ -679,35 +679,28 @@ export function GraphPage() {
 
         <Box position="relative" zIndex={4}>
           <Sidebar
-            {...{
-              isOpen,
-              onOpen,
-              onClose,
-              previewNode,
-              setPreviewNode,
-              canUndo,
-              canRedo,
-              previousPreviewNode,
-              nextPreviewNode,
-              resetPreviewNode,
-              setSidebarHighlightedNode,
-              openContextMenu,
-              scope,
-              setScope,
-              windowWidth,
-              tagColors,
-              setTagColors,
-              filter,
-              setFilter,
-            }}
+            nodeById={nodeByIdRef.current!}
+            previewNode={previewNode}
+            setPreviewNode={setPreviewNode}
+            linksByNodeId={linksByNodeIdRef.current!}
+            nodeByCite={nodeByCiteRef.current!}
+            setSidebarHighlightedNode={setSidebarHighlightedNode}
+            canUndo={canUndo}
+            canRedo={canRedo}
+            previousPreviewNode={previousPreviewNode}
+            nextPreviewNode={nextPreviewNode}
+            openContextMenu={openContextMenu}
+            windowWidth={windowWidth}
+            filter={filter}
+            setFilter={setFilter}
+            tagColors={tagColors}
+            setTagColors={setTagColors}
             macros={emacsVariables.katexMacros}
             attachDir={emacsVariables.attachDir || ''}
             useInheritance={emacsVariables.useInheritance || false}
-            nodeById={nodeByIdRef.current!}
-            linksByNodeId={linksByNodeIdRef.current!}
-            nodeByCite={nodeByCiteRef.current!}
           />
         </Box>
+
         {contextMenu.isOpen && (
           <div ref={contextMenuRef}>
             <ContextMenu

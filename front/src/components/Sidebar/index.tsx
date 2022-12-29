@@ -1,101 +1,81 @@
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import { FC, useEffect, useState } from 'react';
+import { Scrollbars } from 'react-custom-scrollbars-2';
+import { NodeObject } from 'force-graph';
+import { Resizable } from 're-resizable';
+import { VStack, Box } from '@chakra-ui/react';
 
-import Toolbar from './Toolbar'
-import { TagBar } from './TagBar'
-import { Note } from './Note'
-import { Title } from './Title'
+import { OrgRoamNode } from '../../api';
+import { LinksByNodeId, NodeByCite, NodeById } from '../../index';
+import { usePersistantState } from '../../util/persistant-state';
+import { initialFilter, TagColors } from '../config';
 
-import { VStack, Box } from '@chakra-ui/react'
-import { Scrollbars } from 'react-custom-scrollbars-2'
+import Toolbar from './Toolbar';
+import { TagBar } from './TagBar';
+import { Note } from './Note';
+import { Title } from './Title';
 
-import { NodeObject } from 'force-graph'
-import { OrgRoamNode } from '../../api'
-import { ThemeContext } from '../../util/themecontext'
-import { LinksByNodeId, NodeByCite, NodeById, Scope } from '../../index'
-import { Resizable } from 're-resizable'
-import { usePersistantState } from '../../util/persistant-state'
-import { initialFilter, TagColors } from '../config'
-
-export interface SidebarProps {
-  isOpen: boolean
-  onClose: any
-  onOpen: any
-  nodeById: NodeById
-  previewNode: NodeObject
-  setPreviewNode: any
-  linksByNodeId: LinksByNodeId
-  nodeByCite: NodeByCite
-  setSidebarHighlightedNode: any
-  canUndo: any
-  canRedo: any
-  resetPreviewNode: any
-  previousPreviewNode: any
-  nextPreviewNode: any
-  openContextMenu: any
-  scope: Scope
-  setScope: any
-  windowWidth: number
-  filter: typeof initialFilter
-  setFilter: any
-  tagColors: TagColors
-  setTagColors: any
-  macros?: { [key: string]: string }
-  attachDir: string
-  useInheritance: boolean
+interface SidebarProps {
+  nodeById: NodeById;
+  previewNode: NodeObject;
+  setPreviewNode: any;
+  linksByNodeId: LinksByNodeId;
+  nodeByCite: NodeByCite;
+  setSidebarHighlightedNode: any;
+  canUndo: any;
+  canRedo: any;
+  previousPreviewNode: any;
+  nextPreviewNode: any;
+  openContextMenu: any;
+  windowWidth: number;
+  filter: typeof initialFilter;
+  setFilter: any;
+  tagColors: TagColors;
+  setTagColors: any;
+  macros?: { [key: string]: string };
+  attachDir: string;
+  useInheritance: boolean;
 }
 
-const Sidebar = (props: SidebarProps) => {
-  const {
-    isOpen,
-    onOpen,
-    onClose,
-    previewNode,
-    setPreviewNode,
-    nodeById,
-    linksByNodeId,
-    nodeByCite,
-    setSidebarHighlightedNode,
-    canUndo,
-    canRedo,
-    resetPreviewNode,
-    previousPreviewNode,
-    nextPreviewNode,
-    openContextMenu,
-    scope,
-    setScope,
-    windowWidth,
-    filter,
-    setFilter,
-    tagColors,
-    setTagColors,
-    macros,
-    attachDir,
-    useInheritance,
-  } = props
-
-  const { highlightColor } = useContext(ThemeContext)
-  const [previewRoamNode, setPreviewRoamNode] = useState<OrgRoamNode | undefined>()
-  const [sidebarWidth, setSidebarWidth] = usePersistantState<number>('sidebarWidth', 400)
+const Sidebar: FC<SidebarProps> = ({
+  previewNode,
+  setPreviewNode,
+  nodeById,
+  linksByNodeId,
+  nodeByCite,
+  setSidebarHighlightedNode,
+  canUndo,
+  canRedo,
+  previousPreviewNode,
+  nextPreviewNode,
+  openContextMenu,
+  windowWidth,
+  filter,
+  setFilter,
+  tagColors,
+  setTagColors,
+  macros,
+  attachDir,
+  useInheritance,
+}) => {
+  const [previewRoamNode, setPreviewRoamNode] = useState<OrgRoamNode | undefined>();
+  const [sidebarWidth, setSidebarWidth] = usePersistantState<number>('sidebarWidth', 400);
 
   useEffect(() => {
     if (!previewNode?.id) {
-      onClose()
-      return
+      setPreviewRoamNode(previewNode as OrgRoamNode);
     }
-    onOpen()
-    setPreviewRoamNode(previewNode as OrgRoamNode)
-  }, [previewNode?.id])
+  }, [previewNode?.id]);
 
-  const [justification, setJustification] = usePersistantState('justification', 1)
-  const [outline, setOutline] = usePersistantState('outline', false)
-  const justificationList = ['justify', 'start', 'end', 'center']
-  const [collapse, setCollapse] = useState(false)
+  const [justification, setJustification] = usePersistantState('justification', 1);
+  const [outline, setOutline] = usePersistantState('outline', false);
+  const justificationList = ['justify', 'start', 'end', 'center'];
+  const [collapse, setCollapse] = useState(false);
 
   return (
     <Resizable
       size={{ height: '100vh', width: sidebarWidth }}
       onResizeStop={(e, direction, ref, d) => {
-        setSidebarWidth((curr: number) => curr + d.width)
+        setSidebarWidth((curr: number) => curr + d.width);
       }}
       enable={{
         top: false,
@@ -140,9 +120,11 @@ const Sidebar = (props: SidebarProps) => {
             paddingLeft={4}
           >
             <Title previewNode={previewRoamNode} />
+
             <TagBar
               {...{ filter, setFilter, tagColors, setTagColors, openContextMenu, previewNode }}
             />
+
             <Note
               {...{
                 setPreviewNode,
@@ -166,7 +148,7 @@ const Sidebar = (props: SidebarProps) => {
         )}
       </Scrollbars>
     </Resizable>
-  )
-}
+  );
+};
 
-export default Sidebar
+export default Sidebar;
