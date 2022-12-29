@@ -2,3 +2,7 @@
 /front/package-lock.json
 /front/node_modules/
 /front/build/
+/backend/node_modules/
+/backend/yarn.lock
+/backend/package-lock.json
+/backend/dist/

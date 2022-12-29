@@ -2,7 +2,7 @@
 ::  https://github.com/bitcoin/bips/blob/master/bip-0173.mediawiki
 ::
 ::  Heavily copies:
-::  https://github.com/bitcoinjs/bech32/blob/master/index.js
+::  https://github.com/bitcoinjs/bech32/blob/master/index.ts
 ::
 /-  sur=bitcoin
 /+  bcu=bitcoin-utils
@@ -14,7 +14,7 @@
   (my [[%main "bc"] [%testnet "tb"] [%regtest "bcrt"] ~])
 ++  charset  "qpzry9x8gf2tvdw0s3jn54khce6mua7l"
 +$  raw-decoded  [hrp=tape data=(list @) checksum=(list @)]
-::  below is a port of: https://github.com/bitcoinjs/bech32/blob/master/index.js
+::  below is a port of: https://github.com/bitcoinjs/bech32/blob/master/index.ts
 ::
 ++  polymod
   |=  values=(list @)
