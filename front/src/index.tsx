@@ -63,7 +63,7 @@ import { isLinkRelatedToNode } from './util/isLinkRelatedToNode'
 import { getLinkColor } from './util/getLinkColor'
 import {UrbitClientWrapper, connectUrbitClient} from "./util/urbit";
 import MyApp from './_app'
-import {FilesListBar} from './components/FilesListBar'
+import FilesListBar from './components/FilesListBar'
 import {openNodeInEmacs} from "./util/webSocketFunctions";
 
 const d3promise = import('d3-force-3d')
@@ -552,16 +552,12 @@ export function GraphPage() {
       >
         <Box position="relative" zIndex={4}>
           <FilesListBar
-              {...{
-                isOpen: isOpenFilesListSideBar,
-                onOpen: onOpenFilesListSideBar,
-                onClose: onCloseFilesListSideBar,
-                windowWidth,
-                graphData: currentOrgRoamGraph.current,
-                visuals
-              }}
+            windowWidth={windowWidth}
+            graphData={currentOrgRoamGraph.current}
+            visuals={visuals}
           />
         </Box>
+
         <Box position="relative" zIndex={4}>
           <Tooltip label={isOpenFilesListSideBar ? 'Close sidebar' : 'Open sidebar'}>
             <IconButton
@@ -574,6 +570,7 @@ export function GraphPage() {
             />
           </Tooltip>
         </Box>
+
         <Tweaks
           {...{
             physics,
@@ -598,6 +595,7 @@ export function GraphPage() {
           tags={tagsRef.current}
           haveOffset={isOpenFilesListSideBar}
         />
+
         <Box position="absolute">
           {(graphData && graphData.nodes.length) ? (
             <Graph
