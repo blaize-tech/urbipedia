@@ -23,6 +23,8 @@ import { Collapse } from './Collapse';
 import { RenameModal } from "./RenameModal";
 import { EditFileModal } from "./EditFileModal";
 
+import styles from './FilesListBar.module.scss';
+
 interface FilesListBarProps {
   windowWidth: number;
   graphData: OrgRoamGraphReponse;
@@ -153,22 +155,23 @@ const FilesListBar: FC<FilesListBarProps> = ({
 
   return (
     <Resizable
-      size={{ height: '100vh', width: sidebarWidth }}
       onResizeStop={(e, direction, ref, d) => {
         setSidebarWidth((curr: number) => curr + d.width)
       }}
+      className={styles.container}
+      maxWidth={windowWidth - 200}
+      minWidth="220px"
       enable={{
         top: false,
-        right: false,
+        right: true,
         bottom: false,
-        left: true,
+        left: false,
         topRight: false,
         bottomRight: false,
         bottomLeft: false,
         topLeft: false,
       }}
-      minWidth="220px"
-      maxWidth={windowWidth - 200}
+      size={{ height: '100vh', width: sidebarWidth }}
     >
       <Toolbar
         {...{
