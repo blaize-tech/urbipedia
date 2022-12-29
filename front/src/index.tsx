@@ -636,43 +636,26 @@ export function GraphPage() {
             />
           ) : (<div/>)}
         </Box>
+
         <Box position="relative" zIndex={4} width="100%">
           <Flex className="headerBar" h={10} flexDir="column">
             <Flex alignItems="center" h={10} justifyContent="flex-end">
-              {/* <Flex flexDir="row" alignItems="center">
-               *   <Box color="blue.500" bgColor="alt.100" h="100%" p={3} mr={4}>
-               *     {mainItem.icon}
-               *   </Box>
-               *   <Heading size="sm">{mainItem.title}</Heading>
-               * </Flex> */}
-              <Flex height="100%" flexDirection="row">
-                {scope.nodeIds.length > 0 && (
-                  <Tooltip label="Return to main graph">
-                    <IconButton
-                      m={1}
-                      icon={<BiNetworkChart />}
-                      aria-label="Exit local mode"
-                      onClick={() =>
-                        setScope((currentScope: Scope) => ({
-                          ...currentScope,
-                          nodeIds: [],
-                        }))
-                      }
-                      variant="subtle"
-                    />
-                  </Tooltip>
-                )}
-                <Tooltip label={isOpen ? 'Close sidebar' : 'Open sidebar'}>
+              {scope.nodeIds.length > 0 && (
+                <Tooltip label="Return to main graph">
                   <IconButton
                     m={1}
-                    // eslint-disable-next-line react/jsx-no-undef
-                    icon={<BsReverseLayoutSidebarInsetReverse />}
-                    aria-label="Close file-viewer"
+                    icon={<BiNetworkChart />}
+                    aria-label="Exit local mode"
+                    onClick={() =>
+                      setScope((currentScope: Scope) => ({
+                        ...currentScope,
+                        nodeIds: [],
+                      }))
+                    }
                     variant="subtle"
-                    onClick={isOpen ? onClose : onOpen}
                   />
                 </Tooltip>
-              </Flex>
+              )}
             </Flex>
           </Flex>
         </Box>
