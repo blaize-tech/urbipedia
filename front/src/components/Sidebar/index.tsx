@@ -14,6 +14,8 @@ import { TagBar } from './TagBar';
 import { Note } from './Note';
 import { Title } from './Title';
 
+import styles from './Sidebar.module.scss';
+
 interface SidebarProps {
   nodeById: NodeById;
   previewNode: NodeObject;
@@ -73,10 +75,12 @@ const Sidebar: FC<SidebarProps> = ({
 
   return (
     <Resizable
-      size={{ height: '100vh', width: sidebarWidth }}
       onResizeStop={(e, direction, ref, d) => {
         setSidebarWidth((curr: number) => curr + d.width);
       }}
+      className={styles.container}
+      maxWidth={windowWidth - 200}
+      minWidth="220px"
       enable={{
         top: false,
         right: false,
@@ -87,8 +91,7 @@ const Sidebar: FC<SidebarProps> = ({
         bottomLeft: false,
         topLeft: false,
       }}
-      minWidth="220px"
-      maxWidth={windowWidth - 200}
+      size={{ height: '100vh', width: sidebarWidth }}
     >
       <Toolbar
         setJustification={setJustification}
