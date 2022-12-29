@@ -30,7 +30,13 @@ const IconButton: FC<IconButtonProps> = ({
         onClick={onClick}
         type="button"
       >
-        <img src={icon} alt={title} height="16" width="16" />
+        <img
+          className={styles.icon}
+          height="16"
+          width="16"
+          src={icon}
+          alt={title}
+        />
       </button>
     </Tooltip>
   );

@@ -1,4 +1,5 @@
 .container {
+  transition: background-color .3s, border-color .3s;
   background-color: #FCFCFC;
   border-radius: 20px;
   padding: 7.75px;
@@ -20,4 +21,9 @@
     background-color: #E9E9EB;
     cursor: not-allowed;
   }
+}
+
+.icon {
+  height: auto;
+  width: 17.5px;
 }
