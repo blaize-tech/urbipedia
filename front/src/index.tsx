@@ -128,15 +128,6 @@ export function GraphPage() {
     future: futurePreviewNodes,
   } = previewNodeState
   const [sidebarHighlightedNode, setSidebarHighlightedNode] = useState<OrgRoamNode | null>(null)
-  const { isOpen, onOpen, onClose } = useDisclosure()
-
-  let isOpenFilesListSideBar, onOpenFilesListSideBar, onCloseFilesListSideBar;
-  {
-    const {isOpen, onOpen, onClose} = useDisclosure({defaultIsOpen: true})
-    isOpenFilesListSideBar = isOpen;
-    onOpenFilesListSideBar = onOpen;
-    onCloseFilesListSideBar = onClose;
-  }
 
   const nodeByIdRef = useRef<NodeById>({})
   const linksByNodeIdRef = useRef<LinksByNodeId>({})
@@ -558,19 +549,6 @@ export function GraphPage() {
           />
         </Box>
 
-        <Box position="relative" zIndex={4}>
-          <Tooltip label={isOpenFilesListSideBar ? 'Close sidebar' : 'Open sidebar'}>
-            <IconButton
-                m={1}
-                // eslint-disable-next-line react/jsx-no-undef
-                icon={<BsLayoutSidebarInset />}
-                aria-label="Close files-list"
-                variant="subtle"
-                onClick={isOpenFilesListSideBar ? onCloseFilesListSideBar : onOpenFilesListSideBar}
-            />
-          </Tooltip>
-        </Box>
-
         <Tweaks
           {...{
             physics,
@@ -593,7 +571,7 @@ export function GraphPage() {
             setLocal,
           }}
           tags={tagsRef.current}
-          haveOffset={isOpenFilesListSideBar}
+          haveOffset={true}
         />
 
         <Box position="absolute">
