@@ -1,0 +1,23 @@
+.container {
+  background-color: #FCFCFC;
+  border-radius: 20px;
+  padding: 7.75px;
+  border: 1px solid #E9E9EB;
+  cursor: pointer;
+
+  &:not(:disabled) {
+    &:focus,
+    &:hover {
+      border-color: #8158FF;
+    }
+
+    &:active {
+      border-color: #303FC0;
+    }
+  }
+
+  &:disabled {
+    background-color: #E9E9EB;
+    cursor: not-allowed;
+  }
+}

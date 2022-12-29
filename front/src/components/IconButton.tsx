@@ -1,5 +1,8 @@
 import { FC } from 'react';
 import { Tooltip } from '@chakra-ui/react';
+import cn from 'classnames';
+
+import styles from './IconButton.module.scss';
 
 interface IconButtonProps {
   ariaLabel?: string;
@@ -22,7 +25,7 @@ const IconButton: FC<IconButtonProps> = ({
     <Tooltip label={title}>
       <button
         aria-label={ariaLabel}
-        className={className}
+        className={cn(styles.container, className)}
         disabled={disabled}
         onClick={onClick}
         type="button"
