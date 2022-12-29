@@ -158,88 +158,52 @@ export const FilesListBar = (props: SidebarProps) => {
     };
 
     return (
-        <Collapse
-            animateOpacity={false}
-            dimension="width"
-            in={isOpen}
-            //style={{ position: 'relative' }}
-            unmountOnExit
-            startingSize={0}
-            style={{height: '100vh'}}
+        <Resizable
+            size={{height: '100vh', width: sidebarWidth}}
+            onResizeStop={(e, direction, ref, d) => {
+                setSidebarWidth((curr: number) => curr + d.width)
+            }}
+            enable={{
+                top: false,
+                right: false,
+                bottom: false,
+                left: true,
+                topRight: false,
+                bottomRight: false,
+                bottomLeft: false,
+                topLeft: false,
+            }}
+            minWidth="220px"
+            maxWidth={windowWidth - 200}
         >
-            <Resizable
-                size={{height: '100vh', width: sidebarWidth}}
-                onResizeStop={(e, direction, ref, d) => {
-                    setSidebarWidth((curr: number) => curr + d.width)
+            <Toolbar
+                {...{
+                    createNewFile,
+                    editFile,
+                    renameFile,
+                    deleteFile,
                 }}
-                enable={{
-                    top: false,
-                    right: false,
-                    bottom: false,
-                    left: true,
-                    topRight: false,
-                    bottomRight: false,
-                    bottomLeft: false,
-                    topLeft: false,
-                }}
-                minWidth="220px"
-                maxWidth={windowWidth - 200}
-            >
-                <Flex flexDir="column" h="100vh" pl={2} color="black" bg="alt.100" width="100%">
-                    <Flex
-                        //whiteSpace="nowrap"
-                        // overflow="hidden"
-                        // textOverflow="ellipsis"
-                        pl={2}
-                        alignItems="center"
-                        color="black"
-                        width="100%"
-                    >
-                        <Flex pt={1} flexShrink={0}>
-                            <Toolbar
-                                {...{
-                                    createNewFile,
-                                    editFile,
-                                    renameFile,
-                                    deleteFile,
-                                }}
-                                haveSelection={(selectedItemIndex >= 0)}
-                            />
-                        </Flex>
-                    </Flex>
-                    <Scrollbars
-                        //autoHeight
-                        //autoHeightMax={600}
-                        autoHide={false}
-                        // renderThumbVertical={({style, ...props}) => (
-                        //     <Box
-                        //         style={{
-                        //             ...style,
-                        //             borderRadius: 0,
-                        //             backgroundColor: highlightColor,
-                        //         }}
-                        //         //color="alt.100"
-                        //         {...props}
-                        //     />
-                        // )}
-                    >
-                        {items(filesList)}
-                    </Scrollbars>
-                </Flex>
-            </Resizable>
+                haveSelection={(selectedItemIndex >= 0)}
+            />
+
+            <Scrollbars autoHide={false}>
+                {items(filesList)}
+            </Scrollbars>
+
             {isOpenRenameDialog && (<RenameModal
-                name={currentFileName}
-                showModal={isOpenRenameDialog}
-                onRename={onRenameFile}
-                onClose={onCloseRenameDialog}
+              name={currentFileName}
+              showModal={isOpenRenameDialog}
+              onRename={onRenameFile}
+              onClose={onCloseRenameDialog}
             />)}
+
             {isOpenEditFileModal && (<EditFileModal
-                showModal={isOpenEditFileModal}
-                onEdit={onEditFile}
-                onClose={onCloseEditFileModal}
-                graphData={graphData}
-                node={graphData.nodes[selectedItemIndex]}
-            />)}
-        </Collapse>
+              showModal={isOpenEditFileModal}
+              onEdit={onEditFile}
+              onClose={onCloseEditFileModal}
+              graphData={graphData}
+              node={graphData.nodes[selectedItemIndex]}
+              />)}
+        </Resizable>
     )
 }
