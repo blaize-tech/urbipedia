@@ -28,14 +28,17 @@ class UrbitClientWrapperImpl implements UrbitClientWrapper {
 
 const urbitClientWrapper = new UrbitClientWrapperImpl();
 
-async function watchGraphWithUrbit() {
-}
-
 export function connectUrbitClient(listener: UrbitListener): UrbitClientWrapper {
     urbitClientWrapper.listener = listener;
     urbitClientWrapper.connectionState = UrbitConnectionState.UCS_NOT_CONNECTED;
 
-    urbitClientWrapper.urbit = new Urbit("");
+    // @ts-ignore
+    global.window = {ship: "sabwed-nommun-sidrex-nidsut--ragrys-filwyd-fotpen-litzod"};
+
+    if (!(window as any)?.ship) {
+        throw new Error("window.ship not defined");
+    }
+    urbitClientWrapper.urbit = new Urbit("http://localhost:8080/apps/zettelkasten/");
     (window as any).urbit = urbitClientWrapper.urbit;
 
     if (!(window as any)?.ship) {
@@ -60,7 +63,6 @@ export function connectUrbitClient(listener: UrbitListener): UrbitClientWrapper 
             if (urbitClientWrapper.urbit) {
                 const init = () => {
                     urbitClientWrapper.connectionState = UrbitConnectionState.UCS_CONNECTED;
-                    watchGraphWithUrbit().catch(console.error);
 
                     if (!urbitClientWrapper
                         || !urbitClientWrapper.urbit
@@ -143,7 +145,6 @@ export async function urbitUpdateTagsToFile(id: string, tags: Array<string>) {
         });
     });
 }
-
 
 export async function urbitUpdateFile(id: string, text: string) {
     return new Promise((resolve, reject) => {
