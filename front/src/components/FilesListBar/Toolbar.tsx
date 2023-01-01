@@ -15,6 +15,8 @@ import IconDelete from '../../images/icon-delete.svg';
 import IconDeleteHover from '../../images/icon-delete-hover.svg';
 import IconDeleteActive from '../../images/icon-delete-active.svg';
 
+import styles from './Toolbar.module.scss';
+
 interface ToolbarProps {
     createNewFile: any;
     editFile: any;
@@ -31,7 +33,7 @@ const Toolbar: FC<ToolbarProps> = ({
     haveSelection,
 }) => {
   return (
-    <div>
+    <div className={styles.container}>
       <IconButton
         ariaLabel="Create new file"
         onClick={createNewFile}
