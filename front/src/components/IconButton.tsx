@@ -12,6 +12,7 @@ interface IconButtonProps {
   title?: string;
   icon: string;
   iconHover: string;
+  iconActive: string;
 }
 
 const IconButton: FC<IconButtonProps> = ({
@@ -22,6 +23,7 @@ const IconButton: FC<IconButtonProps> = ({
   title,
   icon,
   iconHover,
+  iconActive,
 }) => {
   return (
     <Tooltip label={title}>
@@ -45,6 +47,14 @@ const IconButton: FC<IconButtonProps> = ({
           height="16"
           width="16"
           src={iconHover}
+          alt={title}
+        />
+
+        <img
+          className={cn(styles.icon, styles['icon--active'])}
+          height="16"
+          width="16"
+          src={iconActive}
           alt={title}
         />
       </button>

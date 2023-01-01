@@ -23,6 +23,14 @@
 
     &:active {
       border-color: #303FC0;
+
+      .icon {
+        opacity: 0;
+
+        &--active {
+          opacity: 1;
+        }
+      }
     }
   }
 
@@ -38,6 +46,14 @@
   width: 17.5px;
 
   &--hover {
+    transform: translateX(-50%) translateY(-50%);
+    position: absolute;
+    opacity: 0;
+    left: 50%;
+    top: 50%;
+  }
+
+  &--active {
     transform: translateX(-50%) translateY(-50%);
     position: absolute;
     opacity: 0;

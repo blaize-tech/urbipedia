@@ -5,16 +5,22 @@ import IconButton from '../IconButton';
 
 import IconUndo from '../../images/icon-undo.svg';
 import IconUndoHover from '../../images/icon-undo-hover.svg';
+import IconUndoActive from '../../images/icon-undo-active.svg';
 import IconRedo from '../../images/icon-redo.svg';
 import IconRedoHover from '../../images/icon-redo-hover.svg';
+import IconRedoActive from '../../images/icon-redo-active.svg';
 import IconAlignJustify from '../../images/icon-align-justify.svg';
 import IconAlignJustifyHover from '../../images/icon-align-justify-hover.svg';
+import IconAlignJustifyActive from '../../images/icon-align-justify-active.svg';
 import IconAlignLeft from '../../images/icon-align-left.svg';
 import IconAlignLeftHover from '../../images/icon-align-left-hover.svg';
+import IconAlignLeftActive from '../../images/icon-align-left-active.svg';
 import IconAlignRight from '../../images/icon-align-right.svg';
 import IconAlignRightHover from '../../images/icon-align-right-hover.svg';
+import IconAlignRightActive from '../../images/icon-align-right-active.svg';
 import IconAlignCenter from '../../images/icon-align-center.svg';
 import IconAlignCenterHover from '../../images/icon-align-center-hover.svg';
+import IconAlignCenterActive from '../../images/icon-align-center-active.svg';
 
 import styles from './Toolbar.module.scss';
 
@@ -45,6 +51,7 @@ const Toolbar: FC<ToolbarProps> = ({
         title="Go backward"
         icon={IconUndo}
         iconHover={IconUndoHover}
+        iconActive={IconUndoActive}
       />
 
       <IconButton
@@ -55,6 +62,7 @@ const Toolbar: FC<ToolbarProps> = ({
         title="Go forward"
         icon={IconRedo}
         iconHover={IconRedoHover}
+        iconActive={IconRedoActive}
       />
 
       <IconButton
@@ -76,6 +84,14 @@ const Toolbar: FC<ToolbarProps> = ({
             IconAlignLeftHover,
             IconAlignRightHover,
             IconAlignCenterHover,
+          ][justification]
+        }
+        iconActive={
+          [
+            IconAlignJustifyActive,
+            IconAlignLeftActive,
+            IconAlignRightActive,
+            IconAlignCenterActive,
           ][justification]
         }
       />
