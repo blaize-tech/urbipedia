@@ -19,7 +19,7 @@ import {
 } from "../../util/urbit";
 
 import Logo from './Logo';
-import { Toolbar } from './Toolbar';
+import Toolbar from './Toolbar';
 import { Collapse } from './Collapse';
 import { RenameModal } from "./RenameModal";
 import { EditFileModal } from "./EditFileModal";
