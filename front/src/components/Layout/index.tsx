@@ -10,6 +10,8 @@ import { initialFilter, TagColors } from '../config';
 import FilesListBar from '../FilesListBar';
 import Sidebar from '../Sidebar';
 
+import styles from './Layout.module.scss';
+
 interface LayoutProps {
   graphData: OrgRoamGraphReponse;
   visuals: typeof initialVisuals;
@@ -60,7 +62,7 @@ const Layout: FC<LayoutProps> = ({
   const windowWidth = useWindowWidth();
 
   return (
-    <div>
+    <div className={styles.container}>
       <FilesListBar
         windowWidth={windowWidth}
         graphData={graphData}
