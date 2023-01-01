@@ -2,6 +2,7 @@
   transition: background-color .3s, border-color .3s;
   background-color: #FCFCFC;
   border-radius: 20px;
+  position: relative;
   padding: 7.75px;
   border: 1px solid #E9E9EB;
   cursor: pointer;
@@ -10,6 +11,14 @@
     &:focus,
     &:hover {
       border-color: #8158FF;
+
+      .icon {
+        opacity: 0;
+
+        &--hover {
+          opacity: 1;
+        }
+      }
     }
 
     &:active {
@@ -24,6 +33,15 @@
 }
 
 .icon {
+  transition: opacity .3s;
   height: auto;
   width: 17.5px;
+
+  &--hover {
+    transform: translateX(-50%) translateY(-50%);
+    position: absolute;
+    opacity: 0;
+    left: 50%;
+    top: 50%;
+  }
 }

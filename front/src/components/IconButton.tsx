@@ -11,6 +11,7 @@ interface IconButtonProps {
   onClick: (arg: any) => void;
   title?: string;
   icon: string;
+  iconHover: string;
 }
 
 const IconButton: FC<IconButtonProps> = ({
@@ -20,7 +21,8 @@ const IconButton: FC<IconButtonProps> = ({
   onClick,
   title,
   icon,
-}, ref) => {
+  iconHover,
+}) => {
   return (
     <Tooltip label={title}>
       <button
@@ -35,6 +37,14 @@ const IconButton: FC<IconButtonProps> = ({
           height="16"
           width="16"
           src={icon}
+          alt={title}
+        />
+
+        <img
+          className={cn(styles.icon, styles['icon--hover'])}
+          height="16"
+          width="16"
+          src={iconHover}
           alt={title}
         />
       </button>
