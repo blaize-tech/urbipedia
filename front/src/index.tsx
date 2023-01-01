@@ -64,6 +64,7 @@ import { getLinkColor } from './util/getLinkColor'
 import {UrbitClientWrapper, connectUrbitClient} from "./util/urbit";
 import MyApp from './_app'
 import FilesListBar from './components/FilesListBar'
+import Layout from './components/Layout';
 import {openNodeInEmacs} from "./util/webSocketFunctions";
 
 const d3promise = import('d3-force-3d')
@@ -534,21 +535,28 @@ export function GraphPage() {
 
   return (
     <VariablesContext.Provider value={{ ...emacsVariables }}>
-      <Box
-        display="flex"
-        alignItems="flex-start"
-        flexDirection="row"
-        height="100vh"
-        overflow="clip"
+      <Layout
+        graphData={currentOrgRoamGraph.current}
+        visuals={visuals}
+        nodeById={nodeByIdRef.current!}
+        previewNode={previewNode}
+        setPreviewNode={setPreviewNode}
+        linksByNodeId={linksByNodeIdRef.current!}
+        nodeByCite={nodeByCiteRef.current!}
+        setSidebarHighlightedNode={setSidebarHighlightedNode}
+        canUndo={canUndo}
+        canRedo={canRedo}
+        previousPreviewNode={previousPreviewNode}
+        nextPreviewNode={nextPreviewNode}
+        openContextMenu={openContextMenu}
+        filter={filter}
+        setFilter={setFilter}
+        tagColors={tagColors}
+        setTagColors={setTagColors}
+        macros={emacsVariables.katexMacros}
+        attachDir={emacsVariables.attachDir || ''}
+        useInheritance={emacsVariables.useInheritance || false}
       >
-        <Box position="relative" zIndex={4}>
-          <FilesListBar
-            windowWidth={windowWidth}
-            graphData={currentOrgRoamGraph.current}
-            visuals={visuals}
-          />
-        </Box>
-
         <Tweaks
           {...{
             physics,
@@ -636,30 +644,6 @@ export function GraphPage() {
           </Flex>
         </Box>
 
-        <Box position="relative" zIndex={4}>
-          <Sidebar
-            nodeById={nodeByIdRef.current!}
-            previewNode={previewNode}
-            setPreviewNode={setPreviewNode}
-            linksByNodeId={linksByNodeIdRef.current!}
-            nodeByCite={nodeByCiteRef.current!}
-            setSidebarHighlightedNode={setSidebarHighlightedNode}
-            canUndo={canUndo}
-            canRedo={canRedo}
-            previousPreviewNode={previousPreviewNode}
-            nextPreviewNode={nextPreviewNode}
-            openContextMenu={openContextMenu}
-            windowWidth={windowWidth}
-            filter={filter}
-            setFilter={setFilter}
-            tagColors={tagColors}
-            setTagColors={setTagColors}
-            macros={emacsVariables.katexMacros}
-            attachDir={emacsVariables.attachDir || ''}
-            useInheritance={emacsVariables.useInheritance || false}
-          />
-        </Box>
-
         {contextMenu.isOpen && (
           <div ref={contextMenuRef}>
             <ContextMenu
@@ -679,7 +663,7 @@ export function GraphPage() {
             />
           </div>
         )}
-      </Box>
+      </Layout>
     </VariablesContext.Provider>
   )
 }
