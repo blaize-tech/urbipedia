@@ -1,5 +1,4 @@
 import { FC } from 'react';
-import { Tooltip } from '@chakra-ui/react';
 
 import IconButton from '../IconButton';
 
