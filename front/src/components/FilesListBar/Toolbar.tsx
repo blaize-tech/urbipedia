@@ -36,6 +36,7 @@ const Toolbar: FC<ToolbarProps> = ({
     <div className={styles.container}>
       <IconButton
         ariaLabel="Create new file"
+        className={styles.button}
         onClick={createNewFile}
         title="Create new"
         icon={IconAdd}
@@ -45,6 +46,7 @@ const Toolbar: FC<ToolbarProps> = ({
 
       <IconButton
         ariaLabel="Edit selected file"
+        className={styles.button}
         disabled={!haveSelection}
         onClick={editFile}
         title="Edit selected"
@@ -55,6 +57,7 @@ const Toolbar: FC<ToolbarProps> = ({
 
       <IconButton
         ariaLabel="Rename selected file"
+        className={styles.button}
         disabled={!haveSelection}
         onClick={renameFile}
         title="Rename selected"
@@ -65,6 +68,7 @@ const Toolbar: FC<ToolbarProps> = ({
 
       <IconButton
         ariaLabel="Delete selected file"
+        className={styles.button}
         disabled={!haveSelection}
         onClick={deleteFile}
         title="Delete selected"

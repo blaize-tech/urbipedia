@@ -161,7 +161,7 @@ const FilesListBar: FC<FilesListBarProps> = ({
       }}
       className={styles.container}
       maxWidth={windowWidth - 200}
-      minWidth="220px"
+      minWidth="250px"
       enable={{
         top: false,
         right: true,
