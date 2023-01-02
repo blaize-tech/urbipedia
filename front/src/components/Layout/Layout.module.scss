@@ -6,3 +6,18 @@
   position: relative;
   display: flex;
 }
+
+.sidebar {
+  position: relative;
+  z-index: 10;
+}
+
+.content {
+  background-color: #F6F7FA;
+  position: absolute;
+  opacity: .7;
+  height: 100%;
+  width: 100%;
+  left: 0;
+  top: 0;
+}

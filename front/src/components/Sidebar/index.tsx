@@ -3,6 +3,7 @@ import { Scrollbars } from 'react-custom-scrollbars-2';
 import { NodeObject } from 'force-graph';
 import { Resizable } from 're-resizable';
 import { VStack, Box } from '@chakra-ui/react';
+import cn from 'classnames';
 
 import { OrgRoamNode } from '../../api';
 import { LinksByNodeId, NodeByCite, NodeById } from '../../index';
@@ -17,6 +18,7 @@ import { Title } from './Title';
 import styles from './Sidebar.module.scss';
 
 interface SidebarProps {
+  className: string;
   nodeById: NodeById;
   previewNode: NodeObject;
   setPreviewNode: any;
@@ -39,6 +41,7 @@ interface SidebarProps {
 }
 
 const Sidebar: FC<SidebarProps> = ({
+  className,
   previewNode,
   setPreviewNode,
   nodeById,
@@ -78,7 +81,7 @@ const Sidebar: FC<SidebarProps> = ({
       onResizeStop={(e, direction, ref, d) => {
         setSidebarWidth((curr: number) => curr + d.width);
       }}
-      className={styles.container}
+      className={cn(styles.container, className)}
       maxWidth={windowWidth - 200}
       minWidth="250px"
       enable={{

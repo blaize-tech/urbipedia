@@ -582,44 +582,42 @@ export function GraphPage() {
           haveOffset={true}
         />
 
-        <Box position="absolute">
-          {(graphData && graphData.nodes.length) ? (
-            <Graph
-              //ref={graphRef}
-              nodeById={nodeByIdRef.current!}
-              linksByNodeId={linksByNodeIdRef.current!}
-              urbitClientWrapper={urbitClient.current}
-              variables={emacsVariables}
-              {...{
-                physics,
-                graphData,
-                threeDim,
-                emacsNodeId,
-                filter,
-                visuals,
-                behavior,
-                mouse,
-                scope,
-                setScope,
-                tagColors,
-                setPreviewNode,
-                sidebarHighlightedNode,
-                windowWidth,
-                windowHeight,
-                openContextMenu,
-                contextMenu,
-                handleLocal,
-                mainWindowWidth,
-                setMainWindowWidth,
-                setContextMenuTarget,
-                graphRef,
-                clusterRef,
-                coloring,
-                local,
-              }}
-            />
-          ) : (<div/>)}
-        </Box>
+        {(graphData && graphData.nodes.length) ? (
+          <Graph
+            //ref={graphRef}
+            nodeById={nodeByIdRef.current!}
+            linksByNodeId={linksByNodeIdRef.current!}
+            urbitClientWrapper={urbitClient.current}
+            variables={emacsVariables}
+            {...{
+              physics,
+              graphData,
+              threeDim,
+              emacsNodeId,
+              filter,
+              visuals,
+              behavior,
+              mouse,
+              scope,
+              setScope,
+              tagColors,
+              setPreviewNode,
+              sidebarHighlightedNode,
+              windowWidth,
+              windowHeight,
+              openContextMenu,
+              contextMenu,
+              handleLocal,
+              mainWindowWidth,
+              setMainWindowWidth,
+              setContextMenuTarget,
+              graphRef,
+              clusterRef,
+              coloring,
+              local,
+            }}
+          />
+        ) : (<div/>)}
 
         <Box position="relative" zIndex={4} width="100%">
           <Flex className="headerBar" h={10} flexDir="column">

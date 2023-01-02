@@ -65,15 +65,17 @@ const Layout: FC<LayoutProps> = ({
     <div className={styles.container}>
       <FilesListBar
         windowWidth={windowWidth}
+        className={styles.sidebar}
         graphData={graphData}
         visuals={visuals}
       />
 
-      <div>
+      <div className={styles.content}>
         {children}
       </div>
 
       <Sidebar
+        className={styles.sidebar}
         nodeById={nodeById}
         previewNode={previewNode}
         setPreviewNode={setPreviewNode}

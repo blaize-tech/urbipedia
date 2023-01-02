@@ -2,6 +2,7 @@ import { FC, useContext, useState } from 'react';
 import { useTheme, useDisclosure } from '@chakra-ui/react';
 import { Scrollbars } from 'react-custom-scrollbars-2';
 import { Resizable } from 're-resizable';
+import cn from 'classnames';
 
 import { ThemeContext } from '../../util/themecontext';
 import { usePersistantState } from '../../util/persistant-state';
@@ -28,12 +29,14 @@ import styles from './FilesListBar.module.scss';
 
 interface FilesListBarProps {
   windowWidth: number;
+  className: string;
   graphData: OrgRoamGraphReponse;
   visuals: typeof initialVisuals;
 }
 
 const FilesListBar: FC<FilesListBarProps> = ({
   windowWidth,
+  className,
   graphData,
   visuals
 }) => {
@@ -159,7 +162,7 @@ const FilesListBar: FC<FilesListBarProps> = ({
       onResizeStop={(e, direction, ref, d) => {
         setSidebarWidth((curr: number) => curr + d.width)
       }}
-      className={styles.container}
+      className={cn(styles.container, className)}
       maxWidth={windowWidth - 200}
       minWidth="250px"
       enable={{
