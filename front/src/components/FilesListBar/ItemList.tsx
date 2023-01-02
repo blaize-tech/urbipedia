@@ -20,6 +20,7 @@ const ItemList: FC<ItemListProps> = ({
       {list.map(({ id, file }: OrgRoamNode, index: number) => (
         <li className={styles.element} key={id}>
           <button
+            className={styles.button}
             onClick={() => {
               setSelectedItemIndex(index);
               setCurrentFileName(file);

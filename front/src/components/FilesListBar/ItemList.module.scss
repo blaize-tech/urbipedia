@@ -8,3 +8,25 @@
     margin-bottom: 23px;
   }
 }
+
+.button {
+  transition: font-weight .3s, opacity .3s;
+  font-family: 'Montserrat';
+  font-weight: 400;
+  line-height: 20px;
+  font-size: 16px;
+  padding: 3px 30px 2px;
+  outline: none;
+  border: none;
+  cursor: pointer;
+  color: #3E3F4B;
+
+  &:hover {
+    color: #8158FF;
+  }
+
+  &:active {
+    font-weight: 500;
+    color: #303FC0;
+  }
+}
