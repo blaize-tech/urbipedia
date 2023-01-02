@@ -15,7 +15,6 @@ export interface BacklinksProps {
   linksByNodeId: LinksByNodeId
   nodeByCite: NodeByCite
   setSidebarHighlightedNode: OrgRoamNode
-  openContextMenu: any
   outline: boolean
   attachDir: string
   useInheritance: boolean
@@ -31,7 +30,6 @@ export const Backlinks = (props: BacklinksProps) => {
     nodeById,
     linksByNodeId,
     nodeByCite,
-    openContextMenu,
     outline,
     macros,
     attachDir,
@@ -76,7 +74,6 @@ export const Backlinks = (props: BacklinksProps) => {
                   nodeById={nodeById}
                   previewNode={previewNode}
                   setPreviewNode={setPreviewNode}
-                  openContextMenu={openContextMenu}
                   outline={outline}
                   noUnderline
                   {...{ attachDir, useInheritance, macros }}

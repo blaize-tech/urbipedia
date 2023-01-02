@@ -25,7 +25,6 @@ interface LayoutProps {
   canRedo: any;
   previousPreviewNode: any;
   nextPreviewNode: any;
-  openContextMenu: any;
   filter: typeof initialFilter;
   setFilter: any;
   tagColors: TagColors;
@@ -49,7 +48,6 @@ const Layout: FC<LayoutProps> = ({
   canRedo,
   previousPreviewNode,
   nextPreviewNode,
-  openContextMenu,
   filter,
   setFilter,
   tagColors,
@@ -82,7 +80,6 @@ const Layout: FC<LayoutProps> = ({
         canRedo={canRedo}
         previousPreviewNode={previousPreviewNode}
         nextPreviewNode={nextPreviewNode}
-        openContextMenu={openContextMenu}
         filter={filter}
         setFilter={setFilter}
         tagColors={tagColors}

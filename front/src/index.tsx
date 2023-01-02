@@ -7,7 +7,6 @@ import {
   Slide,
   Tooltip,
   useDisclosure,
-  useOutsideClick,
   useTheme,
 } from '@chakra-ui/react'
 import { useAnimation } from '@lilib/hooks'
@@ -47,7 +46,6 @@ import {
   initialVisuals,
   TagColors,
 } from './components/config'
-import { ContextMenu } from './components/contextmenu'
 import Sidebar from './components/Sidebar'
 import { Tweaks } from './components/Tweaks'
 import { usePersistantState } from './util/persistant-state'
@@ -475,37 +473,6 @@ export function GraphPage() {
 
   const [windowWidth, windowHeight] = useWindowSize()
 
-  const contextMenuRef = useRef<any>()
-  const [contextMenuTarget, setContextMenuTarget] = useState<OrgRoamNode | string | null>(null)
-  type ContextPos = {
-    left: number | undefined
-    right: number | undefined
-    top: number | undefined
-    bottom: number | undefined
-  }
-  const [contextPos, setContextPos] = useState<ContextPos>({
-    left: 0,
-    top: 0,
-    right: undefined,
-    bottom: undefined,
-  })
-
-  const contextMenu = useDisclosure()
-  useOutsideClick({
-    ref: contextMenuRef,
-    handler: () => {
-      contextMenu.onClose()
-    },
-  })
-
-  const openContextMenu = (target: OrgRoamNode | string, event: any, coords?: ContextPos) => {
-    coords
-      ? setContextPos(coords)
-      : setContextPos({ left: event.pageX, top: event.pageY, right: undefined, bottom: undefined })
-    setContextMenuTarget(target)
-    contextMenu.onOpen()
-  }
-
   const handleLocal = (node: OrgRoamNode, command: string) => {
     if (command === 'remove') {
       setScope((currentScope: Scope) => ({
@@ -548,7 +515,6 @@ export function GraphPage() {
         canRedo={canRedo}
         previousPreviewNode={previousPreviewNode}
         nextPreviewNode={nextPreviewNode}
-        openContextMenu={openContextMenu}
         filter={filter}
         setFilter={setFilter}
         tagColors={tagColors}
@@ -605,12 +571,9 @@ export function GraphPage() {
               sidebarHighlightedNode,
               windowWidth,
               windowHeight,
-              openContextMenu,
-              contextMenu,
               handleLocal,
               mainWindowWidth,
               setMainWindowWidth,
-              setContextMenuTarget,
               graphRef,
               clusterRef,
               coloring,
@@ -641,26 +604,6 @@ export function GraphPage() {
             </Flex>
           </Flex>
         </Box>
-
-        {contextMenu.isOpen && (
-          <div ref={contextMenuRef}>
-            <ContextMenu
-              //contextMenuRef={contextMenuRef}
-              scope={scope}
-              target={contextMenuTarget}
-              background={false}
-              coordinates={contextPos}
-              handleLocal={handleLocal}
-              menuClose={contextMenu.onClose.bind(contextMenu)}
-              urbitClientWrapper={urbitClient.current}
-              setPreviewNode={setPreviewNode}
-              setFilter={setFilter}
-              filter={filter}
-              setTagColors={setTagColors}
-              tagColors={tagColors}
-            />
-          </div>
-        )}
       </Layout>
     </VariablesContext.Provider>
   )
@@ -686,9 +629,6 @@ export interface GraphProps {
   sidebarHighlightedNode: OrgRoamNode | null
   windowWidth: number
   windowHeight: number
-  setContextMenuTarget: any
-  openContextMenu: any
-  contextMenu: any
   handleLocal: any
   mainWindowWidth: number
   setMainWindowWidth: any
@@ -720,9 +660,6 @@ export const Graph = function (props: GraphProps) {
     sidebarHighlightedNode,
     windowWidth,
     windowHeight,
-    setContextMenuTarget,
-    openContextMenu,
-    contextMenu,
     handleLocal,
     variables,
     clusterRef,
@@ -749,10 +686,6 @@ export const Graph = function (props: GraphProps) {
       }
       case mouse.follow: {
         openNodeInEmacs(node, urbitClientWrapper)
-        break
-      }
-      case mouse.context: {
-        openContextMenu(node, event)
         break
       }
       default:
@@ -1229,7 +1162,6 @@ export const Graph = function (props: GraphProps) {
 
     onNodeClick: (nodeArg: NodeObject, event: any) => {
       const node = nodeArg as OrgRoamNode
-      //contextMenu.onClose()
       const doubleClickTimeBuffer = 200
       const isDoubleClick = event.timeStamp - lastNodeClickRef.current < doubleClickTimeBuffer
       lastNodeClickRef.current = event.timeStamp
@@ -1245,19 +1177,6 @@ export const Graph = function (props: GraphProps) {
         return handleClick('click', node, event)
       }, doubleClickTimeBuffer)
     },
-    /* onBackgroundClick: () => {
-     *   contextMenu.onClose()
-     *   setHoverNode(null)
-     *   if (scope.nodeIds.length === 0) {
-     *     return
-     *   }
-     *   if (mouse.backgroundExitsLocal) {
-     *     setScope((currentScope: Scope) => ({
-     *       ...currentScope,
-     *       nodeIds: [],
-     *     }))
-     *   }
-     * }, */
     onNodeHover: (node) => {
       if (!visuals.highlight) {
         return
@@ -1278,7 +1197,6 @@ export const Graph = function (props: GraphProps) {
       handleClick('right', node, event)
     },
     onNodeDrag: (node) => {
-      //contextMenu.onClose()
       setHoverNode(node)
       setDragging(true)
     },
@@ -1288,51 +1206,47 @@ export const Graph = function (props: GraphProps) {
     },
   }
 
-  return (
-    <Box overflow="hidden" onClick={contextMenu.onClose}>
-      {threeDim ? (
-        <ForceGraph3D
-          ref={graphRef}
-          {...graphCommonProps}
-          nodeThreeObjectExtend={true}
-          nodeOpacity={visuals.nodeOpacity}
-          nodeResolution={visuals.nodeResolution}
-          linkOpacity={visuals.linkOpacity}
-          nodeThreeObject={(node: OrgRoamNode) => {
-            if (!visuals.labels) {
-              return
-            }
-            if (visuals.labels < 3 && !highlightedNodes[node.id!]) {
-              return
-            }
-            const sprite = new SpriteText(node.title.substring(0, 40))
-            sprite.color = getThemeColor(visuals.labelTextColor, theme)
-            sprite.backgroundColor = getThemeColor(visuals.labelBackgroundColor, theme)
-            sprite.padding = 2
-            sprite.textHeight = 8
+  return threeDim ? (
+    <ForceGraph3D
+      ref={graphRef}
+      {...graphCommonProps}
+      nodeThreeObjectExtend={true}
+      nodeOpacity={visuals.nodeOpacity}
+      nodeResolution={visuals.nodeResolution}
+      linkOpacity={visuals.linkOpacity}
+      nodeThreeObject={(node: OrgRoamNode) => {
+        if (!visuals.labels) {
+          return
+        }
+        if (visuals.labels < 3 && !highlightedNodes[node.id!]) {
+          return
+        }
+        const sprite = new SpriteText(node.title.substring(0, 40))
+        sprite.color = getThemeColor(visuals.labelTextColor, theme)
+        sprite.backgroundColor = getThemeColor(visuals.labelBackgroundColor, theme)
+        sprite.padding = 2
+        sprite.textHeight = 8
 
-            return sprite
-          }}
-        />
-      ) : (
-        <ForceGraph2D
-          ref={graphRef}
-          {...graphCommonProps}
-          linkLineDash={(link) => {
-            const linkArg = link as OrgRoamLink
-            if (visuals.citeDashes && linkArg.type?.includes('cite')) {
-              return [visuals.citeDashLength, visuals.citeGapLength]
-            }
-            if (visuals.refDashes && linkArg.type == 'ref') {
-              return [visuals.refDashLength, visuals.refGapLength]
-            }
-            return null
-          }}
-        />
-      )}
-    </Box>
-  )
-}
+        return sprite
+      }}
+    />
+  ) : (
+    <ForceGraph2D
+      ref={graphRef}
+      {...graphCommonProps}
+      linkLineDash={(link) => {
+        const linkArg = link as OrgRoamLink
+        if (visuals.citeDashes && linkArg.type?.includes('cite')) {
+          return [visuals.citeDashLength, visuals.citeGapLength]
+        }
+        if (visuals.refDashes && linkArg.type == 'ref') {
+          return [visuals.refDashLength, visuals.refGapLength]
+        }
+        return null
+      }}
+    />
+  );
+};
 
 
 export default function Home() {

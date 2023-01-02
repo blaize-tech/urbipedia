@@ -17,7 +17,6 @@ export interface NoteProps {
   justification: number
   justificationList: string[]
   linksByNodeId: LinksByNodeId
-  openContextMenu: any
   outline: boolean
   collapse: boolean
   macros?: { [key: string]: string }
@@ -35,7 +34,6 @@ export const Note = (props: NoteProps) => {
     nodeByCite,
     setSidebarHighlightedNode,
     linksByNodeId,
-    openContextMenu,
     outline,
     collapse,
     macros,
@@ -69,7 +67,6 @@ export const Note = (props: NoteProps) => {
               previewNode,
               nodeByCite,
               setSidebarHighlightedNode,
-              openContextMenu,
               outline,
               collapse,
               nodeById,
@@ -87,7 +84,6 @@ export const Note = (props: NoteProps) => {
               linksByNodeId,
               nodeByCite,
               setSidebarHighlightedNode,
-              openContextMenu,
               outline,
               attachDir,
               useInheritance,

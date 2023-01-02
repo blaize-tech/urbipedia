@@ -10,12 +10,11 @@ export interface TagBarProps {
   setFilter: any
   tagColors: TagColors
   setTagColors: any
-  openContextMenu: any
   previewNode: NodeObject
 }
 
 export const TagBar = (props: TagBarProps) => {
-  const { filter, setFilter, tagColors, setTagColors, openContextMenu, previewNode } = props
+  const { filter, setFilter, tagColors, setTagColors, previewNode } = props
 
   const node = previewNode as OrgRoamNode
   if (!node?.tags || node?.tags?.[0] === null) {
@@ -33,10 +32,6 @@ export const TagBar = (props: TagBarProps) => {
             tabIndex={0}
             mr={2}
             mt={2}
-            onContextMenu={(e) => {
-              e.preventDefault()
-              openContextMenu(tag, e)
-            }}
             cursor="pointer"
             onClick={() => {
               if (blackList) {

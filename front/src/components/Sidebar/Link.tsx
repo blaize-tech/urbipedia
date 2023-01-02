@@ -42,7 +42,6 @@ export interface LinkProps {
   setSidebarHighlightedNode: any
   nodeByCite: NodeByCite
   nodeById: NodeById
-  openContextMenu: any
   outline: boolean
   linksByNodeId: LinksByNodeId
   isWiki?: boolean
@@ -59,7 +58,6 @@ export interface NodeLinkProps {
   href: any
   children: any
   setSidebarHighlightedNode: any
-  openContextMenu: any
   isWiki?: boolean
   noUnderline?: boolean
   id?: string
@@ -76,7 +74,6 @@ export const NodeLink = (props: NodeLinkProps) => {
     setSidebarHighlightedNode,
     setPreviewNode,
     nodeById,
-    openContextMenu,
     href,
     children,
     isWiki,
@@ -100,10 +97,6 @@ export const NodeLink = (props: NodeLinkProps) => {
       fontWeight={500}
       color={highlightColor}
       textDecoration={noUnderline ? undefined : 'underline'}
-      onContextMenu={(e) => {
-        e.preventDefault()
-        openContextMenu(nodeById[uri], e)
-      }}
       onClick={() => setPreviewNode(nodeById[uri])}
       // TODO  don't hardcode the opacitycolor
       _hover={{ textDecoration: 'none', cursor: 'pointer', bgColor: coolHighlightColor + '22' }}
@@ -134,7 +127,6 @@ export const PreviewLink = (props: LinkProps) => {
     previewNode,
     setPreviewNode,
     nodeByCite,
-    openContextMenu,
     outline,
     noUnderline,
     linksByNodeId,
@@ -230,7 +222,6 @@ export const PreviewLink = (props: LinkProps) => {
                   href,
                   children,
                   nodeByCite,
-                  openContextMenu,
                   noUnderline,
                   isWiki,
                 }}
@@ -290,7 +281,6 @@ export const PreviewLink = (props: LinkProps) => {
                         setSidebarHighlightedNode,
                         setPreviewNode,
                         nodeByCite,
-                        openContextMenu,
                         outline,
                         linksByNodeId,
                         macros,

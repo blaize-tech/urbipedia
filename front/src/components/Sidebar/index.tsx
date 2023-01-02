@@ -30,7 +30,6 @@ interface SidebarProps {
   canRedo: any;
   previousPreviewNode: any;
   nextPreviewNode: any;
-  openContextMenu: any;
   filter: typeof initialFilter;
   setFilter: any;
   tagColors: TagColors;
@@ -52,7 +51,6 @@ const Sidebar: FC<SidebarProps> = ({
   canRedo,
   previousPreviewNode,
   nextPreviewNode,
-  openContextMenu,
   filter,
   setFilter,
   tagColors,
@@ -128,7 +126,7 @@ const Sidebar: FC<SidebarProps> = ({
             <Title previewNode={previewRoamNode} />
 
             <TagBar
-              {...{ filter, setFilter, tagColors, setTagColors, openContextMenu, previewNode }}
+              {...{ filter, setFilter, tagColors, setTagColors, previewNode }}
             />
 
             <Note
@@ -141,7 +139,6 @@ const Sidebar: FC<SidebarProps> = ({
                 justification,
                 justificationList,
                 linksByNodeId,
-                openContextMenu,
                 outline,
                 setOutline,
                 collapse,
