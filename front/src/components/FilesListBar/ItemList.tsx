@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import cn from 'classnames';
 
 import { OrgRoamNode } from '../../api';
 
@@ -7,12 +8,14 @@ import styles from './ItemList.module.scss';
 interface ItemListProps {
   setSelectedItemIndex: (arr: number) => void;
   setCurrentFileName: (arr: string) => void;
+  selectedItemIndex: number;
   list: OrgRoamNode[];
 }
 
 const ItemList: FC<ItemListProps> = ({
   setSelectedItemIndex,
   setCurrentFileName,
+  selectedItemIndex,
   list,
 }) => {
   return (
@@ -20,7 +23,9 @@ const ItemList: FC<ItemListProps> = ({
       {list.map(({ id, file }: OrgRoamNode, index: number) => (
         <li className={styles.element} key={id}>
           <button
-            className={styles.button}
+            className={cn(styles.button, {
+              [styles.isActive]: selectedItemIndex === index,
+            })}
             onClick={() => {
               setSelectedItemIndex(index);
               setCurrentFileName(file);

@@ -160,6 +160,7 @@ const FilesListBar: FC<FilesListBarProps> = ({
         <ItemList
           setSelectedItemIndex={setSelectedItemIndex}
           setCurrentFileName={setCurrentFileName}
+          selectedItemIndex={selectedItemIndex}
           list={graphData.nodes}
         />
       </Scrollbars>
