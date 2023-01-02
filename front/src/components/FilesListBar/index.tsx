@@ -22,6 +22,7 @@ import {
 
 import Logo from './Logo';
 import Toolbar from './Toolbar';
+import ItemList from './ItemList';
 import { Collapse } from './Collapse';
 import { RenameModal } from "./RenameModal";
 import { EditFileModal } from "./EditFileModal";
@@ -60,38 +61,6 @@ const FilesListBar: FC<FilesListBarProps> = ({
     onOpenEditFileModal = onOpen;
     onCloseEditFileModal = onClose;
   }
-
-  const items = (list: Array<string>) => {
-    return (
-      list.map((item, index) => {
-        const id = graphData.nodes[index].id;
-        return (<div
-          key={id}
-          onClick={() => {
-            for (let i = 0; i < graphData.nodes.length; i++) {
-              if (graphData.nodes[index].id === id) {
-                setCurrentFileName(graphData.nodes[index].file);
-                setSelectedItemIndex(index);
-                break;
-              }
-            }
-          }}
-          style={{
-            width: "100%",
-            background: (index !== selectedItemIndex)
-              ? getThemeColor(visuals.labelBackgroundColor, theme)
-              : getThemeColor(highlightColor, theme),
-            margin: "1px",
-            paddingLeft: "5px",
-          }}
-        >{item}</div>)
-      })
-    )
-  };
-
-  const filesList = graphData.nodes.map((node) => {
-    return node.file;
-  });
 
   const createNewFile = async () => {
     const nameExist: Map<string, boolean> = new Map<string, boolean>;
@@ -180,17 +149,19 @@ const FilesListBar: FC<FilesListBarProps> = ({
       <Logo />
 
       <Toolbar
-        {...{
-          createNewFile,
-          editFile,
-          renameFile,
-          deleteFile,
-        }}
+        createNewFile={createNewFile}
+        editFile={editFile}
+        renameFile={renameFile}
+        deleteFile={deleteFile}
         haveSelection={(selectedItemIndex >= 0)}
       />
 
       <Scrollbars autoHide={false}>
-        {items(filesList)}
+        <ItemList
+          setSelectedItemIndex={setSelectedItemIndex}
+          setCurrentFileName={setCurrentFileName}
+          list={graphData.nodes}
+        />
       </Scrollbars>
 
       {isOpenRenameDialog && (<RenameModal
