@@ -18,7 +18,7 @@ const ItemList: FC<ItemListProps> = ({
   return (
     <ul className={styles.container}>
       {list.map(({ id, file }: OrgRoamNode, index: number) => (
-        <li key={id}>
+        <li className={styles.element} key={id}>
           <button
             onClick={() => {
               setSelectedItemIndex(index);
