@@ -2,6 +2,8 @@ import { FC } from 'react';
 
 import { OrgRoamNode } from '../../api';
 
+import styles from './ItemList.module.scss';
+
 interface ItemListProps {
   setSelectedItemIndex: (arr: number) => void;
   setCurrentFileName: (arr: string) => void;
@@ -14,7 +16,7 @@ const ItemList: FC<ItemListProps> = ({
   list,
 }) => {
   return (
-    <ul>
+    <ul className={styles.container}>
       {list.map(({ id, file }: OrgRoamNode, index: number) => (
         <li key={id}>
           <button
