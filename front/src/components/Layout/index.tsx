@@ -1,5 +1,4 @@
 import { FC } from 'react';
-import { useWindowWidth } from '@react-hook/window-size';
 import { NodeObject } from 'force-graph';
 
 import { OrgRoamGraphReponse } from '../../api';
@@ -59,12 +58,9 @@ const Layout: FC<LayoutProps> = ({
   attachDir,
   useInheritance,
 }) => {
-  const windowWidth = useWindowWidth();
-
   return (
     <div className={styles.container}>
       <FilesListBar
-        windowWidth={windowWidth}
         className={styles.sidebar}
         graphData={graphData}
         visuals={visuals}
@@ -87,7 +83,6 @@ const Layout: FC<LayoutProps> = ({
         previousPreviewNode={previousPreviewNode}
         nextPreviewNode={nextPreviewNode}
         openContextMenu={openContextMenu}
-        windowWidth={windowWidth}
         filter={filter}
         setFilter={setFilter}
         tagColors={tagColors}

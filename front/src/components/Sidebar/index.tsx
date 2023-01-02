@@ -1,4 +1,5 @@
 import { FC, useEffect, useState } from 'react';
+import { useWindowWidth } from '@react-hook/window-size';
 import { Scrollbars } from 'react-custom-scrollbars-2';
 import { NodeObject } from 'force-graph';
 import { Resizable } from 're-resizable';
@@ -30,7 +31,6 @@ interface SidebarProps {
   previousPreviewNode: any;
   nextPreviewNode: any;
   openContextMenu: any;
-  windowWidth: number;
   filter: typeof initialFilter;
   setFilter: any;
   tagColors: TagColors;
@@ -53,7 +53,6 @@ const Sidebar: FC<SidebarProps> = ({
   previousPreviewNode,
   nextPreviewNode,
   openContextMenu,
-  windowWidth,
   filter,
   setFilter,
   tagColors,
@@ -64,6 +63,7 @@ const Sidebar: FC<SidebarProps> = ({
 }) => {
   const [previewRoamNode, setPreviewRoamNode] = useState<OrgRoamNode | undefined>();
   const [sidebarWidth, setSidebarWidth] = usePersistantState<number>('sidebarWidth', 400);
+  const windowWidth = useWindowWidth();
 
   useEffect(() => {
     if (!previewNode?.id) {

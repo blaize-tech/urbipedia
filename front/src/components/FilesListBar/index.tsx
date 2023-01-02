@@ -1,4 +1,5 @@
 import { FC, useContext, useState } from 'react';
+import { useWindowWidth } from '@react-hook/window-size';
 import { useTheme, useDisclosure } from '@chakra-ui/react';
 import { Scrollbars } from 'react-custom-scrollbars-2';
 import { Resizable } from 're-resizable';
@@ -28,18 +29,17 @@ import { EditFileModal } from "./EditFileModal";
 import styles from './FilesListBar.module.scss';
 
 interface FilesListBarProps {
-  windowWidth: number;
   className: string;
   graphData: OrgRoamGraphReponse;
   visuals: typeof initialVisuals;
 }
 
 const FilesListBar: FC<FilesListBarProps> = ({
-  windowWidth,
   className,
   graphData,
   visuals
 }) => {
+  const windowWidth = useWindowWidth();
   const theme = useTheme()
   const {highlightColor} = useContext(ThemeContext)
   const [sidebarWidth, setSidebarWidth] = usePersistantState<number>('sidebarWidth', 400);
