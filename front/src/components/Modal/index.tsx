@@ -3,8 +3,6 @@ import {
     Modal as ModalContainer,
     ModalOverlay,
     ModalContent,
-    ModalHeader,
-    ModalBody,
     ModalFooter,
     Button,
 } from '@chakra-ui/react';
@@ -38,9 +36,10 @@ const Modal: FC<ModalProps> = ({
           <ModalCloseButton/>
         </header>
 
-        <ModalBody>
+        <section className={styles.content}>
           {children}
-        </ModalBody>
+        </section>
+
         <ModalFooter>
           <Button mr={3} onClick={onClose}>
             Cancel
