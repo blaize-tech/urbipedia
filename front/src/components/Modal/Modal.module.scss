@@ -30,3 +30,11 @@
 .content {
   padding: 20px 19px 15px;
 }
+
+.footer {
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: nowrap;
+  display: flex;
+  padding: 15px 19px 19px;
+}

@@ -3,7 +3,6 @@ import {
     Modal as ModalContainer,
     ModalOverlay,
     ModalContent,
-    ModalFooter,
     Button,
 } from '@chakra-ui/react';
 
@@ -40,7 +39,7 @@ const Modal: FC<ModalProps> = ({
           {children}
         </section>
 
-        <ModalFooter>
+        <footer className={styles.footer}>
           <Button mr={3} onClick={onClose}>
             Cancel
           </Button>
@@ -52,7 +51,7 @@ const Modal: FC<ModalProps> = ({
           >
             Ok
           </Button>
-        </ModalFooter>
+        </footer>
       </ModalContent>
     </ModalContainer>
   );
