@@ -6,6 +6,7 @@ import {
 } from '@chakra-ui/react';
 
 import ModalCloseButton from '../ModalCloseButton';
+import Button from '../Button';
 
 import styles from './Modal.module.scss';
 
@@ -39,12 +40,19 @@ const Modal: FC<ModalProps> = ({
         </section>
 
         <footer className={styles.footer}>
-          <button className={styles.button} onClick={onSubmit} type="submit">
-            Accept
-          </button>
-          <button className={styles.button} onClick={onClose} type="button">
-            Cancel
-          </button>
+          <Button
+            className={styles.button}
+            onClick={onSubmit}
+            type="submit"
+            text="Accept"
+          />
+
+          <Button
+            className={styles.button}
+            onClick={onClose}
+            type="button"
+            text="Cancel"
+          />
         </footer>
       </ModalContent>
     </ModalContainer>
