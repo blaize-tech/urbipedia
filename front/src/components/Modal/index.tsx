@@ -11,7 +11,9 @@ import {
 
 import ModalCloseButton from '../ModalCloseButton';
 
-interface RenameModalProps {
+import styles from './Modal.module.scss';
+
+interface ModalProps {
   isVisible: boolean;
   onSubmit: () => void;
   onClose: () => void;
@@ -19,7 +21,7 @@ interface RenameModalProps {
   children: any;
 }
 
-const Modal: FC<RenameModalProps> = ({
+const Modal: FC<ModalProps> = ({
   isVisible,
   onSubmit,
   onClose,
@@ -29,7 +31,7 @@ const Modal: FC<RenameModalProps> = ({
   return (
     <ModalContainer isCentered isOpen={isVisible} onClose={onClose}>
       <ModalOverlay/>
-      <ModalContent zIndex="popover">
+      <ModalContent className={styles.container} zIndex="popover">
         <ModalHeader>{title}</ModalHeader>
         <ModalCloseButton/>
         <ModalBody>
