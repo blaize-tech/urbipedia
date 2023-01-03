@@ -1,4 +1,7 @@
 import { FC } from 'react';
+import cn from 'classnames';
+
+import styles from './Button.module.scss';
 
 interface ButtonProps {
   className: string;
@@ -9,7 +12,11 @@ interface ButtonProps {
 
 const Button: FC<ButtonProps> = ({ className, onClick, type, text }) => {
   return (
-    <button className={className} onClick={onClick} type={type || 'button'}>
+    <button
+      className={cn(styles.container, className)}
+      onClick={onClick}
+      type={type || 'button'}
+    >
       {text}
     </button>
   );
