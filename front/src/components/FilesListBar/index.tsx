@@ -167,7 +167,7 @@ const FilesListBar: FC<FilesListBarProps> = ({
       {isOpenRenameDialog && (
         <RenameModal
           name={currentFileName}
-          showModal={isOpenRenameDialog}
+          isVisible={isOpenRenameDialog}
           onRename={onRenameFile}
           onClose={onCloseRenameDialog}
         />
