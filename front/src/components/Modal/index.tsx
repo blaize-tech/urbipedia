@@ -4,11 +4,12 @@ import {
     ModalOverlay,
     ModalContent,
     ModalHeader,
-    ModalCloseButton,
     ModalBody,
     ModalFooter,
     Button,
 } from '@chakra-ui/react';
+
+import ModalCloseButton from '../ModalCloseButton';
 
 interface RenameModalProps {
   isVisible: boolean;
