@@ -23,8 +23,8 @@ import {
 import Logo from './Logo';
 import Toolbar from './Toolbar';
 import ItemList from './ItemList';
-import RenameModal from "./RenameModal";
-import { EditFileModal } from "./EditFileModal";
+import RenameModal from './RenameModal';
+import EditFileModal from './EditFileModal';
 
 import styles from './FilesListBar.module.scss';
 
@@ -167,19 +167,21 @@ const FilesListBar: FC<FilesListBarProps> = ({
       {isOpenRenameDialog && (
         <RenameModal
           name={currentFileName}
-          isVisible={isOpenRenameDialog}
           onRename={onRenameFile}
           onClose={onCloseRenameDialog}
+          isVisible={isOpenRenameDialog}
         />
       )}
 
-      {isOpenEditFileModal && (<EditFileModal
-        showModal={isOpenEditFileModal}
-        onEdit={onEditFile}
-        onClose={onCloseEditFileModal}
-        graphData={graphData}
-        node={graphData.nodes[selectedItemIndex]}
-      />)}
+      {isOpenEditFileModal && (
+        <EditFileModal
+          node={graphData.nodes[selectedItemIndex]}
+          onEdit={onEditFile}
+          onClose={onCloseEditFileModal}
+          graphData={graphData}
+          isVisible={isOpenEditFileModal}
+        />
+      )}
     </Resizable>
   );
 };
