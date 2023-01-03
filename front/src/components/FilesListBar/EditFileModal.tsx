@@ -1,7 +1,6 @@
 import { FC, useContext, useEffect, useState } from 'react';
 import { Textarea } from '@chakra-ui/react';
 import {
-  Modal,
   ModalOverlay,
   ModalContent,
   ModalHeader,
@@ -15,6 +14,8 @@ import {
 import { CUIAutoComplete, Item } from 'chakra-ui-autocomplete';
 import { ThemeContext } from '../../util/themecontext';
 import { OrgRoamGraphReponse, OrgRoamNode } from '../../api';
+
+import Modal from '../Modal';
 
 interface EditFileModalProps {
   node: OrgRoamNode;
@@ -82,125 +83,105 @@ const EditFileModal: FC<EditFileModalProps> = ({
     );
 
   return (
-    <Modal isCentered isOpen={isVisible} onClose={onClose}>
-      <ModalOverlay/>
+    <Modal
+      isVisible={isVisible}
+      onSubmit={() => {
+        onEdit(
+          newContent,
+          selectedItemsTags.map((item) => item.value),
+          selectedItemsLinks.map((item) => item.value),
+        );
+      }}
+      onClose={onClose}
+      title={node.file}
+    >
+      <VStack spacing={4} display="flex" alignItems="flex-start">
+        <Text>Edit file:</Text>
 
-      <ModalContent zIndex="popover">
-        <ModalHeader>{node.file}</ModalHeader>
+        <Textarea
+          value={newContent}
+          onChange={(e) => setNewContent(e.target.value)}
+        />
 
-        <ModalCloseButton/>
+        <CUIAutoComplete
+          labelStyleProps={{ fontWeight: 300, fontSize: 14 }}
+          items={tagsOptionArray}
+          label="Tags:"
+          placeholder="Tag"
+          onCreateItem={(item) => {
+            if (!graphData.tags.includes(item.value)) {
+              setSelectedItemsTags((curr) => [...selectedItemsTags, item]);
+              tagsOptionArray.push(item);
+            }
+          }}
+          disableCreateItem={false}
+          selectedItems={selectedItemsTags}
+          onSelectedItemsChange={(changes) => {
+            if (changes.selectedItems) {
+              setSelectedItemsTags(changes.selectedItems);
+            }
+          }}
+          listItemStyleProps={{ overflow: 'hidden' }}
+          highlightItemBg="gray.400"
+          toggleButtonStyleProps={{ variant: 'outline' }}
+          inputStyleProps={{
+            mt: 2,
+            height: 8,
+            focusBorderColor: highlightColor,
+            color: 'gray.800',
+            borderColor: 'gray.500',
+          }}
+          tagStyleProps={{
+            justifyContent: 'flex-start',
+            fontSize: 10,
+            borderColor: highlightColor,
+            borderWidth: 1,
+            borderRadius: 'md',
+            color: highlightColor,
+            bg: '',
+            height: 4,
+            mb: 2,
+          }}
+          itemRenderer={(selected) => selected.label}
+        />
 
-        <ModalBody style={{ visibility: showTrigger ? 'visible' : 'collapse' }}>
-          <VStack spacing={4} display="flex" alignItems="flex-start">
-            <Text>Edit file:</Text>
-
-            <Textarea
-              value={newContent}
-              onChange={(e) => setNewContent(e.target.value)}
-            />
-
-            <CUIAutoComplete
-              labelStyleProps={{ fontWeight: 300, fontSize: 14 }}
-              items={tagsOptionArray}
-              label="Tags:"
-              placeholder="Tag"
-              onCreateItem={(item) => {
-                if (!graphData.tags.includes(item.value)) {
-                  setSelectedItemsTags((curr) => [...selectedItemsTags, item]);
-                  tagsOptionArray.push(item);
-                }
-              }}
-              disableCreateItem={false}
-              selectedItems={selectedItemsTags}
-              onSelectedItemsChange={(changes) => {
-                if (changes.selectedItems) {
-                  setSelectedItemsTags(changes.selectedItems);
-                }
-              }}
-              listItemStyleProps={{ overflow: 'hidden' }}
-              highlightItemBg="gray.400"
-              toggleButtonStyleProps={{ variant: 'outline' }}
-              inputStyleProps={{
-                mt: 2,
-                height: 8,
-                focusBorderColor: highlightColor,
-                color: 'gray.800',
-                borderColor: 'gray.500',
-              }}
-              tagStyleProps={{
-                justifyContent: 'flex-start',
-                fontSize: 10,
-                borderColor: highlightColor,
-                borderWidth: 1,
-                borderRadius: 'md',
-                color: highlightColor,
-                bg: '',
-                height: 4,
-                mb: 2,
-              }}
-              itemRenderer={(selected) => selected.label}
-            />
-
-            <CUIAutoComplete
-                labelStyleProps={{ fontWeight: 300, fontSize: 14 }}
-                items={linksOptionArray}
-                label="Links:"
-                placeholder="links"
-                onCreateItem={(item) => null}
-                disableCreateItem={true}
-                selectedItems={selectedItemsLinks}
-                onSelectedItemsChange={(changes) => {
-                  if (changes.selectedItems) {
-                    setSelectedItemsLinks(changes.selectedItems);
-                  }
-                }}
-                listItemStyleProps={{ overflow: 'hidden' }}
-                highlightItemBg="gray.400"
-                toggleButtonStyleProps={{ variant: 'outline' }}
-                inputStyleProps={{
-                  mt: 2,
-                  height: 8,
-                  focusBorderColor: highlightColor,
-                  color: 'gray.800',
-                  borderColor: 'gray.500',
-                }}
-                tagStyleProps={{
-                  justifyContent: 'flex-start',
-                  fontSize: 10,
-                  borderColor: highlightColor,
-                  borderWidth: 1,
-                  borderRadius: 'md',
-                  color: highlightColor,
-                  bg: '',
-                  height: 4,
-                  mb: 2,
-                }}
-                itemRenderer={(selected) => selected.label}
-            />
-          </VStack>
-        </ModalBody>
-
-        <ModalFooter>
-          <Button mr={3} onClick={onClose}>
-            Cancel
-          </Button>
-
-          <Button
-            variant="link"
-            colorScheme="red"
-            ml={3}
-            onClick={() => {
-              onEdit(
-                newContent,
-                selectedItemsTags.map((item) => item.value),
-                selectedItemsLinks.map((item) => item.value),
-              );
+        <CUIAutoComplete
+            labelStyleProps={{ fontWeight: 300, fontSize: 14 }}
+            items={linksOptionArray}
+            label="Links:"
+            placeholder="links"
+            onCreateItem={(item) => null}
+            disableCreateItem={true}
+            selectedItems={selectedItemsLinks}
+            onSelectedItemsChange={(changes) => {
+              if (changes.selectedItems) {
+                setSelectedItemsLinks(changes.selectedItems);
+              }
             }}
-          >
-            Ok
-          </Button>
-        </ModalFooter>
-      </ModalContent>
+            listItemStyleProps={{ overflow: 'hidden' }}
+            highlightItemBg="gray.400"
+            toggleButtonStyleProps={{ variant: 'outline' }}
+            inputStyleProps={{
+              mt: 2,
+              height: 8,
+              focusBorderColor: highlightColor,
+              color: 'gray.800',
+              borderColor: 'gray.500',
+            }}
+            tagStyleProps={{
+              justifyContent: 'flex-start',
+              fontSize: 10,
+              borderColor: highlightColor,
+              borderWidth: 1,
+              borderRadius: 'md',
+              color: highlightColor,
+              bg: '',
+              height: 4,
+              mb: 2,
+            }}
+            itemRenderer={(selected) => selected.label}
+        />
+      </VStack>
     </Modal>
   );
 };
