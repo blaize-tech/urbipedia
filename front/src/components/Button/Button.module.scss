@@ -1,5 +1,4 @@
 .container {
-  background-color: #FCFCFC;
   border-radius: 5px;
   font-family: 'Montserrat';
   font-weight: 500;
@@ -10,5 +9,14 @@
   outline: none;
   border: 1px solid #303FC0;
   cursor: pointer;
-  color: #303FC0;
+
+  &:not([type="submit"]) {
+    background-color: #FCFCFC;
+    color: #303FC0;
+  }
+
+  &[type="submit"] {
+    background-color: #303FC0;
+    color: #FCFCFC;
+  }
 }
