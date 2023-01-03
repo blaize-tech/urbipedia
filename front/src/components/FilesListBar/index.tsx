@@ -23,8 +23,7 @@ import {
 import Logo from './Logo';
 import Toolbar from './Toolbar';
 import ItemList from './ItemList';
-import { Collapse } from './Collapse';
-import { RenameModal } from "./RenameModal";
+import RenameModal from "./RenameModal";
 import { EditFileModal } from "./EditFileModal";
 
 import styles from './FilesListBar.module.scss';
@@ -45,7 +44,7 @@ const FilesListBar: FC<FilesListBarProps> = ({
   const {highlightColor} = useContext(ThemeContext)
   const [sidebarWidth, setSidebarWidth] = usePersistantState<number>('sidebarWidth', 400);
   const [selectedItemIndex, setSelectedItemIndex] = useState<number>(-1);
-  const [currentFileName, setCurrentFileName] = useState<string>("");
+  const [currentFileName, setCurrentFileName] = useState<string>('');
 
   let isOpenRenameDialog, onOpenRenameDialog: () => void, onCloseRenameDialog: () => void;
   {
@@ -165,12 +164,14 @@ const FilesListBar: FC<FilesListBarProps> = ({
         />
       </Scrollbars>
 
-      {isOpenRenameDialog && (<RenameModal
-        name={currentFileName}
-        showModal={isOpenRenameDialog}
-        onRename={onRenameFile}
-        onClose={onCloseRenameDialog}
-      />)}
+      {isOpenRenameDialog && (
+        <RenameModal
+          name={currentFileName}
+          showModal={isOpenRenameDialog}
+          onRename={onRenameFile}
+          onClose={onCloseRenameDialog}
+        />
+      )}
 
       {isOpenEditFileModal && (<EditFileModal
         showModal={isOpenEditFileModal}
