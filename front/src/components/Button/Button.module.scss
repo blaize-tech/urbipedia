@@ -1,4 +1,5 @@
 .container {
+  transition: background-color .3s, border-color .3s, color .3s;
   border-radius: 5px;
   font-family: 'Montserrat';
   font-weight: 500;
@@ -20,14 +21,24 @@
     color: #FCFCFC;
   }
 
-  &:focus,
-  &:hover {
-    background-color: #8158FF;
-    border-color: #8158FF;
-    color: #FCFCFC;
+  &:not(:disabled) {
+    &:focus,
+    &:hover {
+      background-color: #8158FF;
+      border-color: #8158FF;
+      color: #FCFCFC;
+    }
+
+    &:active {
+      background-color: #303FC0;
+      border-color: #303FC0;
+    }
   }
 
-  &:active {
-    border-color: #303FC0;
+  &:disabled {
+    background-color: #E9E9EB;
+    border-color: #E9E9EB;
+    cursor: not-allowed;
+    color: #BABABE;
   }
 }

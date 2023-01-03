@@ -5,15 +5,23 @@ import styles from './Button.module.scss';
 
 interface ButtonProps {
   className: string;
+  disabled?: boolean;
   onClick: () => void;
   type?: 'submit' | 'button';
   text: string;
 }
 
-const Button: FC<ButtonProps> = ({ className, onClick, type, text }) => {
+const Button: FC<ButtonProps> = ({
+  className,
+  disabled,
+  onClick,
+  type,
+  text,
+}) => {
   return (
     <button
       className={cn(styles.container, className)}
+      disabled={disabled}
       onClick={onClick}
       type={type || 'button'}
     >
