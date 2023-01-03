@@ -30,7 +30,7 @@ const Modal: FC<ModalProps> = ({
 }) => {
   return (
     <ModalContainer isCentered isOpen={isVisible} onClose={onClose}>
-      <ModalOverlay/>
+      <ModalOverlay className={styles.overlay}/>
       <ModalContent className={styles.container} zIndex="popover">
         <ModalHeader>{title}</ModalHeader>
         <ModalCloseButton/>
