@@ -5,3 +5,12 @@
   display: flex;
   grid-gap: 5px;
 }
+
+.button {
+  background-color: #F6F7FA;
+  border-radius: 2px;
+  padding: 2px;
+  outline: none;
+  border: 1px solid #303FC0;
+  cursor: pointer;
+}
