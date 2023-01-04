@@ -6,8 +6,9 @@ import { LinksByNodeId, NodeByCite, NodeById } from '../../index';
 import { normalizeLinkEnds } from '../../util/normalizeLinkEnds';
 import { OrgRoamNode } from '../../api';
 
-
 import { PreviewLink } from './Link';
+
+import styles from './Backlinks.module.scss';
 
 interface BacklinksProps {
   previewNode: NodeObject | OrgRoamNode;
@@ -51,7 +52,7 @@ const Backlinks: FC<BacklinksProps> = ({
     });
 
   return (
-    <Box className="backlinks" borderRadius="sm" mt={6} p={4} bg="white" mb={10}>
+    <div className={styles.container}>
       <p style={{ fontSize: 16, fontWeight: 600 }}>{`Linked references (${backLinks.length})`}</p>
       <VStack
         py={2}
@@ -83,7 +84,7 @@ const Backlinks: FC<BacklinksProps> = ({
             </Box>
           )})}
       </VStack>
-    </Box>
+    </div>
   );
 };
 
