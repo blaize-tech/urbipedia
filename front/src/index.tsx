@@ -35,7 +35,7 @@ import {
   TagColors,
 } from './components/config';
 import Sidebar from './components/Sidebar';
-import { Tweaks } from './components/Tweaks';
+import Tweaks from './components/Tweaks';
 import { usePersistantState } from './util/persistant-state';
 import { ThemeContext, ThemeContextProps } from './util/themecontext';
 import { drawLabels } from './components/Graph/drawLabels';

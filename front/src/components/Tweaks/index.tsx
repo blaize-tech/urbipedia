@@ -1,4 +1,5 @@
-import { CloseIcon, RepeatClockIcon, SettingsIcon } from '@chakra-ui/icons'
+import { FC, useContext } from 'react';
+import { CloseIcon, RepeatClockIcon, SettingsIcon } from '@chakra-ui/icons';
 import {
   Accordion,
   AccordionButton,
@@ -10,10 +11,9 @@ import {
   IconButton,
   Tooltip,
   Heading,
-} from '@chakra-ui/react'
+} from '@chakra-ui/react';
+import Scrollbars from 'react-custom-scrollbars-2';
 
-import React, { useContext } from 'react'
-import Scrollbars from 'react-custom-scrollbars-2'
 import {
   initialPhysics,
   initialFilter,
@@ -24,65 +24,62 @@ import {
   TagColors,
   colorList,
   initialColoring,
-} from '../config'
+} from '../config';
+import { ThemeContext } from '../../util/themecontext';
+import { usePersistantState } from '../../util/persistant-state';
 
-import FilterPanel from './Filter/FilterPanel'
+import FilterPanel from './Filter/FilterPanel';
+import { PhysicsPanel } from './Physics/PhysicsPanel';
+import { BehaviorPanel } from './Behavior/BehaviorPanel';
+import { VisualsPanel } from './Visual/VisualsPanel';
 
-import { ThemeContext } from '../../util/themecontext'
-import { usePersistantState } from '../../util/persistant-state'
-import { PhysicsPanel } from './Physics/PhysicsPanel'
-import { BehaviorPanel } from './Behavior/BehaviorPanel'
-import { VisualsPanel } from './Visual/VisualsPanel'
-
-export interface TweakProps {
-  physics: typeof initialPhysics
-  setPhysics: any
-  threeDim: boolean
-  setThreeDim: (newValue: boolean) => void
-  filter: typeof initialFilter
-  setFilter: any
-  visuals: typeof initialVisuals
-  setVisuals: any
-  mouse: typeof initialMouse
-  setMouse: any
-  behavior: typeof initialBehavior
-  setBehavior: any
-  tags: string[]
-  tagColors: TagColors
-  setTagColors: any
-  coloring: typeof initialColoring
-  setColoring: any
-  local: typeof initialLocal
-  setLocal: any,
-  haveOffset: boolean
+interface TweakProps {
+  physics: typeof initialPhysics;
+  setPhysics: any;
+  threeDim: boolean;
+  setThreeDim: (newValue: boolean) => void;
+  filter: typeof initialFilter;
+  setFilter: any;
+  visuals: typeof initialVisuals;
+  setVisuals: any;
+  mouse: typeof initialMouse;
+  setMouse: any;
+  behavior: typeof initialBehavior;
+  setBehavior: any;
+  tags: string[];
+  tagColors: TagColors;
+  setTagColors: any;
+  coloring: typeof initialColoring;
+  setColoring: any;
+  local: typeof initialLocal;
+  setLocal: any;
+  haveOffset: boolean;
 }
 
-export const Tweaks = (props: TweakProps) => {
-  const {
-    physics,
-    setPhysics,
-    threeDim,
-    setThreeDim,
-    filter,
-    setFilter,
-    visuals,
-    setVisuals,
-    mouse,
-    setMouse,
-    behavior,
-    setBehavior,
-    tags,
-    tagColors,
-    setTagColors,
-    coloring,
-    setColoring,
-    local,
-    setLocal,
-    haveOffset
-  } = props
-
-  const [showTweaks, setShowTweaks] = usePersistantState('showTweaks', false)
-  const { highlightColor, setHighlightColor } = useContext(ThemeContext)
+const Tweaks: FC<TweakProps> = ({
+  physics,
+  setPhysics,
+  threeDim,
+  setThreeDim,
+  filter,
+  setFilter,
+  visuals,
+  setVisuals,
+  mouse,
+  setMouse,
+  behavior,
+  setBehavior,
+  tags,
+  tagColors,
+  setTagColors,
+  coloring,
+  setColoring,
+  local,
+  setLocal,
+  haveOffset
+}) => {
+  const [showTweaks, setShowTweaks] = usePersistantState('showTweaks', false);
+  const { highlightColor, setHighlightColor } = useContext(ThemeContext);
 
   return !showTweaks ? (
     <Box
@@ -238,5 +235,7 @@ export const Tweaks = (props: TweakProps) => {
         </Accordion>
       </Scrollbars>
     </Box>
-  )
-}
+  );
+};
+
+export default Tweaks;
