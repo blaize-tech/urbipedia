@@ -61,7 +61,9 @@ const Node: FC<NodeProps> = ({
 
   return (
     <div className={styles.container}>
-      <h3>{previewRoamNode?.title}</h3>
+      {previewRoamNode?.title && (
+        <h3 className={styles.title}>{previewRoamNode.title}</h3>
+      )}
 
       <TagBar
         {...{ filter, setFilter, tagColors, setTagColors, previewNode }}
