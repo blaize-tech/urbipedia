@@ -12,7 +12,7 @@ import styles from './Modal.module.scss';
 
 interface ModalProps {
   isVisible: boolean;
-  onSubmit: () => void;
+  onSubmit?: () => void;
   onClose: () => void;
   title: string;
   children: any;
@@ -39,21 +39,23 @@ const Modal: FC<ModalProps> = ({
           {children}
         </section>
 
-        <footer className={styles.footer}>
-          <Button
-            className={styles.button}
-            onClick={onSubmit}
-            type="submit"
-            text="Accept"
-          />
+        {onSubmit && (
+          <footer className={styles.footer}>
+            <Button
+              className={styles.button}
+              onClick={onSubmit}
+              type="submit"
+              text="Accept"
+            />
 
-          <Button
-            className={styles.button}
-            onClick={onClose}
-            type="button"
-            text="Cancel"
-          />
-        </footer>
+            <Button
+              className={styles.button}
+              onClick={onClose}
+              type="button"
+              text="Cancel"
+            />
+          </footer>
+        )}
       </ModalContent>
     </ModalContainer>
   );

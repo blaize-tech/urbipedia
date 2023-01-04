@@ -20,9 +20,8 @@ const Input: FC<InputProps> = ({ className, type, title, value, onChange }) => {
         <textarea
           className={cn(styles.input, styles['input--textarea'])}
           onChange={onChange}
-        >
-          {value}
-        </textarea>
+          value={value}
+        />
       ) : (
         <input
           className={styles.input}
