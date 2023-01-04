@@ -23,7 +23,6 @@ const fetchHack = async (resource, options) => {
                             value: res.body,
                         };
                     },
-                    length: res.body.length,
                 }
             }
         };
