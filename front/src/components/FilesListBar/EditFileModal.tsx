@@ -6,6 +6,7 @@ import { ThemeContext } from '../../util/themecontext';
 import { OrgRoamGraphReponse, OrgRoamNode } from '../../api';
 
 import Modal from '../Modal';
+import Input from '../Input';
 
 interface EditFileModalProps {
   node: OrgRoamNode;
@@ -85,14 +86,14 @@ const EditFileModal: FC<EditFileModalProps> = ({
       onClose={onClose}
       title={node.file}
     >
+      <Input
+        type="textarea"
+        title="Edit File:"
+        value={newContent}
+        onChange={(e) => setNewContent(e.target.value)}
+      />
+
       <VStack spacing={4} display="flex" alignItems="flex-start">
-        <Text>Edit file:</Text>
-
-        <Textarea
-          value={newContent}
-          onChange={(e) => setNewContent(e.target.value)}
-        />
-
         <CUIAutoComplete
           labelStyleProps={{ fontWeight: 300, fontSize: 14 }}
           items={tagsOptionArray}
