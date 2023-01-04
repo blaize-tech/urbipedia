@@ -3,7 +3,7 @@ import { useWindowWidth } from '@react-hook/window-size';
 import { Scrollbars } from 'react-custom-scrollbars-2';
 import { NodeObject } from 'force-graph';
 import { Resizable } from 're-resizable';
-import { VStack, Box } from '@chakra-ui/react';
+import { Box } from '@chakra-ui/react';
 import cn from 'classnames';
 
 import { OrgRoamNode } from '../../api';
@@ -12,9 +12,7 @@ import { usePersistantState } from '../../util/persistant-state';
 import { initialFilter, TagColors } from '../config';
 
 import Toolbar from './Toolbar';
-import { TagBar } from './TagBar';
-import { Note } from './Note';
-import { Title } from './Title';
+import Node from './Node';
 
 import styles from './Sidebar.module.scss';
 
@@ -70,9 +68,6 @@ const Sidebar: FC<SidebarProps> = ({
   }, [previewNode?.id]);
 
   const [justification, setJustification] = usePersistantState('justification', 1);
-  const [outline, setOutline] = usePersistantState('outline', false);
-  const justificationList = ['justify', 'start', 'end', 'center'];
-  const [collapse, setCollapse] = useState(false);
 
   return (
     <Resizable
@@ -116,38 +111,23 @@ const Sidebar: FC<SidebarProps> = ({
         )}
       >
         {previewRoamNode && (
-          <VStack
-            flexGrow={1}
-            // overflowY="scroll"
-            alignItems="left"
-            bg="alt.100"
-            paddingLeft={4}
-          >
-            <Title previewNode={previewRoamNode} />
-
-            <TagBar
-              {...{ filter, setFilter, tagColors, setTagColors, previewNode }}
-            />
-
-            <Note
-              {...{
-                setPreviewNode,
-                previewNode,
-                nodeById,
-                nodeByCite,
-                setSidebarHighlightedNode,
-                justification,
-                justificationList,
-                linksByNodeId,
-                outline,
-                setOutline,
-                collapse,
-                macros,
-                attachDir,
-                useInheritance,
-              }}
-            />
-          </VStack>
+          <Node
+            filter={filter}
+            setFilter={setFilter}
+            tagColors={tagColors}
+            setTagColors={setTagColors}
+            previewRoamNode={previewRoamNode}
+            setPreviewNode={setPreviewNode}
+            previewNode={previewNode}
+            nodeById={nodeById}
+            nodeByCite={nodeByCite}
+            setSidebarHighlightedNode={setSidebarHighlightedNode}
+            justification={justification}
+            linksByNodeId={linksByNodeId}
+            macros={macros}
+            attachDir={attachDir}
+            useInheritance={useInheritance}
+          />
         )}
       </Scrollbars>
     </Resizable>
