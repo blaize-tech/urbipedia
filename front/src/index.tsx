@@ -536,7 +536,6 @@ export function GraphPage() {
             setLocal,
           }}
           tags={tagsRef.current}
-          haveOffset={true}
         />
 
         {graphData?.nodes.length ? (

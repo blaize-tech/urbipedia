@@ -8,7 +8,7 @@ import {
   AccordionPanel,
   Box,
   Button,
-  IconButton,
+  IconButton as IconButtonOld,
   Tooltip,
   Heading,
 } from '@chakra-ui/react';
@@ -28,10 +28,15 @@ import {
 import { ThemeContext } from '../../util/themecontext';
 import { usePersistantState } from '../../util/persistant-state';
 
+import IconButton from '../IconButton';
 import FilterPanel from './Filter/FilterPanel';
 import { PhysicsPanel } from './Physics/PhysicsPanel';
 import { BehaviorPanel } from './Behavior/BehaviorPanel';
 import { VisualsPanel } from './Visual/VisualsPanel';
+
+import IconTweaks from '../../images/icon-tweaks.svg';
+import IconTweaksHover from '../../images/icon-tweaks-hover.svg';
+import IconTweaksActive from '../../images/icon-tweaks-active.svg';
 
 interface TweakProps {
   physics: typeof initialPhysics;
@@ -53,7 +58,6 @@ interface TweakProps {
   setColoring: any;
   local: typeof initialLocal;
   setLocal: any;
-  haveOffset: boolean;
 }
 
 const Tweaks: FC<TweakProps> = ({
@@ -76,28 +80,19 @@ const Tweaks: FC<TweakProps> = ({
   setColoring,
   local,
   setLocal,
-  haveOffset
 }) => {
   const [showTweaks, setShowTweaks] = usePersistantState('showTweaks', false);
   const { highlightColor, setHighlightColor } = useContext(ThemeContext);
 
   return !showTweaks ? (
-    <Box
-      position="absolute"
-      zIndex="overlay"
-      marginTop={1}
-      marginLeft={0}
-      left={haveOffset ? 403 : 1}
-      top={10}
-      display={showTweaks ? 'none' : 'block'}
-    >
-      <IconButton
-        variant="subtle"
-        aria-label="Settings"
-        icon={<SettingsIcon />}
-        onClick={() => setShowTweaks(true)}
-      />
-    </Box>
+    <IconButton
+      ariaLabel="Settings"
+      onClick={() => setShowTweaks(true)}
+      title="Settings"
+      icon={IconTweaks}
+      iconHover={IconTweaksHover}
+      iconActive={IconTweaksActive}
+    />
   ) : (
     <Box
       position="absolute"
@@ -105,7 +100,6 @@ const Tweaks: FC<TweakProps> = ({
       w="xs"
       marginTop={2}
       marginLeft={2}
-      left={haveOffset ? 403 : 1}
       top={10}
       borderRadius="lg"
       paddingBottom={5}
@@ -128,7 +122,7 @@ const Tweaks: FC<TweakProps> = ({
         </Tooltip>
         <Box display="flex" alignItems="center">
           <Tooltip label="Reset settings to defaults">
-            <IconButton
+            <IconButtonOld
               aria-label="Reset Defaults"
               icon={<RepeatClockIcon />}
               onClick={() => {
@@ -145,7 +139,7 @@ const Tweaks: FC<TweakProps> = ({
               size="sm"
             />
           </Tooltip>
-          <IconButton
+          <IconButtonOld
             size="sm"
             icon={<CloseIcon />}
             aria-label="Close Tweak Panel"
