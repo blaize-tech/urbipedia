@@ -3,6 +3,8 @@ import expressWs from 'express-ws';
 import {connectUrbitClient, urbitCreateFile, urbitUpdateTagsToFile} from "./urbit";
 
 const app = express();
+app.use(express.json());
+app.use(express.urlencoded());
 const wsInstance = expressWs(app);
 
 app.post('/create-node', function (req: Request, res: Response, next: NextFunction) {
