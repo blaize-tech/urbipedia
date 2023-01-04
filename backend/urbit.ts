@@ -11,9 +11,18 @@ function sleep(ms) {
 }
 
 const fetchWithStreamReader = async (resource, options) => {
+    const res = await fetch(resource, options);
     if (options.method === undefined) {
-        const res = await fetch(resource, options);
-        const newRes = {body: null};
+        let lastBody = "";
+        const newRes = {
+            body: "",
+            json: () => {
+                if (lastBody.length) {
+                    return JSON.parse(lastBody);
+                }
+                return {};
+            }
+        };
         Object.assign(newRes, res);
         // @ts-ignore
         newRes.ok = true;
@@ -36,10 +45,10 @@ const fetchWithStreamReader = async (resource, options) => {
                             }
                             return getChunk(source.next, level, counter + 1);
                         };
-                        const newValue = getChunk(body._readableState.buffer.head, lastRead++, 0);
+                        const lastBody = getChunk(body._readableState.buffer.head, lastRead++, 0);
                         return {
                             done,
-                            value: newValue,
+                            value: lastBody,
                         };
                     },
                 }
@@ -47,7 +56,13 @@ const fetchWithStreamReader = async (resource, options) => {
         };
         return newRes;
     }
-    return fetch(resource, options);
+    if (!res.response) {
+        res.response = {}
+    }
+    res.json = () => {
+        return JSON.parse(res.body);
+    };
+    return res;
 };
 
 if (!('fetch' in globalThis)) {
@@ -110,61 +125,61 @@ export function connectUrbitClient(listener: UrbitListener): UrbitClientWrapper 
                 urbitClientWrapper.connectionState = UrbitConnectionState.UCS_HAS_ERROR;
                 console.error('urbit error', err);
             };
+
+            const forceTestConnection = () => {
+                try {
+                    const path = `/entries/all`;
+                    if (urbitClientWrapper.urbit) {
+                        const init = () => {
+                            urbitClientWrapper.connectionState = UrbitConnectionState.UCS_CONNECTED;
+
+                            if (!urbitClientWrapper
+                                || !urbitClientWrapper.urbit
+                                || urbitClientWrapper.connectionState !== UrbitConnectionState.UCS_CONNECTED) {
+                                throw new Error("not connected to urbit");
+                            } else {
+                                urbitClientWrapper.urbit.subscribe({
+                                    app: "zettelkasten",
+                                    path: "/updates",
+                                    event: (event) => {
+                                        listener.onEvent(event);
+                                    },
+                                    err: () => console.error("Subscription rejected"),
+                                    quit: () => console.error("Kicked from subscription"),
+                                });
+                            }
+                        };
+                        urbitClientWrapper.urbit
+                            .scry({
+                                app: "zettelkasten",
+                                path: path,
+                            })
+                            .then(
+                                (data) => {
+                                    init();
+                                },
+                                (err) => {
+                                    if (err.status === 404) {
+                                        init();
+                                    } else {
+                                        console.error(err);
+                                        setTimeout(forceTestConnection, 1000);
+                                    }
+                                }
+                            );
+                    } else {
+                        setTimeout(forceTestConnection, 1000);
+                    }
+                } catch (e) {
+                    console.error(e);
+                    setTimeout(forceTestConnection, 1000);
+                }
+            };
+            forceTestConnection();
         })
         .catch(err => {
             console.error(err);
         });
-
-
-    const forceTestConnection = () => {
-        try {
-            const path = `/entries/all`;
-            if (urbitClientWrapper.urbit) {
-                const init = () => {
-                    urbitClientWrapper.connectionState = UrbitConnectionState.UCS_CONNECTED;
-
-                    if (!urbitClientWrapper
-                        || !urbitClientWrapper.urbit
-                        || urbitClientWrapper.connectionState !== UrbitConnectionState.UCS_CONNECTED) {
-                        throw new Error("not connected to urbit");
-                    } else {
-                        urbitClientWrapper.urbit.subscribe({
-                            app: "zettelkasten",
-                            path: "/updates",
-                            event: (event) => {
-                                listener.onEvent(event);
-                            },
-                            err: () => console.error("Subscription rejected"),
-                            quit: () => console.error("Kicked from subscription"),
-                        });
-                    }
-                };
-                urbitClientWrapper.urbit
-                    .scry({
-                        app: "zettelkasten",
-                        path: path,
-                    })
-                    .then(
-                        (data) => {
-                            init();
-                        },
-                        (err) => {
-                            if (err.status === 404) {
-                                init();
-                            } else {
-                                throw new Error(err.statusText);
-                            }
-                        }
-                    );
-            } else {
-                throw new Error("not connected to urbit");
-            }
-        } catch (e) {
-            console.error(e);
-            setTimeout(forceTestConnection, 1000);
-        }
-    };
-    // forceTestConnection();
 
     return urbitClientWrapper;
 }
