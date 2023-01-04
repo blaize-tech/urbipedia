@@ -57,19 +57,12 @@ const Backlinks: FC<BacklinksProps> = ({
         {`Linked references (${backLinks.length})`}
       </h4>
 
-      <VStack
-        py={2}
-        spacing={3}
-        alignItems="start"
-        divider={<StackDivider borderColor="gray.500" />}
-        align="stretch"
-        color="gray.800"
-      >
+      <ul className={styles.list}>
         {previewNode?.id && backLinks.map((link) => {
           const title = nodeById[link as string]?.title ?? '';
 
           return (
-            <Box overflow="hidden" py={1} borderRadius="sm" width="100%" key={link}>
+            <li className={styles.listItem} key={link}>
               <PreviewLink
                 linksByNodeId={linksByNodeId}
                 nodeByCite={nodeByCite}
@@ -84,9 +77,9 @@ const Backlinks: FC<BacklinksProps> = ({
               >
                 {nodeById[link as string]?.title}
               </PreviewLink>
-            </Box>
+            </li>
           )})}
-      </VStack>
+      </ul>
     </div>
   );
 };

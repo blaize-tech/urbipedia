@@ -11,3 +11,20 @@
   font-size: 16px;
   color: #3E3F4B;
 }
+
+.list {
+  margin-right: -5px;
+  margin-left: -5px;
+  list-style: none;
+}
+
+.listItem {
+  padding-right: 5px;
+  padding-left: 5px;
+  padding-top: 15px;
+
+  &:not(:last-child) {
+    padding-bottom: 14px;
+    border-bottom: 1px solid #E3E3E4;
+  }
+}
