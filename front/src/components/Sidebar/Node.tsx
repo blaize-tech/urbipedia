@@ -11,6 +11,8 @@ import { UniOrg } from '../../util/uniorg';
 import { Backlinks } from './Backlinks';
 import { TagBar } from './TagBar';
 
+import styles from './Node.module.scss';
+
 interface NodeProps {
   filter: typeof initialFilter;
   setFilter: any;
@@ -58,7 +60,7 @@ const Node: FC<NodeProps> = ({
   const [outline, setOutline] = usePersistantState('outline', false);
 
   return (
-    <div>
+    <div className={styles.container}>
       <h3>{previewRoamNode?.title}</h3>
 
       <TagBar
