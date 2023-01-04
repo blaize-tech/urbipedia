@@ -1,8 +1,7 @@
 import { FC, useState } from 'react';
-import { Input } from '@chakra-ui/react';
-import { VStack } from '@chakra-ui/react';
 
 import Modal from '../Modal';
+import Input from '../Input';
 
 interface RenameModalProps {
   name: string;
@@ -26,13 +25,11 @@ const RenameModal: FC<RenameModalProps> = ({
       onClose={onClose}
       title="Rename file"
     >
-      <VStack spacing={4} display="flex" alignItems="flex-start">
-        <Input
-          type="text"
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-        />
-      </VStack>
+      <Input
+        title="Edit Name:"
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+      />
     </Modal>
   );
 };
