@@ -15,13 +15,13 @@ const fetchHack = async (resource, options) => {
             console.error(err);
             throw err;
         });
-    } else if (options.method === "get") {
+    } else if (options.method === "get" || options.method === undefined) {
         res = await axios.get(resource, options).catch((err) => {
             console.error(err);
             throw err;
         });
     } else if (options.method === "PUT") {
-        res = await axios.get(resource, options).catch((err) => {
+        res = await axios.put(resource, options.body, options).catch((err) => {
             console.error(err);
             throw err;
         });
@@ -34,27 +34,32 @@ const fetchHack = async (resource, options) => {
     const withStream = {};
     Object.assign(withStream, Object(res));
     // @ts-ignore
-    if (!!withStream.body) {
+    if (!withStream.body) {
         // @ts-ignore
-        withStream.body = new ReadableStream(
-            {
-                start(controller) {
-                    controller.enqueue(res.data);
-                    controller.close();
-                },
-
-                pull(controller) {
-                    /* … */
-                },
-
-                cancel(reason) {
-                    /* … */
-                },
-            });
+        withStream.body = res.data;
+        // withStream.body = new ReadableStream(
+        //     {
+        //         start(controller) {
+        //             controller.enqueue(res.data);
+        //             controller.close();
+        //         },
+        //
+        //         pull(controller) {
+        //             /* … */
+        //         },
+        //
+        //         cancel(reason) {
+        //             /* … */
+        //         },
+        //     });
     }
     // console.log('withStream', JSON.stringify(res, null, 4));
-    // return withStream;
-    return res;
+    if (options.method === "PUT") {
+        // @ts-ignore
+        withStream.ok = res.status === 204;
+    }
+    return withStream;
+    // return res;
 };
 
 if (!('fetch' in globalThis)) {
