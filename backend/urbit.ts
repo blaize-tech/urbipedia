@@ -9,21 +9,25 @@ import axios from "axios";
 const fetchHack = async (resource, options) => {
     if (options.method === undefined) {
         const res = await fetch(resource, options);
-        return {
-            body: {
-                getReader: () => {
-                    return {
-                        read: () => {
-                            return {
-                                done: true,
-                                value: res.body,
-                            };
-                        },
-                        length: 0,
-                    }
+        const newRes = {body: null};
+        Object.assign(newRes, res);
+        // @ts-ignore
+        newRes.ok = true;
+        // @ts-ignore
+        newRes.body = {
+            getReader: () => {
+                return {
+                    read: () => {
+                        return {
+                            done: false,
+                            value: res.body,
+                        };
+                    },
+                    length: res.body.length,
                 }
             }
-        }
+        };
+        return newRes;
     }
     return fetch(resource, options);
 };
