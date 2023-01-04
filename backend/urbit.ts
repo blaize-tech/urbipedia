@@ -10,7 +10,7 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-const fetchHack = async (resource, options) => {
+const fetchWithStreamReader = async (resource, options) => {
     if (options.method === undefined) {
         const res = await fetch(resource, options);
         const newRes = {body: null};
@@ -51,11 +51,11 @@ const fetchHack = async (resource, options) => {
 };
 
 if (!('fetch' in globalThis)) {
-    Object.assign(globalThis, {fetch: fetchHack, Headers, Request, Response})
+    Object.assign(globalThis, {fetch: fetchWithStreamReader, Headers, Request, Response})
 }
 
 // @ts-ignore
-globalThis.window = {fetch: fetchHack, Headers, Request, Response};
+globalThis.window = {fetch: fetchWithStreamReader, Headers, Request, Response};
 
 // @ts-ignore
 globalThis.AbortController = AbortController;
