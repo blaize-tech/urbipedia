@@ -1,4 +1,17 @@
 import {Urbit} from "@urbit/http-api";
+import {AbortController} from "node-abort-controller";
+import fetch, {Headers, Request, Response} from 'node-fetch';
+import * as stream from 'stream';
+
+if (!('fetch' in globalThis)) {
+    Object.assign(globalThis, {fetch, Headers, Request, Response})
+}
+
+// @ts-ignore
+globalThis.window = {fetch, Headers, Request, Response, stream};
+
+// @ts-ignore
+globalThis.AbortController = AbortController;
 
 export interface UrbitListener {
     onEvent(event: any): void;
@@ -32,30 +45,29 @@ export function connectUrbitClient(listener: UrbitListener): UrbitClientWrapper 
     urbitClientWrapper.listener = listener;
     urbitClientWrapper.connectionState = UrbitConnectionState.UCS_NOT_CONNECTED;
 
-    // @ts-ignore
-    global.window = {ship: "sabwed-nommun-sidrex-nidsut--ragrys-filwyd-fotpen-litzod"};
+    Urbit.authenticate({
+        ship: "timrut-biddeb-timryc-ronsyd--tinlut-talbes-ticpur-binzod",
+        url: "localhost:8080",
+        code: "rillev-foswyt-ridwed-tiddul",
+        verbose: true,
+    })
+        .then((urbit) => {
+            urbitClientWrapper.urbit = urbit;
+            urbitClientWrapper.urbit.onOpen = () => {
+                urbitClientWrapper.connectionState = UrbitConnectionState.UCS_CONNECTED;
+            };
+            urbitClientWrapper.urbit.onRetry = () => {
+                urbitClientWrapper.connectionState = UrbitConnectionState.UCS_NOT_CONNECTED;
+            };
+            urbitClientWrapper.urbit.onError = (err) => {
+                urbitClientWrapper.connectionState = UrbitConnectionState.UCS_HAS_ERROR;
+                console.error('urbit error', err);
+            };
+        })
+        .catch(err => {
+            console.error(err);
+        });
 
-    if (!(window as any)?.ship) {
-        throw new Error("window.ship not defined");
-    }
-    urbitClientWrapper.urbit = new Urbit("http://localhost:8080/apps/zettelkasten/");
-    (window as any).urbit = urbitClientWrapper.urbit;
-
-    if (!(window as any)?.ship) {
-        throw new Error("window.ship not defined");
-    }
-
-    urbitClientWrapper.urbit.ship = (window as any)?.ship;
-    urbitClientWrapper.urbit.onOpen = () => {
-        urbitClientWrapper.connectionState = UrbitConnectionState.UCS_CONNECTED;
-    };
-    urbitClientWrapper.urbit.onRetry = () => {
-        urbitClientWrapper.connectionState = UrbitConnectionState.UCS_NOT_CONNECTED;
-    };
-    urbitClientWrapper.urbit.onError = (err) => {
-        urbitClientWrapper.connectionState = UrbitConnectionState.UCS_HAS_ERROR;
-        console.error('urbit error', err);
-    };
 
     const forceTestConnection = () => {
         try {
