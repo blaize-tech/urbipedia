@@ -66,7 +66,6 @@ const TagBar: FC<TagBarProps> = ({
             }}
             style={tagColors[tag] ? {
               borderColor: getThemeColor(tagColors[tag], theme),
-              color: getThemeColor(tagColors[tag], theme),
             }: undefined}
             type="button"
           >
