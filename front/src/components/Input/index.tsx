@@ -13,7 +13,12 @@ const Input: FC<InputProps> = ({ title, value, onChange }) => {
     <label className={styles.container}>
       <span className={styles.title}>{title}</span>
 
-      <input type="text" value={value} onChange={onChange} />
+      <input
+        className={styles.input}
+        type="text"
+        value={value}
+        onChange={onChange}
+      />
     </label>
   );
 };
