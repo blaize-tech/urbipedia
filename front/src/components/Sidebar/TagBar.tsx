@@ -1,11 +1,15 @@
 import { FC } from 'react';
 import { NodeObject } from 'force-graph';
-import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 import { useTheme } from '@chakra-ui/react';
 
 import { initialFilter, TagColors } from '../config';
 import { getThemeColor } from '../../util/getThemeColor';
 import { OrgRoamNode } from '../../api';
+
+import IconHidden from '../../images/icon-hidden.svg';
+import IconVisible from '../../images/icon-visible.svg';
+
+import styles from './TagBar.module.scss';
 
 interface TagBarProps {
   filter: typeof initialFilter;
@@ -13,8 +17,6 @@ interface TagBarProps {
   tagColors: TagColors;
   previewNode: NodeObject;
 }
-
-import styles from './TagBar.module.scss';
 
 const TagBar: FC<TagBarProps> = ({
   filter,
@@ -68,9 +70,13 @@ const TagBar: FC<TagBarProps> = ({
           >
             <span>{tag}</span>
 
-            {blackList && <ViewOffIcon />}
+            {blackList && (
+              <img height="20" width="20" src={IconHidden} alt="" />
+            )}
 
-            {whiteList && <ViewIcon />}
+            {whiteList && (
+              <img height="20" width="20" src={IconVisible} alt="" />
+            )}
           </button>
         )
       })}
