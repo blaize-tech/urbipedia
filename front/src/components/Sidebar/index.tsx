@@ -31,7 +31,6 @@ interface SidebarProps {
   filter: typeof initialFilter;
   setFilter: any;
   tagColors: TagColors;
-  setTagColors: any;
   macros?: { [key: string]: string };
   attachDir: string;
   useInheritance: boolean;
@@ -52,7 +51,6 @@ const Sidebar: FC<SidebarProps> = ({
   filter,
   setFilter,
   tagColors,
-  setTagColors,
   macros,
   attachDir,
   useInheritance,
@@ -115,7 +113,6 @@ const Sidebar: FC<SidebarProps> = ({
             filter={filter}
             setFilter={setFilter}
             tagColors={tagColors}
-            setTagColors={setTagColors}
             previewRoamNode={previewRoamNode}
             setPreviewNode={setPreviewNode}
             previewNode={previewNode}

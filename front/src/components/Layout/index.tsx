@@ -35,7 +35,6 @@ interface LayoutProps {
   filter: typeof initialFilter;
   setFilter: any;
   tagColors: TagColors;
-  setTagColors: any;
   macros?: { [key: string]: string };
   attachDir: string;
   useInheritance: boolean;
@@ -60,7 +59,6 @@ const Layout: FC<LayoutProps> = ({
   filter,
   setFilter,
   tagColors,
-  setTagColors,
   macros,
   attachDir,
   useInheritance,
@@ -103,7 +101,6 @@ const Layout: FC<LayoutProps> = ({
         filter={filter}
         setFilter={setFilter}
         tagColors={tagColors}
-        setTagColors={setTagColors}
         macros={macros}
         attachDir={attachDir}
         useInheritance={useInheritance}

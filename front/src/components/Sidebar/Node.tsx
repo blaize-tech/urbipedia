@@ -8,8 +8,8 @@ import { usePersistantState } from '../../util/persistant-state';
 import { initialFilter, TagColors } from '../config';
 import { UniOrg } from '../../util/uniorg';
 
+import TagBar from './TagBar';
 import { Backlinks } from './Backlinks';
-import { TagBar } from './TagBar';
 
 import styles from './Node.module.scss';
 
@@ -17,7 +17,6 @@ interface NodeProps {
   filter: typeof initialFilter;
   setFilter: any;
   tagColors: TagColors;
-  setTagColors: any;
   previewRoamNode?: OrgRoamNode;
   setPreviewNode: any;
   previewNode: NodeObject;
@@ -42,7 +41,6 @@ const Node: FC<NodeProps> = ({
   filter,
   setFilter,
   tagColors,
-  setTagColors,
   previewRoamNode,
   setPreviewNode,
   previewNode,
@@ -66,7 +64,10 @@ const Node: FC<NodeProps> = ({
       )}
 
       <TagBar
-        {...{ filter, setFilter, tagColors, setTagColors, previewNode }}
+        filter={filter}
+        setFilter={setFilter}
+        tagColors={tagColors}
+        previewNode={previewNode}
       />
 
       {previewNode?.id && (

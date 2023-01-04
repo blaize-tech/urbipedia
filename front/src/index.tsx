@@ -510,7 +510,6 @@ export function GraphPage() {
         filter={filter}
         setFilter={setFilter}
         tagColors={tagColors}
-        setTagColors={setTagColors}
         macros={emacsVariables.katexMacros}
         attachDir={emacsVariables.attachDir || ''}
         useInheritance={emacsVariables.useInheritance || false}

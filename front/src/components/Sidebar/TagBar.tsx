@@ -1,26 +1,27 @@
-import React from 'react'
-import { initialFilter, TagColors } from '../config'
-import { NodeObject } from 'force-graph'
-import { OrgRoamNode } from '../../api'
-import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
-import { Flex, Tag, TagLabel, TagRightIcon } from '@chakra-ui/react'
+import { FC } from 'react';
+import { NodeObject } from 'force-graph';
+import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
+import { Flex, Tag, TagLabel, TagRightIcon } from '@chakra-ui/react';
 
-export interface TagBarProps {
-  filter: typeof initialFilter
-  setFilter: any
-  tagColors: TagColors
-  setTagColors: any
-  previewNode: NodeObject
+import { initialFilter, TagColors } from '../config';
+import { OrgRoamNode } from '../../api';
+
+interface TagBarProps {
+  filter: typeof initialFilter;
+  setFilter: any;
+  tagColors: TagColors;
+  previewNode: NodeObject;
 }
 
-export const TagBar = (props: TagBarProps) => {
-  const { filter, setFilter, tagColors, setTagColors, previewNode } = props
+const TagBar: FC<TagBarProps> = ({
+  filter,
+  setFilter,
+  tagColors,
+  previewNode,
+}) => {
+  const node = previewNode as OrgRoamNode;
 
-  const node = previewNode as OrgRoamNode
-  if (!node?.tags || node?.tags?.[0] === null) {
-    return null
-  }
-  return (
+  return node?.tags?.[0] !== null ? (
     <Flex mb={2} flexWrap="wrap">
       {node?.tags?.map?.((tag: string) => {
         const bl: string[] = filter.tagsBlacklist ?? []
@@ -70,5 +71,7 @@ export const TagBar = (props: TagBarProps) => {
         )
       })}
     </Flex>
-  )
-}
+  ) : null;
+};
+
+export default TagBar;
