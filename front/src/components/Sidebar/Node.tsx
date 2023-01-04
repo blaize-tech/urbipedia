@@ -71,21 +71,23 @@ const Node: FC<NodeProps> = ({
 
       {previewNode?.id && (
         <div style={justificationList[justification]}>
-          <UniOrg
-            {...{
-              setPreviewNode,
-              previewNode,
-              nodeByCite,
-              setSidebarHighlightedNode,
-              outline,
-              collapse,
-              nodeById,
-              linksByNodeId,
-              macros,
-              attachDir,
-              useInheritance,
-            }}
-          />
+          <div className={styles.content}>
+            <UniOrg
+              {...{
+                setPreviewNode,
+                previewNode,
+                nodeByCite,
+                setSidebarHighlightedNode,
+                outline,
+                collapse,
+                nodeById,
+                linksByNodeId,
+                macros,
+                attachDir,
+                useInheritance,
+              }}
+            />
+          </div>
 
           <Backlinks
             {...{

@@ -10,3 +10,21 @@
   font-size: 20px;
   color: #3E3F4B;
 }
+
+.content {
+  background-color: #F6F7FA;
+  margin-bottom: 25px;
+  border-radius: 10px;
+  font-family: 'Montserrat';
+  font-weight: 400;
+  line-height: 20px;
+  font-size: 16px;
+  padding: 20px;
+  color: #3E3F4B;
+
+  p {
+    &:not(:last-child) {
+      margin-bottom: 16px;
+    }
+  }
+}
