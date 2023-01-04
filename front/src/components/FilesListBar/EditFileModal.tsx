@@ -1,16 +1,6 @@
 import { FC, useContext, useEffect, useState } from 'react';
 import { Textarea } from '@chakra-ui/react';
-import {
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
-  ModalBody,
-  VStack,
-  Text,
-  ModalFooter,
-  Button
-} from '@chakra-ui/react';
+import { VStack, Text } from '@chakra-ui/react';
 import { CUIAutoComplete, Item } from 'chakra-ui-autocomplete';
 import { ThemeContext } from '../../util/themecontext';
 import { OrgRoamGraphReponse, OrgRoamNode } from '../../api';
