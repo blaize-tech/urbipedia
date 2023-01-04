@@ -10,9 +10,9 @@
   transition: background-color .3s, border-color .3s;
   background-color: #F6F7FA;
   border-radius: 2px;
-  line-height: 22px;
-  padding: 2px;
+  line-height: 1;
   outline: none;
+  padding: 1px;
   border: 1px solid #303FC0;
   cursor: pointer;
 
@@ -47,4 +47,12 @@
   font-size: 12px;
   display: inline-block;
   color: #303FC0;
+}
+
+.icon {
+  vertical-align: middle;
+  min-width: 20px;
+  display: inline-block;
+  height: auto;
+  width: 20px;
 }

@@ -72,11 +72,23 @@ const TagBar: FC<TagBarProps> = ({
             <span className={styles.text}>{tag}</span>
 
             {blackList && (
-              <img height="20" width="20" src={IconHidden} alt="" />
+              <img
+                className={styles.icon}
+                height="20"
+                width="20"
+                src={IconHidden}
+                alt="Blacklist"
+              />
             )}
 
             {whiteList && (
-              <img height="20" width="20" src={IconVisible} alt="" />
+              <img
+                className={styles.icon}
+                height="20"
+                width="20"
+                src={IconVisible}
+                alt="Whitelist"
+              />
             )}
           </button>
         )
