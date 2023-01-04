@@ -2,6 +2,7 @@ import { FC, ChangeEventHandler } from 'react';
 import cn from 'classnames';
 
 interface InputProps {
+  className?: string;
   type?: 'text' | 'textarea';
   title: string;
   value?: string;
@@ -10,9 +11,9 @@ interface InputProps {
 
 import styles from './Input.module.scss';
 
-const Input: FC<InputProps> = ({ type, title, value, onChange }) => {
+const Input: FC<InputProps> = ({ className, type, title, value, onChange }) => {
   return (
-    <label className={styles.container}>
+    <label className={cn(styles.container, className)}>
       <span className={styles.title}>{title}</span>
 
       {type === 'textarea' ? (

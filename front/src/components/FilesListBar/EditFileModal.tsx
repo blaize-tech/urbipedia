@@ -8,6 +8,8 @@ import { OrgRoamGraphReponse, OrgRoamNode } from '../../api';
 import Modal from '../Modal';
 import Input from '../Input';
 
+import styles from './EditFileModal.module.scss';
+
 interface EditFileModalProps {
   node: OrgRoamNode;
   onEdit: any;
@@ -87,6 +89,7 @@ const EditFileModal: FC<EditFileModalProps> = ({
       title={node.file}
     >
       <Input
+        className={styles.input}
         type="textarea"
         title="Edit File:"
         value={newContent}
