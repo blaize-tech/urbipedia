@@ -6,6 +6,10 @@ import axios from "axios";
 // import fetch from 'cross-fetch';
 // import 'whatwg-fetch'
 
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 const fetchHack = async (resource, options) => {
     if (options.method === undefined) {
         const res = await fetch(resource, options);
@@ -13,14 +17,25 @@ const fetchHack = async (resource, options) => {
         Object.assign(newRes, res);
         // @ts-ignore
         newRes.ok = true;
+        const body = res.body;
+        let lastRead = 0;
         // @ts-ignore
         newRes.body = {
             getReader: () => {
+                // console.log(JSON.stringify (res.body, null, 4));
                 return {
-                    read: () => {
+                    read: async () => {
+                        let done = body._readableState.ended || body._readableState.closed;
+                        while (!done && lastRead >= body._readableState.length) {
+                            done = body._readableState.ended || body._readableState.closed;
+                            await sleep(50);
+                        }
+                        console.log(body._readableState.buffer);
+                        const newValue = body._readableState.buffer.head; // TODO increment
+                        lastRead = body._readableState.length;
                         return {
-                            done: false,
-                            value: res.body,
+                            done,
+                            value: newValue,
                         };
                     },
                 }
