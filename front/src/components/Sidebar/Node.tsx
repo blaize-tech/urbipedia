@@ -1,13 +1,15 @@
 import { FC, useState } from 'react';
 import { NodeObject } from 'force-graph';
+import CSS from 'csstype';
 
 import { LinksByNodeId, NodeByCite, NodeById } from '../../index';
 import { OrgRoamNode } from '../../api';
 import { usePersistantState } from '../../util/persistant-state';
 import { initialFilter, TagColors } from '../config';
+import { UniOrg } from '../../util/uniorg';
 
+import { Backlinks } from './Backlinks';
 import { TagBar } from './TagBar';
-import { Note } from './Note';
 
 interface NodeProps {
   filter: typeof initialFilter;
@@ -27,7 +29,12 @@ interface NodeProps {
   useInheritance: boolean;
 }
 
-const justificationList = ['justify', 'start', 'end', 'center'];
+const justificationList: CSS.Properties[] = [
+  { textAlign: 'justify' },
+  { textAlign: 'start' },
+  { textAlign: 'end' },
+  { textAlign: 'center' },
+];
 
 const Node: FC<NodeProps> = ({
   filter,
@@ -58,24 +65,40 @@ const Node: FC<NodeProps> = ({
         {...{ filter, setFilter, tagColors, setTagColors, previewNode }}
       />
 
-      <Note
-        {...{
-          setPreviewNode,
-          previewNode,
-          nodeById,
-          nodeByCite,
-          setSidebarHighlightedNode,
-          justification,
-          justificationList,
-          linksByNodeId,
-          outline,
-          setOutline,
-          collapse,
-          macros,
-          attachDir,
-          useInheritance,
-        }}
-      />
+      {previewNode?.id && (
+        <div style={justificationList[justification]}>
+          <UniOrg
+            {...{
+              setPreviewNode,
+              previewNode,
+              nodeByCite,
+              setSidebarHighlightedNode,
+              outline,
+              collapse,
+              nodeById,
+              linksByNodeId,
+              macros,
+              attachDir,
+              useInheritance,
+            }}
+          />
+
+          <Backlinks
+            {...{
+              setPreviewNode,
+              previewNode,
+              nodeById,
+              linksByNodeId,
+              nodeByCite,
+              setSidebarHighlightedNode,
+              outline,
+              attachDir,
+              useInheritance,
+            }}
+            macros={macros || {}}
+          />
+        </div>
+      )}
     </div>
   );
 };
