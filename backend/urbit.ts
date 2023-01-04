@@ -7,63 +7,25 @@ import axios from "axios";
 // import 'whatwg-fetch'
 
 const fetchHack = async (resource, options) => {
-    // const res = await fetch(resource, options);
-    // console.info(resource, options);
-    let res;
-    if (options.method === "post") {
-        res = await axios.post(resource, options.body, options).catch((err) => {
-            console.error(err);
-            throw err;
-        });
-    } else if (options.method === "get") {
-        res = await axios.get(resource, options).catch((err) => {
-            console.error(err);
-            throw err;
-        });
-    } else if (options.method === "PUT") {
-        res = await axios.put(resource, options.body, options).catch((err) => {
-            console.error(err);
-            throw err;
-        });
-    } else {
-        if(options.method === undefined){
-            return fetch(resource, options);
+    if (options.method === undefined) {
+        const res = await fetch(resource, options);
+        return {
+            body: {
+                getReader: () => {
+                    return {
+                        read: () => {
+                            return {
+                                done: true,
+                                value: res.body,
+                            };
+                        },
+                        length: 0,
+                    }
+                }
+            }
         }
-        throw new Error("unsupported method " + options.method);
     }
-    // console.log('options', JSON.stringify(options, null, 4));
-    // console.log('res', JSON.stringify(res, null, 4));
-    // console.log('body', res.body);
-    const withStream = {};
-    Object.assign(withStream, Object(res));
-    // @ts-ignore
-    if (!withStream.body) {
-        // @ts-ignore
-        withStream.body = res.data;
-        // withStream.body = new ReadableStream(
-        //     {
-        //         start(controller) {
-        //             controller.enqueue(res.data);
-        //             controller.close();
-        //         },
-        //
-        //         pull(controller) {
-        //             /* … */
-        //         },
-        //
-        //         cancel(reason) {
-        //             /* … */
-        //         },
-        //     });
-    }
-    // console.log('withStream', JSON.stringify(res, null, 4));
-    if (options.method === "PUT") {
-        // @ts-ignore
-        withStream.ok = res.status === 204;
-    }
-    console.log(res.status);
-    return withStream;
-    // return res;
+    return fetch(resource, options);
 };
 
 if (!('fetch' in globalThis)) {
