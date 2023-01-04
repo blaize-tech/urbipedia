@@ -14,12 +14,26 @@
   outline: none;
   border: 1px solid #303FC0;
   cursor: pointer;
-  color: #303FC0;
 
   &:focus,
   &:hover {
     background-color: #8158FF;
     border-color: #8158FF;
-    color: #FCFCFC;
+
+    .text {
+      color: #FCFCFC;
+    }
   }
+}
+
+.text {
+  vertical-align: middle;
+  margin-right: 10px;
+  margin-left: 10px;
+  font-family: 'Montserrat';
+  font-weight: 400;
+  line-height: 12px;
+  font-size: 12px;
+  display: inline-block;
+  color: #303FC0;
 }

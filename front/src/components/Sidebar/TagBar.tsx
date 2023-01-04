@@ -70,7 +70,7 @@ const TagBar: FC<TagBarProps> = ({
             }: undefined}
             type="button"
           >
-            <span>{tag}</span>
+            <span className={styles.text}>{tag}</span>
 
             {blackList && (
               <img height="20" width="20" src={IconHidden} alt="" />
