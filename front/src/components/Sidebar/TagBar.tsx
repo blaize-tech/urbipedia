@@ -14,6 +14,8 @@ interface TagBarProps {
   previewNode: NodeObject;
 }
 
+import styles from './TagBar.module.scss';
+
 const TagBar: FC<TagBarProps> = ({
   filter,
   setFilter,
@@ -25,7 +27,7 @@ const TagBar: FC<TagBarProps> = ({
   const node = previewNode as OrgRoamNode;
 
   return node?.tags?.[0] !== null ? (
-    <div>
+    <div className={styles.container}>
       {node?.tags?.map((tag: string) => {
         const bl: string[] = filter.tagsBlacklist ?? [];
         const wl: string[] = filter.tagsWhitelist ?? [];
