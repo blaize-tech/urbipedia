@@ -1,6 +1,5 @@
 import { FC } from 'react';
 import { NodeObject, LinkObject } from 'force-graph';
-import { VStack, Box, Button, Heading, StackDivider } from '@chakra-ui/react';
 
 import { LinksByNodeId, NodeByCite, NodeById } from '../../index';
 import { normalizeLinkEnds } from '../../util/normalizeLinkEnds';

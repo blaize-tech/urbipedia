@@ -6,7 +6,7 @@ import { LinksByNodeId, NodeByCite, NodeById } from '../../index';
 import { OrgRoamNode } from '../../api';
 import { usePersistantState } from '../../util/persistant-state';
 import { initialFilter, TagColors } from '../config';
-import { UniOrg } from '../../util/uniorg';
+import UniOrg from '../../util/uniorg';
 
 import TagBar from './TagBar';
 import Backlinks from './Backlinks';
