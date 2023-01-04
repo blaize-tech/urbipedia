@@ -1,7 +1,5 @@
 import { FC } from 'react';
 import { NodeObject } from 'force-graph';
-import { IconButton, Tooltip } from '@chakra-ui/react';
-import { BiNetworkChart } from 'react-icons/bi';
 
 import { OrgRoamGraphReponse } from '../../api';
 import { initialVisuals } from '../config';
@@ -9,7 +7,12 @@ import { LinksByNodeId, NodeByCite, NodeById } from '../../index';
 import { initialFilter, TagColors } from '../config';
 
 import FilesListBar from '../FilesListBar';
+import IconButton from '../IconButton';
 import Sidebar from '../Sidebar';
+
+import IconExit from '../../images/icon-exit.svg';
+import IconExitHover from '../../images/icon-exit-hover.svg';
+import IconExitActive from '../../images/icon-exit-active.svg';
 
 import styles from './Layout.module.scss';
 
@@ -74,17 +77,16 @@ const Layout: FC<LayoutProps> = ({
         {children}
       </div>
 
-      {nodeIds.length > 0 && (
-        <Tooltip label="Return to main graph">
-          <IconButton
-            m={1}
-            icon={<BiNetworkChart />}
-            aria-label="Exit local mode"
-            onClick={onExit}
-            variant="subtle"
-          />
-        </Tooltip>
-      )}
+      <IconButton
+        ariaLabel="Exit local mode"
+        className={styles.button}
+        disabled={!nodeIds.length}
+        onClick={onExit}
+        title="Return to main graph"
+        icon={IconExit}
+        iconHover={IconExitHover}
+        iconActive={IconExitActive}
+      />
 
       <Sidebar
         className={styles.sidebar}
