@@ -6,13 +6,21 @@ import {
 } from '@chakra-ui/react';
 
 import ModalCloseButton from '../ModalCloseButton';
+import IconButton from '../IconButton';
 import Button from '../Button';
+
+import IconReset from '../../images/icon-reset.svg';
+import IconResetHover from '../../images/icon-reset-hover.svg';
+import IconResetActive from '../../images/icon-reset-active.svg';
 
 import styles from './Modal.module.scss';
 
 interface ModalProps {
   isVisible: boolean;
   onSubmit?: () => void;
+  resetAriaLabel?: string;
+  resetTitle?: string;
+  onReset?: () => void;
   onClose: () => void;
   title: string;
   children: any;
@@ -21,6 +29,9 @@ interface ModalProps {
 const Modal: FC<ModalProps> = ({
   isVisible,
   onSubmit,
+  resetAriaLabel,
+  resetTitle,
+  onReset,
   onClose,
   title,
   children,
@@ -32,6 +43,19 @@ const Modal: FC<ModalProps> = ({
       <ModalContent className={styles.container} zIndex="popover">
         <header className={styles.header}>
           <h1 className={styles.title}>{title}</h1>
+
+          {onReset && (
+            <IconButton
+              ariaLabel={resetAriaLabel}
+              className={styles.reset}
+              onClick={onReset}
+              title={resetTitle}
+              icon={IconReset}
+              iconHover={IconResetHover}
+              iconActive={IconResetActive}
+            />
+          )}
+
           <ModalCloseButton />
         </header>
 
