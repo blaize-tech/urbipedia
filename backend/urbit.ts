@@ -202,7 +202,7 @@ export async function urbitCreateFile(name: string) {
     });
 }
 
-export async function urbitUpdateTagsToFile(id: string, tags: Array<string>) {
+export async function urbitUpdateTagsToFile(id: string, tags: string) {
     return new Promise((resolve, reject) => {
         if (!urbitClientWrapper
             || !urbitClientWrapper.urbit
@@ -213,7 +213,7 @@ export async function urbitUpdateTagsToFile(id: string, tags: Array<string>) {
         urbitClientWrapper.urbit.poke({
             app: "zettelkasten",
             mark: "zettelkasten-action",
-            json: {"update-tags": {id: Number.parseInt(id), tags: tags.join("#$")}},
+            json: {"update-tags": {id: Number.parseInt(id), tags: tags}},
             onSuccess: () => resolve({status: "ok"}),
             onError: () => reject("can't update tags"),
         });
