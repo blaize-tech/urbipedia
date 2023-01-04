@@ -22,17 +22,21 @@ const fetchHack = async (resource, options) => {
         // @ts-ignore
         newRes.body = {
             getReader: () => {
-                // console.log(JSON.stringify (res.body, null, 4));
                 return {
                     read: async () => {
                         let done = body._readableState.ended || body._readableState.closed;
-                        while (!done && lastRead >= body._readableState.length) {
+                        while (!done && lastRead >= body._readableState.buffer.length) {
                             done = body._readableState.ended || body._readableState.closed;
                             await sleep(50);
                         }
-                        console.log(body._readableState.buffer);
-                        const newValue = body._readableState.buffer.head; // TODO increment
-                        lastRead = body._readableState.length;
+                        // console.log(JSON.stringify(body, null, 4));
+                        const getChunk = (source, level, counter) => {
+                            if (level == counter) {
+                                return source.data;
+                            }
+                            return getChunk(source.next, level, counter + 1);
+                        };
+                        const newValue = getChunk(body._readableState.buffer.head, lastRead++, 0);
                         return {
                             done,
                             value: newValue,
