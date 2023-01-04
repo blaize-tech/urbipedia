@@ -9,7 +9,7 @@ import { initialFilter, TagColors } from '../config';
 import { UniOrg } from '../../util/uniorg';
 
 import TagBar from './TagBar';
-import { Backlinks } from './Backlinks';
+import Backlinks from './Backlinks';
 
 import styles from './Node.module.scss';
 
