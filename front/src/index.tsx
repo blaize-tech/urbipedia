@@ -1,19 +1,9 @@
-import { HamburgerIcon } from '@chakra-ui/icons'
-import {
-  Box,
-  Flex,
-  Heading,
-  IconButton,
-  Slide,
-  Tooltip,
-  useDisclosure,
-  useTheme,
-} from '@chakra-ui/react'
-import { useAnimation } from '@lilib/hooks'
-import { useWindowSize, useWindowWidth } from '@react-hook/window-size'
-import * as d3int from 'd3-interpolate'
-import { GraphData, LinkObject, NodeObject } from 'force-graph'
-import Head from 'next/head'
+import { useTheme } from '@chakra-ui/react';
+import { useAnimation } from '@lilib/hooks';
+import { useWindowSize, useWindowWidth } from '@react-hook/window-size';
+import * as d3int from 'd3-interpolate';
+import { GraphData, LinkObject, NodeObject } from 'force-graph';
+import Head from 'next/head';
 import React, {
   ComponentPropsWithoutRef,
   useContext,
@@ -21,19 +11,17 @@ import React, {
   useMemo,
   useRef,
   useState,
-} from 'react'
+} from 'react';
 import ReactDOM from 'react-dom/client';
 //@ts-expect-error
 import jLouvain from 'jlouvain.js'
 import type, {
   ForceGraph2D as TForceGraph2D,
   ForceGraph3D as TForceGraph3D,
-} from 'react-force-graph'
-import { BiNetworkChart } from 'react-icons/bi'
-import { BsReverseLayoutSidebarInsetReverse, BsLayoutSidebarInset } from 'react-icons/bs'
-import SpriteText from 'three-spritetext'
-import useUndo from 'use-undo'
-import { OrgRoamGraphReponse, OrgRoamLink, OrgRoamNode } from './api'
+} from 'react-force-graph';
+import SpriteText from 'three-spritetext';
+import useUndo from 'use-undo';
+import { OrgRoamGraphReponse, OrgRoamLink, OrgRoamNode } from './api';
 import {
   algos,
   colorList,
@@ -45,27 +33,27 @@ import {
   initialPhysics,
   initialVisuals,
   TagColors,
-} from './components/config'
-import Sidebar from './components/Sidebar'
-import { Tweaks } from './components/Tweaks'
-import { usePersistantState } from './util/persistant-state'
-import { ThemeContext, ThemeContextProps } from './util/themecontext'
-import { drawLabels } from './components/Graph/drawLabels'
-import { VariablesContext } from './util/variablesContext'
-import { findNthNeighbors } from './util/findNthNeighbour'
-import { getThemeColor } from './util/getThemeColor'
-import { normalizeLinkEnds } from './util/normalizeLinkEnds'
-import { nodeSize } from './util/nodeSize'
-import { getNodeColor } from './util/getNodeColor'
-import { isLinkRelatedToNode } from './util/isLinkRelatedToNode'
-import { getLinkColor } from './util/getLinkColor'
-import {UrbitClientWrapper, connectUrbitClient} from "./util/urbit";
-import MyApp from './_app'
-import FilesListBar from './components/FilesListBar'
+} from './components/config';
+import Sidebar from './components/Sidebar';
+import { Tweaks } from './components/Tweaks';
+import { usePersistantState } from './util/persistant-state';
+import { ThemeContext, ThemeContextProps } from './util/themecontext';
+import { drawLabels } from './components/Graph/drawLabels';
+import { VariablesContext } from './util/variablesContext';
+import { findNthNeighbors } from './util/findNthNeighbour';
+import { getThemeColor } from './util/getThemeColor';
+import { normalizeLinkEnds } from './util/normalizeLinkEnds';
+import { nodeSize } from './util/nodeSize';
+import { getNodeColor } from './util/getNodeColor';
+import { isLinkRelatedToNode } from './util/isLinkRelatedToNode';
+import { getLinkColor } from './util/getLinkColor';
+import { UrbitClientWrapper, connectUrbitClient } from './util/urbit';
+import MyApp from './_app';
+import FilesListBar from './components/FilesListBar';
 import Layout from './components/Layout';
-import {openNodeInEmacs} from "./util/webSocketFunctions";
+import { openNodeInEmacs } from './util/webSocketFunctions';
 
-const d3promise = import('d3-force-3d')
+const d3promise = import('d3-force-3d');
 
 // react-force-graph fails on import when server-rendered
 // https://github.com/vasturiano/react-force-graph/issues/155
@@ -505,6 +493,13 @@ export function GraphPage() {
       <Layout
         graphData={currentOrgRoamGraph.current}
         visuals={visuals}
+        nodeIds={scope.nodeIds}
+        onExit={() =>
+          setScope((currentScope: Scope) => ({
+            ...currentScope,
+            nodeIds: [],
+          }))
+        }
         nodeById={nodeByIdRef.current!}
         previewNode={previewNode}
         setPreviewNode={setPreviewNode}
@@ -548,7 +543,7 @@ export function GraphPage() {
           haveOffset={true}
         />
 
-        {(graphData && graphData.nodes.length) ? (
+        {graphData?.nodes.length ? (
           <Graph
             //ref={graphRef}
             nodeById={nodeByIdRef.current!}
@@ -580,30 +575,7 @@ export function GraphPage() {
               local,
             }}
           />
-        ) : (<div/>)}
-
-        <Box position="relative" zIndex={4} width="100%">
-          <Flex className="headerBar" h={10} flexDir="column">
-            <Flex alignItems="center" h={10} justifyContent="flex-end">
-              {scope.nodeIds.length > 0 && (
-                <Tooltip label="Return to main graph">
-                  <IconButton
-                    m={1}
-                    icon={<BiNetworkChart />}
-                    aria-label="Exit local mode"
-                    onClick={() =>
-                      setScope((currentScope: Scope) => ({
-                        ...currentScope,
-                        nodeIds: [],
-                      }))
-                    }
-                    variant="subtle"
-                  />
-                </Tooltip>
-              )}
-            </Flex>
-          </Flex>
-        </Box>
+        ) : null}
       </Layout>
     </VariablesContext.Provider>
   )

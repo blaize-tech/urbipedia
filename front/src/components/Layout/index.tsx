@@ -1,5 +1,7 @@
 import { FC } from 'react';
 import { NodeObject } from 'force-graph';
+import { IconButton, Tooltip } from '@chakra-ui/react';
+import { BiNetworkChart } from 'react-icons/bi';
 
 import { OrgRoamGraphReponse } from '../../api';
 import { initialVisuals } from '../config';
@@ -15,6 +17,8 @@ interface LayoutProps {
   graphData: OrgRoamGraphReponse;
   visuals: typeof initialVisuals;
   children: any;
+  nodeIds: string[];
+  onExit: (arr: any) => void;
   nodeById: NodeById;
   previewNode: NodeObject;
   setPreviewNode: any;
@@ -38,6 +42,8 @@ const Layout: FC<LayoutProps> = ({
   graphData,
   visuals,
   children,
+  nodeIds,
+  onExit,
   nodeById,
   previewNode,
   setPreviewNode,
@@ -67,6 +73,18 @@ const Layout: FC<LayoutProps> = ({
       <div className={styles.content}>
         {children}
       </div>
+
+      {nodeIds.length > 0 && (
+        <Tooltip label="Return to main graph">
+          <IconButton
+            m={1}
+            icon={<BiNetworkChart />}
+            aria-label="Exit local mode"
+            onClick={onExit}
+            variant="subtle"
+          />
+        </Tooltip>
+      )}
 
       <Sidebar
         className={styles.sidebar}
