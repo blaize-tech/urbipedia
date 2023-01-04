@@ -53,7 +53,10 @@ const Backlinks: FC<BacklinksProps> = ({
 
   return (
     <div className={styles.container}>
-      <p style={{ fontSize: 16, fontWeight: 600 }}>{`Linked references (${backLinks.length})`}</p>
+      <h4 className={styles.title}>
+        {`Linked references (${backLinks.length})`}
+      </h4>
+
       <VStack
         py={2}
         spacing={3}
