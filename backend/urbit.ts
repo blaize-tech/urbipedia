@@ -1,14 +1,68 @@
 import {Urbit} from "@urbit/http-api";
 import {AbortController} from "node-abort-controller";
+// import {Headers, Request, Response} from 'node-fetch';
 import fetch, {Headers, Request, Response} from 'node-fetch';
-import * as stream from 'stream';
+import axios from "axios";
+// import fetch from 'cross-fetch';
+// import 'whatwg-fetch'
+
+const fetchHack = async (resource, options) => {
+    // const res = await fetch(resource, options);
+    console.info(resource, options);
+    let res;
+    if (options.method === "post") {
+        res = await axios.post(resource, options.body, options).catch((err) => {
+            console.error(err);
+            throw err;
+        });
+    } else if (options.method === "get") {
+        res = await axios.get(resource, options).catch((err) => {
+            console.error(err);
+            throw err;
+        });
+    } else if (options.method === "PUT") {
+        res = await axios.get(resource, options).catch((err) => {
+            console.error(err);
+            throw err;
+        });
+    } else {
+        throw new Error("unsupported method " + options.method);
+    }
+    // console.log('options', JSON.stringify(options, null, 4));
+    // console.log('res', JSON.stringify(res, null, 4));
+    // console.log('body', res.body);
+    const withStream = {};
+    Object.assign(withStream, Object(res));
+    // @ts-ignore
+    if (!!withStream.body) {
+        // @ts-ignore
+        withStream.body = new ReadableStream(
+            {
+                start(controller) {
+                    controller.enqueue(res.data);
+                    controller.close();
+                },
+
+                pull(controller) {
+                    /* … */
+                },
+
+                cancel(reason) {
+                    /* … */
+                },
+            });
+    }
+    // console.log('withStream', JSON.stringify(res, null, 4));
+    // return withStream;
+    return res;
+};
 
 if (!('fetch' in globalThis)) {
-    Object.assign(globalThis, {fetch, Headers, Request, Response})
+    Object.assign(globalThis, {fetch: fetchHack, Headers, Request, Response})
 }
 
 // @ts-ignore
-globalThis.window = {fetch, Headers, Request, Response, stream};
+globalThis.window = {fetch: fetchHack, Headers, Request, Response};
 
 // @ts-ignore
 globalThis.AbortController = AbortController;
@@ -117,7 +171,7 @@ export function connectUrbitClient(listener: UrbitListener): UrbitClientWrapper 
             setTimeout(forceTestConnection, 1000);
         }
     };
-    forceTestConnection();
+    // forceTestConnection();
 
     return urbitClientWrapper;
 }
