@@ -6,10 +6,12 @@ interface InputProps {
   onChange: ChangeEventHandler<HTMLInputElement>;
 }
 
+import styles from './Input.module.scss';
+
 const Input: FC<InputProps> = ({ title, value, onChange }) => {
   return (
-    <label>
-      <span>{title}</span>
+    <label className={styles.container}>
+      <span className={styles.title}>{title}</span>
 
       <input type="text" value={value} onChange={onChange} />
     </label>
