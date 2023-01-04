@@ -494,12 +494,9 @@ export function GraphPage() {
         graphData={currentOrgRoamGraph.current}
         visuals={visuals}
         nodeIds={scope.nodeIds}
-        onExit={() =>
-          setScope((currentScope: Scope) => ({
-            ...currentScope,
-            nodeIds: [],
-          }))
-        }
+        onExit={() => {
+          setScope((currentScope: Scope) => ({ ...currentScope, nodeIds: [] }));
+        }}
         nodeById={nodeByIdRef.current!}
         previewNode={previewNode}
         setPreviewNode={setPreviewNode}
@@ -1016,7 +1013,7 @@ export const Graph = function (props: GraphProps) {
     graphData: scope.nodeIds.length ? scopedGraphData : filteredGraphData,
     width: windowWidth,
     height: windowHeight,
-    backgroundColor: getThemeColor(visuals.backgroundColor, theme),
+    backgroundColor: '#F6F7FA',
     warmupTicks: scope.nodeIds.length === 1 ? 100 : scope.nodeIds.length > 1 ? 20 : 0,
     onZoom: ({ k, x, y }) => (scaleRef.current = k),
     nodeColor: (node) => {
