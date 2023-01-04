@@ -8,7 +8,6 @@ import { initialFilter, TagColors } from '../config';
 
 import { TagBar } from './TagBar';
 import { Note } from './Note';
-import { Title } from './Title';
 
 interface NodeProps {
   filter: typeof initialFilter;
@@ -53,7 +52,7 @@ const Node: FC<NodeProps> = ({
 
   return (
     <div>
-      <Title previewNode={previewRoamNode} />
+      <h3>{previewRoamNode?.title}</h3>
 
       <TagBar
         {...{ filter, setFilter, tagColors, setTagColors, previewNode }}
