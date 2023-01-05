@@ -77,6 +77,15 @@ app.post('/delete-node', function (req: Request, res: Response, next: NextFuncti
     }));
 });
 
+app.get('/entries/ids', function (req: Request, res: Response, next: NextFunction) {
+    // @ts-ignore
+    urbitGetFileEntries(req.query.id).then((data) => {
+        res.send(data);
+    }).catch((err => {
+        res.status(500).send(err);
+    }));
+});
+
 app.get('/entries/all', function (req: Request, res: Response, next: NextFunction) {
     // @ts-ignore
     urbitGetNodes().then((data) => {
