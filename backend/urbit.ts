@@ -13,13 +13,14 @@ function sleep(ms) {
 const fetchWithStreamReader = async (resource, options) => {
     if (options.method === undefined) {
         const stream = await axios.get(resource, {...options, responseType: 'stream'});
-        // console.log('options', options);
+        let end = false;
+        let buffers = new Array<string>();
         // @ts-ignore
         stream.data.on("data", data => {
-            console.log("data>>>", String(data));
+            buffers.push(String(data));
         });
         stream.data.on('end', () => {
-            console.log("end>>>");
+            end = true;
         });
         let lastBody = "";
         const newRes = {
@@ -34,34 +35,18 @@ const fetchWithStreamReader = async (resource, options) => {
         Object.assign(newRes, stream);
         // @ts-ignore
         newRes.ok = true;
-        const body = stream.data;
-        let lastRead = 0;
         // @ts-ignore
         newRes.body = {
             getReader: () => {
                 return {
                     read: async () => {
-                        let done = body._readableState.ended || body._readableState.closed;
-                        while (!done && lastRead >= body._readableState.buffer.length) {
-                            done = body._readableState.ended || body._readableState.closed;
+                        while (!end && buffers.length === 0) {
                             await sleep(50);
                         }
-                        // console.log(JSON.stringify(body, null, 4));
-                        const getChunk = (source, level, counter) => {
-                            if (level == counter) {
-                                return source.data;
-                            }
-                            return getChunk(source.next, level, counter + 1);
-                        };
-                        const lastBody = getChunk(body._readableState.buffer.head, lastRead++, 0);
-                        let full = "";
-                        for (let i = 0; i < body._readableState.buffer.length; i++) {
-                            full += String(getChunk(body._readableState.buffer.head, i, 0));
-                        }
-                        console.log(">>>>>>>>>>>>>>", full, "<<<<<<<<<<<<<<");
-                        // console.log(">>>>>>>>>>>>>>", JSON.stringify(body, null, 4), "<<<<<<<<<<<<<<");
+                        const lastBody = buffers[0];
+                        buffers = buffers.splice(1);
                         return {
-                            done,
+                            done: end,
                             value: lastBody,
                         };
                     },
@@ -77,7 +62,6 @@ const fetchWithStreamReader = async (resource, options) => {
     res.json = () => {
         return JSON.parse(res.body);
     };
-    console.log(res, JSON.stringify(res));
     return res;
 };
 
