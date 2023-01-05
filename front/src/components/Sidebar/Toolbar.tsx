@@ -1,123 +1,101 @@
-import React from 'react'
-import { Flex, IconButton, ButtonGroup, Tooltip } from '@chakra-ui/react'
-import { BiAlignJustify, BiAlignLeft, BiAlignMiddle, BiAlignRight } from 'react-icons/bi'
-import { MdOutlineExpand, MdOutlineCompress } from 'react-icons/md'
-import { ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons'
-import { IoIosListBox, IoMdListBox } from 'react-icons/io'
+import { FC } from 'react';
 
-export interface ToolbarProps {
-  setJustification: any
-  justification: number
-  setIndent: any
-  setFont: any
-  setPreviewNode: any
-  canUndo: any
-  canRedo: any
-  resetPreviewNode: any
-  previousPreviewNode: any
-  nextPreviewNode: any
-  outline: boolean
-  setOutline: any
-  collapse: boolean
-  setCollapse: any
+import IconButton from '../IconButton';
+
+import IconUndo from '../../images/icon-undo.svg';
+import IconUndoHover from '../../images/icon-undo-hover.svg';
+import IconUndoActive from '../../images/icon-undo-active.svg';
+import IconRedo from '../../images/icon-redo.svg';
+import IconRedoHover from '../../images/icon-redo-hover.svg';
+import IconRedoActive from '../../images/icon-redo-active.svg';
+import IconAlignJustify from '../../images/icon-align-justify.svg';
+import IconAlignJustifyHover from '../../images/icon-align-justify-hover.svg';
+import IconAlignJustifyActive from '../../images/icon-align-justify-active.svg';
+import IconAlignLeft from '../../images/icon-align-left.svg';
+import IconAlignLeftHover from '../../images/icon-align-left-hover.svg';
+import IconAlignLeftActive from '../../images/icon-align-left-active.svg';
+import IconAlignRight from '../../images/icon-align-right.svg';
+import IconAlignRightHover from '../../images/icon-align-right-hover.svg';
+import IconAlignRightActive from '../../images/icon-align-right-active.svg';
+import IconAlignCenter from '../../images/icon-align-center.svg';
+import IconAlignCenterHover from '../../images/icon-align-center-hover.svg';
+import IconAlignCenterActive from '../../images/icon-align-center-active.svg';
+
+import styles from './Toolbar.module.scss';
+
+interface ToolbarProps {
+  setJustification: (arg: any) => void;
+  justification: number;
+  previousPreviewNode: (arg: any) => void;
+  canUndo: any;
+  nextPreviewNode: (arg: any) => void;
+  canRedo: any;
 }
 
-export const Toolbar = (props: ToolbarProps) => {
-  const {
-    setJustification,
-    setIndent,
-    setFont,
-    justification,
-    setPreviewNode,
-    canUndo,
-    canRedo,
-    resetPreviewNode,
-    previousPreviewNode,
-    nextPreviewNode,
-    outline,
-    setOutline,
-    collapse,
-    setCollapse,
-  } = props
+const Toolbar: FC<ToolbarProps> = ({
+  setJustification,
+  justification,
+  previousPreviewNode,
+  canUndo,
+  nextPreviewNode,
+  canRedo,
+}) => {
   return (
-    <Flex flex="0 1 40px" pb={3} alignItems="center" justifyContent="space-between" pr={1}>
-      <Flex>
-        <ButtonGroup isAttached>
-          <Tooltip label="Go backward">
-            <IconButton
-              _focus={{}}
-              variant="subtle"
-              icon={<ChevronLeftIcon />}
-              aria-label="Previous node"
-              disabled={!canUndo}
-              onClick={() => previousPreviewNode()}
-            />
-          </Tooltip>
-          <Tooltip label="Go forward">
-            <IconButton
-              _focus={{}}
-              variant="subtle"
-              icon={<ChevronRightIcon />}
-              aria-label="Next node"
-              disabled={!canRedo}
-              onClick={() => nextPreviewNode()}
-            />
-          </Tooltip>
-        </ButtonGroup>
-      </Flex>
-      <Flex>
-        <Tooltip label="Justify content">
-          <IconButton
-            variant="subtle"
-            aria-label="Justify content"
-            icon={
-              [
-                <BiAlignJustify key="justify" />,
-                <BiAlignLeft key="left" />,
-                <BiAlignRight key="right" />,
-                <BiAlignMiddle key="center" />,
-              ][justification]
-            }
-            onClick={() => setJustification((curr: number) => (curr + 1) % 4)}
-          />
-        </Tooltip>
-        <Tooltip label="Toggle outline view">
-          <IconButton
-            variant="subtle"
-            aria-label="Justify content"
-            icon={outline ? <IoIosListBox /> : <IoMdListBox />}
-            onClick={() => setOutline((curr: boolean) => !curr)}
-          />
-        </Tooltip>
-        <Tooltip label="Toggle headers">
-          <IconButton
-            variant="subtle"
-            aria-label="Toggle headers"
-            icon={collapse ? <MdOutlineExpand /> : <MdOutlineCompress />}
-            onClick={() => setCollapse((curr: boolean) => !curr)}
-          />
-        </Tooltip>
-        {/* <Tooltip label="Indent trees">
-          <IconButton
-            variant="subtle"
-            aria-label="Indent Text"
-            icon={<BiRightIndent />}
-            onClick={() => {
-              setIndent((curr: number) => (curr ? 0 : 1))
-            }}
-          />
-        </Tooltip>
-        <Tooltip label="Switch betwwen sans and serif">
-          <IconButton
-            variant="subtle"
-            aria-label="Change font"
-            icon={<BiFont />}
-            onClick={() => {
-              setFont((curr: string) => (curr === 'sans serif' ? 'serif' : 'sans serif'))
-            }}
-          />
-        </Tooltip> */}
-      </Flex>
-    </Flex>
-  )
-}
+    <div className={styles.container}>
+      <IconButton
+        ariaLabel="Previous node"
+        className={styles.button}
+        disabled={!canUndo}
+        onClick={previousPreviewNode}
+        title="Go backward"
+        icon={IconUndo}
+        iconHover={IconUndoHover}
+        iconActive={IconUndoActive}
+      />
+
+      <IconButton
+        ariaLabel="Next node"
+        className={styles.button}
+        disabled={!canRedo}
+        onClick={nextPreviewNode}
+        title="Go forward"
+        icon={IconRedo}
+        iconHover={IconRedoHover}
+        iconActive={IconRedoActive}
+      />
+
+      <IconButton
+        ariaLabel="Justify content"
+        className={styles.button}
+        onClick={() => setJustification((curr: number) => (curr + 1) % 4)}
+        title="Justify content"
+        icon={
+          [
+            IconAlignJustify,
+            IconAlignLeft,
+            IconAlignRight,
+            IconAlignCenter,
+          ][justification]
+        }
+        iconHover={
+          [
+            IconAlignJustifyHover,
+            IconAlignLeftHover,
+            IconAlignRightHover,
+            IconAlignCenterHover,
+          ][justification]
+        }
+        iconActive={
+          [
+            IconAlignJustifyActive,
+            IconAlignLeftActive,
+            IconAlignRightActive,
+            IconAlignCenterActive,
+          ][justification]
+        }
+      />
+    </div>
+  );
+};
+
+export default Toolbar;

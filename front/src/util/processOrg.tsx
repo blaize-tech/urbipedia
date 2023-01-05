@@ -44,7 +44,6 @@ export interface ProcessedOrgProps {
   previewText: any
   nodeByCite: NodeByCite
   setSidebarHighlightedNode: any
-  openContextMenu: any
   outline: boolean
   collapse: boolean
   linksByNodeId: LinksByNodeId
@@ -61,7 +60,6 @@ export const ProcessedOrg = (props: ProcessedOrgProps) => {
     previewText,
     nodeByCite,
     previewNode,
-    openContextMenu,
     outline,
     collapse,
     linksByNodeId,
@@ -148,7 +146,6 @@ export const ProcessedOrg = (props: ProcessedOrgProps) => {
                   nodeById={nodeById}
                   linksByNodeId={linksByNodeId}
                   setPreviewNode={setPreviewNode}
-                  openContextMenu={openContextMenu}
                   outline={outline}
                   previewNode={previewNode}
                   isWiki={isMarkdown}

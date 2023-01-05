@@ -1,220 +1,120 @@
-import React, {useContext, useEffect, useState} from 'react'
-import {Textarea} from '@chakra-ui/react'
-import {
-    Modal,
-    ModalOverlay,
-    ModalContent,
-    ModalHeader,
-    ModalCloseButton,
-    ModalBody,
-    VStack,
-    Text,
-    ModalFooter,
-    Button
-} from '@chakra-ui/react'
-import {CUIAutoComplete, Item} from "chakra-ui-autocomplete";
-import {ThemeContext} from "../../util/themecontext";
-import {OrgRoamGraphReponse, OrgRoamNode} from "../../api";
+import { FC, useContext, useEffect, useState } from 'react';
+import { Item } from 'chakra-ui-autocomplete';
+import { OrgRoamGraphReponse, OrgRoamNode } from '../../api';
 
-export interface ToolbarProps {
-    node: OrgRoamNode
-    onEdit: any
-    onClose: any
-    showModal: boolean
-    graphData: OrgRoamGraphReponse
+import Modal from '../Modal';
+import Input from '../Input';
+import Select from '../Select';
+
+import styles from './EditFileModal.module.scss';
+
+interface EditFileModalProps {
+  node: OrgRoamNode;
+  onEdit: any;
+  onClose: any;
+  graphData: OrgRoamGraphReponse;
+  isVisible: boolean;
 }
 
-export const EditFileModal = (props: ToolbarProps) => {
-    const {
-        onEdit,
-        onClose,
-        showModal,
-        graphData,
-        node,
-    } = props;
-    const {highlightColor} = useContext(ThemeContext)
-    const [newContent, setNewContent] = useState(node.content);
-    const [showTrigger, setShowTrigger] = useState(false);
+const EditFileModal: FC<EditFileModalProps> = ({
+  node,
+  onEdit,
+  onClose,
+  graphData,
+  isVisible,
+}) => {
+  const [newContent, setNewContent] = useState(node.content);
+  const [showTrigger, setShowTrigger] = useState(false);
 
-    useEffect(() => {
-        setShowTrigger(showModal);
-    }, [showModal]);
+  const tagsOptionArray =
+    graphData.tags.map((option) => ({ value: option, label: option })) || [];
 
-    const tagsOptionArray =
-        graphData.tags.map((option) => {
-            return {value: option, label: option}
-        }) || [];
-
-    const [selectedItemsTags, setSelectedItemsTags] = useState<typeof tagsOptionArray>(
-        node.tags.map((option) => {
-            return {
-                value: option,
-                label: option,
-            }
-        }) || [],
+  const [selectedItemsTags, setSelectedItemsTags] =
+    useState<typeof tagsOptionArray>(
+      node.tags.map((option) => ({ value: option, label: option })) || [],
     );
 
-    const filesList = new Map<string, string>();
-    graphData.nodes.map((node) => {
-        filesList.set(node.id, node.file);
-    });
+  const filesList = new Map<string, string>();
 
-    const linksOptionArray = new Array<Item>();
-    for (let i = 0; i < graphData.nodes.length; i++) {
-        const target = graphData.nodes[i];
-        if (node.id !== target.id) {
-            linksOptionArray.push({value: target.id, label: target.file});
-        }
+  graphData.nodes.map((node) => filesList.set(node.id, node.file));
+
+  const linksOptionArray = new Array<Item>();
+
+  for (let i = 0; i < graphData.nodes.length; i++) {
+    const target = graphData.nodes[i];
+    if (node.id !== target.id) {
+      linksOptionArray.push({value: target.id, label: target.file});
     }
+  }
 
-    const selectedLinksOptionArrayLinks = new Array<Item>();
-    for (let i = 0; i < graphData.links.length; i++) {
-        const link = graphData.links[i];
-        if (link.target === node.id) {
-            selectedLinksOptionArrayLinks.push({
-                value: link.source,
-                label: String(filesList.get(link.source)),
-            });
-        } else if (link.source === node.id) {
-            selectedLinksOptionArrayLinks.push({
-                value: link.source,
-                label: String(filesList.get(link.target)),
-            });
-        }
+  const selectedLinksOptionArrayLinks = new Array<Item>();
+
+  for (let i = 0; i < graphData.links.length; i++) {
+    const link = graphData.links[i];
+
+    if (link.target === node.id) {
+      selectedLinksOptionArrayLinks.push({
+        value: link.source,
+        label: String(filesList.get(link.source)),
+      });
+    } else if (link.source === node.id) {
+      selectedLinksOptionArrayLinks.push({
+        value: link.source,
+        label: String(filesList.get(link.target)),
+      });
     }
+  }
 
-    const [selectedItemsLinks, setSelectedItemsLinks] = useState<typeof selectedLinksOptionArrayLinks>(selectedLinksOptionArrayLinks);
+  const [selectedItemsLinks, setSelectedItemsLinks] =
+    useState<typeof selectedLinksOptionArrayLinks>(selectedLinksOptionArrayLinks
+    );
 
-    return (
-        <Modal
-            isCentered
-            isOpen={showModal}
-            onClose={() => onClose()}
-        >
-            <ModalOverlay/>
-            <ModalContent zIndex="popover">
-                <ModalHeader>{node.file}</ModalHeader>
-                <ModalCloseButton/>
-                <ModalBody style={{visibility: showTrigger ? "visible" : "collapse"}}>
-                    <VStack spacing={4} display="flex" alignItems="flex-start">
-                        <Text>Edit file:</Text>
-                        <Textarea value={newContent} onChange={(e) => {
-                            setNewContent(e.target.value);
-                        }}/>
-                        <CUIAutoComplete
-                            labelStyleProps={{fontWeight: 300, fontSize: 14}}
-                            items={tagsOptionArray}
-                            label={`Tags:`}
-                            placeholder="Tag"
-                            onCreateItem={(item) => {
-                                if (!graphData.tags.includes(item.value)) {
-                                    setSelectedItemsTags((curr) => [...selectedItemsTags, item]);
-                                    tagsOptionArray.push(item);
-                                }
-                            }}
-                            disableCreateItem={false}
-                            selectedItems={selectedItemsTags}
-                            onSelectedItemsChange={(changes) => {
-                                if (changes.selectedItems) {
-                                    setSelectedItemsTags(changes.selectedItems);
-                                }
-                            }}
-                            listItemStyleProps={{overflow: 'hidden'}}
-                            highlightItemBg="gray.400"
-                            toggleButtonStyleProps={{variant: 'outline'}}
-                            inputStyleProps={{
-                                mt: 2,
-                                height: 8,
-                                focusBorderColor: highlightColor,
-                                color: 'gray.800',
-                                borderColor: 'gray.500',
-                            }}
-                            tagStyleProps={{
-                                justifyContent: 'flex-start',
-                                //variant: 'subtle',
-                                fontSize: 10,
-                                borderColor: highlightColor,
-                                borderWidth: 1,
-                                borderRadius: 'md',
-                                color: highlightColor,
-                                bg: '',
-                                height: 4,
-                                mb: 2,
-                                //paddingLeft: 4,
-                                //fontWeight: 'bold',
-                            }}
-                            itemRenderer={(selected) => selected.label}
-                        />
-                        <CUIAutoComplete
-                            labelStyleProps={{fontWeight: 300, fontSize: 14}}
-                            items={linksOptionArray}
-                            label={`Links:`}
-                            placeholder="links"
-                            onCreateItem={(item) => null}
-                            disableCreateItem={true}
-                            selectedItems={selectedItemsLinks}
-                            onSelectedItemsChange={(changes) => {
-                                if (changes.selectedItems) {
-                                    setSelectedItemsLinks(changes.selectedItems);
-                                }
-                            }}
-                            listItemStyleProps={{overflow: 'hidden'}}
-                            highlightItemBg="gray.400"
-                            toggleButtonStyleProps={{variant: 'outline'}}
-                            inputStyleProps={{
-                                mt: 2,
-                                height: 8,
-                                focusBorderColor: highlightColor,
-                                color: 'gray.800',
-                                borderColor: 'gray.500',
-                            }}
-                            tagStyleProps={{
-                                justifyContent: 'flex-start',
-                                //variant: 'subtle',
-                                fontSize: 10,
-                                borderColor: highlightColor,
-                                borderWidth: 1,
-                                borderRadius: 'md',
-                                color: highlightColor,
-                                bg: '',
-                                height: 4,
-                                mb: 2,
-                                //paddingLeft: 4,
-                                //fontWeight: 'bold',
-                            }}
-                            itemRenderer={(selected) => selected.label}
-                        />
-                    </VStack>
-                </ModalBody>
-                <ModalFooter>
-                    <Button
-                        mr={3}
-                        onClick={onClose}
-                    >
-                        Cancel
-                    </Button>
-                    <Button
-                        variant="link"
-                        colorScheme="red"
-                        ml={3}
-                        onClick={() => {
-                            if (!!onEdit) {
-                                onEdit(
-                                    newContent,
-                                    selectedItemsTags.map((item) => {
-                                        return item.value;
-                                    }),
-                                    selectedItemsLinks.map((item) => {
-                                        return item.value;
-                                    })
-                                );
-                            }
-                        }}
-                    >
-                        Ok
-                    </Button>
-                </ModalFooter>
-            </ModalContent>
-        </Modal>
-    )
-}
+  return (
+    <Modal
+      isVisible={isVisible}
+      onSubmit={() => {
+        onEdit(
+          newContent,
+          selectedItemsTags.map((item) => item.value),
+          selectedItemsLinks.map((item) => item.value),
+        );
+      }}
+      onClose={onClose}
+      title={node.file}
+    >
+      <Input
+        className={styles.input}
+        type="textarea"
+        title="Edit File:"
+        value={newContent}
+        onChange={(e) => setNewContent(e.target.value)}
+      />
+
+      <Select
+        className={styles.input}
+        onCreate={(item) => {
+          if (!graphData.tags.includes(item.value)) {
+            setSelectedItemsTags((curr) => [...selectedItemsTags, item]);
+            tagsOptionArray.push(item);
+          }
+        }}
+        onChange={setSelectedItemsTags}
+        title="Tags:"
+        placeholder="Tag"
+        itemList={tagsOptionArray}
+        itemListselected={selectedItemsTags}
+      />
+
+      <Select
+        className={styles.input}
+        onChange={setSelectedItemsLinks}
+        title="Links:"
+        placeholder="links"
+        itemList={linksOptionArray}
+        itemListselected={selectedItemsLinks}
+      />
+    </Modal>
+  );
+};
+
+export default EditFileModal;

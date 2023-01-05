@@ -1,79 +1,101 @@
-import React from 'react'
-import { initialFilter, TagColors } from '../config'
-import { NodeObject } from 'force-graph'
-import { OrgRoamNode } from '../../api'
-import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
-import { Flex, Tag, TagLabel, TagRightIcon } from '@chakra-ui/react'
+import { FC } from 'react';
+import { NodeObject } from 'force-graph';
+import { useTheme } from '@chakra-ui/react';
 
-export interface TagBarProps {
-  filter: typeof initialFilter
-  setFilter: any
-  tagColors: TagColors
-  setTagColors: any
-  openContextMenu: any
-  previewNode: NodeObject
+import { initialFilter, TagColors } from '../config';
+import { getThemeColor } from '../../util/getThemeColor';
+import { OrgRoamNode } from '../../api';
+
+import IconHidden from '../../images/icon-hidden.svg';
+import IconVisible from '../../images/icon-visible.svg';
+
+import styles from './TagBar.module.scss';
+
+interface TagBarProps {
+  filter: typeof initialFilter;
+  setFilter: any;
+  tagColors: TagColors;
+  previewNode: NodeObject;
 }
 
-export const TagBar = (props: TagBarProps) => {
-  const { filter, setFilter, tagColors, setTagColors, openContextMenu, previewNode } = props
+const TagBar: FC<TagBarProps> = ({
+  filter,
+  setFilter,
+  tagColors,
+  previewNode,
+}) => {
+  const theme = useTheme();
 
-  const node = previewNode as OrgRoamNode
-  if (!node?.tags || node?.tags?.[0] === null) {
-    return null
-  }
-  return (
-    <Flex mb={2} flexWrap="wrap">
-      {node?.tags?.map?.((tag: string) => {
-        const bl: string[] = filter.tagsBlacklist ?? []
-        const wl: string[] = filter.tagsWhitelist ?? []
-        const blackList: boolean = bl.includes(tag)
-        const whiteList = wl.includes(tag)
+  const node = previewNode as OrgRoamNode;
+
+  return node?.tags?.[0] !== null ? (
+    <div className={styles.container}>
+      {node?.tags?.map((tag: string) => {
+        const bl: string[] = filter.tagsBlacklist ?? [];
+        const wl: string[] = filter.tagsWhitelist ?? [];
+        const blackList: boolean = bl.includes(tag);
+        const whiteList = wl.includes(tag);
+
         return (
-          <Tag
-            tabIndex={0}
-            mr={2}
-            mt={2}
-            onContextMenu={(e) => {
-              e.preventDefault()
-              openContextMenu(tag, e)
-            }}
-            cursor="pointer"
+          <button
+            className={styles.button}
             onClick={() => {
               if (blackList) {
                 setFilter((filter: typeof initialFilter) => ({
                   ...filter,
                   tagsBlacklist: filter.tagsBlacklist.filter((t) => t !== tag),
                   tagsWhitelist: [...filter.tagsWhitelist, tag],
-                }))
-                return
+                }));
+
+                return;
               }
+
               if (whiteList) {
                 setFilter((filter: typeof initialFilter) => ({
                   ...filter,
                   tagsWhitelist: filter.tagsWhitelist.filter((t) => t !== tag),
-                }))
-                return
+                }));
+
+                return;
               }
 
               setFilter((filter: typeof initialFilter) => ({
                 ...filter,
                 tagsBlacklist: [...filter.tagsBlacklist, tag],
-              }))
+              }));
             }}
-            size="sm"
+            style={tagColors[tag] ? {
+              borderColor: getThemeColor(tagColors[tag], theme),
+            }: undefined}
+            type="button"
             key={tag}
-            variant="outline"
-            colorScheme={tagColors[tag]?.replaceAll(/(.*?)\..*/g, '$1') || undefined}
           >
-            <TagLabel>{tag}</TagLabel>
-            {blackList ? (
-              <TagRightIcon as={ViewOffIcon} />
-            ) : whiteList ? (
-              <TagRightIcon as={ViewIcon} />
-            ) : null}
-          </Tag>
+            <span className={styles.text}>{tag}</span>
+
+            {blackList && (
+              <img
+                className={styles.icon}
+                height="20"
+                width="20"
+                src={IconHidden}
+                alt="Blacklist"
+              />
+            )}
+
+            {whiteList && (
+              <img
+                className={styles.icon}
+                height="20"
+                width="20"
+                src={IconVisible}
+                alt="Whitelist"
+              />
+            )}
+          </button>
         )
       })}
-    </Flex>
-  )
-}
+    </div>
+  ) : null;
+};
+
+export default TagBar;
