@@ -1,4 +1,13 @@
 .container {
   background-color: #FCFCFC;
+  justify-content: space-between;
+  flex-direction: column;
   border-right: 1px solid #E9E9EB;
+  align-items: stretch;
+  flex-wrap: nowrap;
+  display: flex;
+}
+
+.menu {
+  margin-top: auto;
 }

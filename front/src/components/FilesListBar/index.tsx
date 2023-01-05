@@ -25,6 +25,7 @@ import Toolbar from './Toolbar';
 import ItemList from './ItemList';
 import RenameModal from './RenameModal';
 import EditFileModal from './EditFileModal';
+import Menu from './Menu';
 
 import styles from './FilesListBar.module.scss';
 
@@ -155,7 +156,7 @@ const FilesListBar: FC<FilesListBarProps> = ({
         haveSelection={(selectedItemIndex >= 0)}
       />
 
-      <Scrollbars autoHide={false}>
+      <Scrollbars autoHeight autoHide={false}>
         <ItemList
           setSelectedItemIndex={setSelectedItemIndex}
           setCurrentFileName={setCurrentFileName}
@@ -182,6 +183,8 @@ const FilesListBar: FC<FilesListBarProps> = ({
           isVisible={isOpenEditFileModal}
         />
       )}
+
+      <Menu className={styles.menu} />
     </Resizable>
   );
 };
