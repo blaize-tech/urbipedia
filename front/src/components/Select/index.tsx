@@ -65,7 +65,11 @@ const Select: FC<InputProps> = ({
         </ul>
       )}
 
-      <button type="button" onClick={() => setIsOpened(!isOpened)}>
+      <button
+        className={styles.button}
+        onClick={() => setIsOpened(!isOpened)}
+        type="button"
+      >
         <input
           className={styles.input}
           type="text"

@@ -73,30 +73,35 @@
   width: 20px;
 }
 
-.input {
+.button {
   transition: border-color .3s;
   background-color: #F6F7FA;
+  margin-bottom: 5px;
   border-radius: 5px;
-  font-family: 'Montserrat';
-  font-weight: 400;
-  line-height: 17px;
-  font-size: 14px;
-  padding: 9px 14px;
-  outline: none;
+  align-items: center;
+  flex-wrap: nowrap;
+  overflow: hidden;
+  display: flex;
   border: 1px solid #F6F7FA;
   width: 100%;
-  color: #3E3F4B;
 
   &:hover,
   &:focus,
   &:active {
     border-color: #303FC0;
   }
+}
 
-  &--textarea {
-    min-height: 37px;
-    resize: vertical;
-  }
+.input {
+  background-color: #F6F7FA;
+  font-family: 'Montserrat';
+  font-weight: 400;
+  line-height: 17px;
+  font-size: 14px;
+  padding: 9px 14px;
+  outline: none;
+  width: 100%;
+  color: #3E3F4B;
 }
 
 .list {
