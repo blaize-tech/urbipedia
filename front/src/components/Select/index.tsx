@@ -43,6 +43,7 @@ const Select: FC<InputProps> = ({
           {selectedlist.map((item: ItemInterface) => (
             <li key={item.value}>
               <button
+                className={styles.tagsButton}
                 onClick={() => onChange(
                   selectedlist.filter((element) => element !== item),
                 )}
