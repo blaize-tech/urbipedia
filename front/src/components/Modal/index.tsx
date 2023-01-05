@@ -3,7 +3,9 @@ import {
   Modal as ModalContainer,
   ModalOverlay,
   ModalContent,
+  Tooltip,
 } from '@chakra-ui/react';
+import cn from 'classnames';
 
 import ModalCloseButton from '../ModalCloseButton';
 import IconButton from '../IconButton';
@@ -22,6 +24,8 @@ interface ModalProps {
   resetTitle?: string;
   onReset?: () => void;
   onClose: () => void;
+  onTitleClick?: () => void;
+  titleTooltip?: string;
   title: string;
   children: any;
 }
@@ -33,6 +37,8 @@ const Modal: FC<ModalProps> = ({
   resetTitle,
   onReset,
   onClose,
+  onTitleClick,
+  titleTooltip,
   title,
   children,
 }) => {
@@ -42,7 +48,23 @@ const Modal: FC<ModalProps> = ({
 
       <ModalContent className={styles.container} zIndex="popover">
         <header className={styles.header}>
-          <h1 className={styles.title}>{title}</h1>
+          {titleTooltip ? (
+            <Tooltip label={titleTooltip}>
+              <h1
+                className={cn(styles.title, styles['title--clickable'])}
+                onClick={onTitleClick}
+              >
+                {title}
+              </h1>
+            </Tooltip>
+          ) : (
+            <h1
+              className={styles.title}
+              onClick={onTitleClick}
+            >
+              {title}
+            </h1>
+          )}
 
           {onReset && (
             <IconButton

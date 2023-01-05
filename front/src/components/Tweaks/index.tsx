@@ -7,8 +7,6 @@ import {
   AccordionItem,
   AccordionPanel,
   Box,
-  Button,
-  Tooltip,
   Heading,
 } from '@chakra-ui/react';
 import Scrollbars from 'react-custom-scrollbars-2';
@@ -111,21 +109,10 @@ const Tweaks: FC<TweakProps> = ({
             setLocal(initialLocal);
           }}
           onClose={() => setShowTweaks(false)}
+          onTitleClick={() => setThreeDim(!threeDim)}
+          titleTooltip={`Switch to ${threeDim ? '2D' : '3D'} view`}
           title={threeDim ? '3D' : '2D'}
         >
-          <Box
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-            paddingRight={2}
-            paddingTop={1}
-          >
-            <Tooltip label={'Switch to ' + threeDim ? '2D' : '3D' + ' view'}>
-              <Button onClick={() => setThreeDim(!threeDim)} variant="subtle" zIndex="overlay">
-                {threeDim ? '3D' : '2D'}
-              </Button>
-            </Tooltip>
-          </Box>
           <Scrollbars
             autoHeight
             autoHeightMax={0.85 * globalThis.innerHeight}

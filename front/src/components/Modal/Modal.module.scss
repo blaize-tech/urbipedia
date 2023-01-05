@@ -25,6 +25,10 @@
   line-height: 22px;
   font-size: 18px;
   color: #3E3F4B;
+
+  &--clickable {
+    cursor: pointer;
+  }
 }
 
 .reset {
