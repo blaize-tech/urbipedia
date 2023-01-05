@@ -1,12 +1,10 @@
 import { FC, useContext, useEffect, useState } from 'react';
-import { Textarea } from '@chakra-ui/react';
-import { VStack, Text } from '@chakra-ui/react';
-import { CUIAutoComplete, Item } from 'chakra-ui-autocomplete';
-import { ThemeContext } from '../../util/themecontext';
+import { Item } from 'chakra-ui-autocomplete';
 import { OrgRoamGraphReponse, OrgRoamNode } from '../../api';
 
 import Modal from '../Modal';
 import Input from '../Input';
+import Select from '../Select';
 
 import styles from './EditFileModal.module.scss';
 
@@ -25,11 +23,8 @@ const EditFileModal: FC<EditFileModalProps> = ({
   graphData,
   isVisible,
 }) => {
-  const { highlightColor } = useContext(ThemeContext);
   const [newContent, setNewContent] = useState(node.content);
   const [showTrigger, setShowTrigger] = useState(false);
-
-  useEffect(() => setShowTrigger(isVisible), [isVisible]);
 
   const tagsOptionArray =
     graphData.tags.map((option) => ({ value: option, label: option })) || [];
@@ -96,86 +91,29 @@ const EditFileModal: FC<EditFileModalProps> = ({
         onChange={(e) => setNewContent(e.target.value)}
       />
 
-      <VStack spacing={4} display="flex" alignItems="flex-start">
-        <CUIAutoComplete
-          labelStyleProps={{ fontWeight: 300, fontSize: 14 }}
-          items={tagsOptionArray}
-          label="Tags:"
-          placeholder="Tag"
-          onCreateItem={(item) => {
-            if (!graphData.tags.includes(item.value)) {
-              setSelectedItemsTags((curr) => [...selectedItemsTags, item]);
-              tagsOptionArray.push(item);
-            }
-          }}
-          disableCreateItem={false}
-          selectedItems={selectedItemsTags}
-          onSelectedItemsChange={(changes) => {
-            if (changes.selectedItems) {
-              setSelectedItemsTags(changes.selectedItems);
-            }
-          }}
-          listItemStyleProps={{ overflow: 'hidden' }}
-          highlightItemBg="gray.400"
-          toggleButtonStyleProps={{ variant: 'outline' }}
-          inputStyleProps={{
-            mt: 2,
-            height: 8,
-            focusBorderColor: highlightColor,
-            color: 'gray.800',
-            borderColor: 'gray.500',
-          }}
-          tagStyleProps={{
-            justifyContent: 'flex-start',
-            fontSize: 10,
-            borderColor: highlightColor,
-            borderWidth: 1,
-            borderRadius: 'md',
-            color: highlightColor,
-            bg: '',
-            height: 4,
-            mb: 2,
-          }}
-          itemRenderer={(selected) => selected.label}
-        />
+      <Select
+        className={styles.input}
+        onCreate={(item) => {
+          if (!graphData.tags.includes(item.value)) {
+            setSelectedItemsTags((curr) => [...selectedItemsTags, item]);
+            tagsOptionArray.push(item);
+          }
+        }}
+        onChange={setSelectedItemsTags}
+        title="Tags:"
+        placeholder="Tag"
+        itemList={tagsOptionArray}
+        itemListselected={selectedItemsTags}
+      />
 
-        <CUIAutoComplete
-            labelStyleProps={{ fontWeight: 300, fontSize: 14 }}
-            items={linksOptionArray}
-            label="Links:"
-            placeholder="links"
-            onCreateItem={(item) => null}
-            disableCreateItem={true}
-            selectedItems={selectedItemsLinks}
-            onSelectedItemsChange={(changes) => {
-              if (changes.selectedItems) {
-                setSelectedItemsLinks(changes.selectedItems);
-              }
-            }}
-            listItemStyleProps={{ overflow: 'hidden' }}
-            highlightItemBg="gray.400"
-            toggleButtonStyleProps={{ variant: 'outline' }}
-            inputStyleProps={{
-              mt: 2,
-              height: 8,
-              focusBorderColor: highlightColor,
-              color: 'gray.800',
-              borderColor: 'gray.500',
-            }}
-            tagStyleProps={{
-              justifyContent: 'flex-start',
-              fontSize: 10,
-              borderColor: highlightColor,
-              borderWidth: 1,
-              borderRadius: 'md',
-              color: highlightColor,
-              bg: '',
-              height: 4,
-              mb: 2,
-            }}
-            itemRenderer={(selected) => selected.label}
-        />
-      </VStack>
+      <Select
+        className={styles.input}
+        onChange={setSelectedItemsLinks}
+        title="Links:"
+        placeholder="links"
+        itemList={linksOptionArray}
+        itemListselected={selectedItemsLinks}
+      />
     </Modal>
   );
 };

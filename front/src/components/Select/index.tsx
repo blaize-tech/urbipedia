@@ -11,6 +11,7 @@ interface InputProps {
   onCreate?: (value: ItemInterface) => void;
   onChange: (value: ItemInterface[]) => void;
   title: string;
+  placeholder: string;
   itemList: ItemInterface[];
   itemListselected: ItemInterface[];
 }
@@ -22,6 +23,7 @@ const Select: FC<InputProps> = ({
   onCreate,
   onChange,
   title,
+  placeholder,
   itemList,
   itemListselected,
 }) => {
@@ -46,7 +48,7 @@ const Select: FC<InputProps> = ({
                 )}
                 type="button"
               >
-                {item.value}
+                {item.label}
               </button>
             </li>
           ))}
@@ -61,6 +63,7 @@ const Select: FC<InputProps> = ({
             setSearchValue(e.target.value);
             setIsOpened(true);
           }}
+          placeholder={placeholder}
         />
       </button>
 
@@ -98,7 +101,7 @@ const Select: FC<InputProps> = ({
                     }}
                     type="button"
                   >
-                    {item.value}
+                    {item.label}
                   </button>
                 </li>
               );
@@ -119,7 +122,7 @@ const Select: FC<InputProps> = ({
                     }}
                     type="button"
                   >
-                    {item.value}
+                    {item.label}
                   </button>
                 </li>
               );
