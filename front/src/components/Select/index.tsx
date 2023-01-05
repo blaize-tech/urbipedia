@@ -89,7 +89,9 @@ const Select: FC<InputProps> = ({
                     })}
                     type="button"
                   >
-                    {`Create ${searchValue}`}
+                    <span className={styles.listItemText}>
+                      {`Create ${searchValue}`}
+                    </span>
                   </button>
                 </li>
               );
@@ -110,7 +112,9 @@ const Select: FC<InputProps> = ({
                     }}
                     type="button"
                   >
-                    {item.label}
+                    <span className={styles.listItemText}>
+                      {item.label}
+                    </span>
                   </button>
                 </li>
               );
@@ -131,7 +135,9 @@ const Select: FC<InputProps> = ({
                     }}
                     type="button"
                   >
-                    {item.label}
+                    <span className={styles.listItemText}>
+                      {item.label}
+                    </span>
                   </button>
                 </li>
               );

@@ -107,7 +107,25 @@
 }
 
 .listItem {
+  min-height: 20px;
+
   &:not(:last-child) {
     margin-bottom: 4px;
+  }
+}
+
+.listItemText {
+  font-family: 'Montserrat';
+  font-weight: 400;
+  line-height: 12px;
+  font-size: 14px;
+  color: #3E3F4B;
+
+  &:not(:first-child) {
+    margin-left: 5px;
+  }
+
+  &:first-child {
+    margin-left: 25px;
   }
 }
