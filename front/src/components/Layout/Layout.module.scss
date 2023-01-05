@@ -1,0 +1,40 @@
+.container {
+  background-color: #F6F7FA;
+  justify-content: space-between;
+  align-items: stretch;
+  flex-wrap: nowrap;
+  position: relative;
+  display: flex;
+}
+
+.sidebar {
+  position: relative;
+  z-index: 10;
+
+  &:first-child {
+    margin-right: 30px;
+  }
+
+  &:last-child {
+    margin-left: 30px;
+  }
+}
+
+.content {
+  background-color: #F6F7FA;
+  position: absolute;
+  z-index: 2;
+  opacity: .7;
+  height: 100%;
+  width: 100%;
+  left: 0;
+  top: 0;
+}
+
+.button {
+  margin-left: auto;
+  margin-top: 30px;
+  align-self: flex-start;
+  position: relative;
+  z-index: 10;
+}

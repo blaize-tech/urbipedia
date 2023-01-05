@@ -59,6 +59,7 @@
     "remark-rehype": "^8.1.0",
     "remark-sectionize": "^1.1.1",
     "remark-wiki-link": "^1.0.4",
+    "sass": "^1.57.1",
     "slate": "^0.66.5",
     "slate-react": "^0.66.7",
     "styled-jsx": "^4.0.1",
@@ -83,6 +84,7 @@
     "word-wrap": "^1.2.3"
   },
   "devDependencies": {
+    "@types/classnames": "^2.3.1",
     "@types/d3-interpolate": "^3.0.1",
     "@types/react": "17.0.14",
     "eslint": "7.31.0",

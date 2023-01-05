@@ -1,68 +1,37 @@
-import React, {useContext, useState} from 'react'
-import {Input} from '@chakra-ui/react'
-import {
-    Flex,
-    IconButton,
-    ButtonGroup,
-    Tooltip,
-    Box,
-    Modal,
-    ModalOverlay,
-    ModalContent,
-    ModalHeader, ModalCloseButton, ModalBody, VStack, Text, ModalFooter, Button
-} from '@chakra-ui/react'
-import {PlusSquareIcon, EditIcon, DeleteIcon, CalendarIcon} from '@chakra-ui/icons'
-import {deleteNodeInEmacs} from "../../util/webSocketFunctions";
+import { FC, useState } from 'react';
 
-export interface ToolbarProps {
-    name: string
-    onRename: any
-    onClose: any
-    showModal: boolean
+import Modal from '../Modal';
+import Input from '../Input';
+
+interface RenameModalProps {
+  name: string;
+  onRename: any;
+  onClose: any;
+  isVisible: boolean;
 }
 
-export const RenameModal = (props: ToolbarProps) => {
-    const {
-        name,
-        onRename,
-        onClose,
-        showModal,
-    } = props;
-    const [value, setValue] = useState(name);
-    return (
-        <Modal isCentered isOpen={showModal} onClose={() => onClose()}>
-            <ModalOverlay/>
-            <ModalContent zIndex="popover">
-                <ModalHeader>Rename file:</ModalHeader>
-                <ModalCloseButton/>
-                <ModalBody>
-                    <VStack spacing={4} display="flex" alignItems="flex-start">
-                        <Input type="text" value={value} onChange={(e) => {
-                            setValue(e.target.value);
-                        }}/>
-                    </VStack>
-                </ModalBody>
-                <ModalFooter>
-                    <Button
-                        mr={3}
-                        onClick={onClose}
-                    >
-                        Cancel
-                    </Button>
-                    <Button
-                        variant="link"
-                        colorScheme="red"
-                        ml={3}
-                        onClick={() => {
-                            if (!!onRename) {
-                                onRename(value);
-                            }
-                        }}
-                    >
-                        Ok
-                    </Button>
-                </ModalFooter>
-            </ModalContent>
-        </Modal>
-    )
-}
+const RenameModal: FC<RenameModalProps> = ({
+  name,
+  onRename,
+  onClose,
+  isVisible,
+}) => {
+  const [value, setValue] = useState(name);
+
+  return (
+    <Modal
+      isVisible={isVisible}
+      onSubmit={() => onRename(value)}
+      onClose={onClose}
+      title="Rename file"
+    >
+      <Input
+        title="Edit Name:"
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+      />
+    </Modal>
+  );
+};
+
+export default RenameModal;
