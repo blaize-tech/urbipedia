@@ -10,17 +10,33 @@ interface InputProps {
   className?: string;
   title: string;
   itemList: ItemInterface[];
+  itemListselected: ItemInterface[];
 }
 
 import styles from './Select.module.scss';
 
-const Select: FC<InputProps> = ({ className, title, itemList }) => {
+const Select: FC<InputProps> = ({
+  className,
+  title,
+  itemList,
+  itemListselected,
+}) => {
   const [isOpened, setIsOpened] = useState<boolean>(false);
   const [searchValue, setSearchValue] = useState<string>('');
 
   return (
     <label className={cn(styles.container, className)}>
       <span className={styles.title}>{title}</span>
+
+      {itemListselected.length > 0 && (
+        <ul>
+          {itemListselected.map(({ value }: ItemInterface) => (
+            <li key={value}>
+              <button type="button">{value}</button>
+            </li>
+          ))}
+        </ul>
+      )}
 
       <button type="button" onClick={() => setIsOpened(true)}>
         <input
@@ -35,7 +51,7 @@ const Select: FC<InputProps> = ({ className, title, itemList }) => {
 
       {isOpened && (
         <ul>
-          {itemList?.map(({ value, label }: ItemInterface) => {
+          {itemList?.map(({ value }: ItemInterface) => {
             if (searchValue && value.includes(searchValue)) {
               return (
                 <li key={value}>
