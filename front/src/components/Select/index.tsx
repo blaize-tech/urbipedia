@@ -8,6 +8,7 @@ interface ItemInterface {
 
 interface InputProps {
   className?: string;
+  onCreate?: (value: ItemInterface) => void;
   onChange: (value: ItemInterface[]) => void;
   title: string;
   itemList: ItemInterface[];
@@ -18,6 +19,7 @@ import styles from './Select.module.scss';
 
 const Select: FC<InputProps> = ({
   className,
+  onCreate,
   onChange,
   title,
   itemList,
@@ -65,6 +67,22 @@ const Select: FC<InputProps> = ({
       {isOpened && (
         <ul>
           {itemList?.map((item: ItemInterface) => {
+            if (onCreate && searchValue && !item.value.includes(searchValue)) {
+              return (
+                <li key={item.value}>
+                  <button
+                    onClick={() => onCreate({
+                      value: searchValue,
+                      label: searchValue,
+                    })}
+                    type="button"
+                  >
+                    {`Create ${searchValue}`}
+                  </button>
+                </li>
+              );
+            }
+
             if (searchValue && item.value.includes(searchValue)) {
               return (
                 <li key={item.value}>
