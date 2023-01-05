@@ -18,6 +18,9 @@ const fetchWithStreamReader = async (resource, options) => {
         stream.data.on("data", data => {
             console.log("data>>>", String(data));
         });
+        stream.data.on('end', () => {
+            console.log("end>>>");
+        });
         let lastBody = "";
         const newRes = {
             body: "",
