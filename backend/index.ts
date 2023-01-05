@@ -1,6 +1,16 @@
 import express, {Express, NextFunction, Request, Response} from 'express';
 import expressWs from 'express-ws';
-import {connectUrbitClient, urbitCreateFile, urbitUpdateTagsToFile} from "./urbit";
+import {
+    connectUrbitClient,
+    urbitCreateFile,
+    urbitCreateLinkFileToFile,
+    urbitDeleteFile,
+    urbitDeleteLinkFileToFile,
+    urbitGetFileEntries,
+    urbitRenameFile,
+    urbitUpdateFile,
+    urbitUpdateTagsToFile
+} from "./urbit";
 
 const app = express();
 app.use(express.json());
@@ -19,6 +29,55 @@ app.post('/create-node', function (req: Request, res: Response, next: NextFuncti
 app.post('/update-tags', function (req: Request, res: Response, next: NextFunction) {
     urbitUpdateTagsToFile(req.body.id, req.body.tags).then(() => {
         res.send("ok");
+    }).catch((err => {
+        res.status(500).send(err);
+    }));
+});
+
+app.post('/update-content', function (req: Request, res: Response, next: NextFunction) {
+    urbitUpdateFile(req.body.id, req.body.content).then(() => {
+        res.send("ok");
+    }).catch((err => {
+        res.status(500).send(err);
+    }));
+});
+
+app.post('/rename-node', function (req: Request, res: Response, next: NextFunction) {
+    urbitRenameFile(req.body.id, req.body.name).then(() => {
+        res.send("ok");
+    }).catch((err => {
+        res.status(500).send(err);
+    }));
+});
+
+app.post('/create-link', function (req: Request, res: Response, next: NextFunction) {
+    urbitCreateLinkFileToFile(req.body.from, req.body.to).then(() => {
+        res.send("ok");
+    }).catch((err => {
+        res.status(500).send(err);
+    }));
+});
+
+app.post('/delete-link', function (req: Request, res: Response, next: NextFunction) {
+    urbitDeleteLinkFileToFile(req.body.id).then(() => {
+        res.send("ok");
+    }).catch((err => {
+        res.status(500).send(err);
+    }));
+});
+
+app.post('/delete-node', function (req: Request, res: Response, next: NextFunction) {
+    urbitDeleteFile(req.body.id).then(() => {
+        res.send("ok");
+    }).catch((err => {
+        res.status(500).send(err);
+    }));
+});
+
+app.get('/entries/ids', function (req: Request, res: Response, next: NextFunction) {
+    // @ts-ignore
+    urbitGetFileEntries(req.query.id).then((data) => {
+        res.send(data);
     }).catch((err => {
         res.status(500).send(err);
     }));
