@@ -1,4 +1,7 @@
 import { FC } from 'react';
+import cn from 'classnames';
+
+import styles from './Menu.module.scss';
 
 interface MenuProps {
   className: string;
@@ -6,8 +9,8 @@ interface MenuProps {
 
 const Menu: FC<MenuProps> = ({ className }) => {
   return (
-    <ul className={className}>
-      <li>
+    <ul className={cn(styles.container, className)}>
+      <li className={styles.item}>
         <label>
         </label>
       </li>
