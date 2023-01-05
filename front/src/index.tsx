@@ -493,6 +493,24 @@ export function GraphPage() {
       <Layout
         graphData={currentOrgRoamGraph.current}
         visuals={visuals}
+        physics={physics}
+        setPhysics={setPhysics}
+        threeDim={threeDim}
+        setThreeDim={setThreeDim}
+        filter={filter}
+        setFilter={setFilter}
+        setVisuals={setVisuals}
+        mouse={mouse}
+        setMouse={setMouse}
+        behavior={behavior}
+        setBehavior={setBehavior}
+        tagColors={tagColors}
+        setTagColors={setTagColors}
+        coloring={coloring}
+        setColoring={setColoring}
+        local={local}
+        setLocal={setLocal}
+        tags={tagsRef.current}
         nodeIds={scope.nodeIds}
         onExit={() => {
           setScope((currentScope: Scope) => ({ ...currentScope, nodeIds: [] }));
@@ -507,37 +525,10 @@ export function GraphPage() {
         canRedo={canRedo}
         previousPreviewNode={previousPreviewNode}
         nextPreviewNode={nextPreviewNode}
-        filter={filter}
-        setFilter={setFilter}
-        tagColors={tagColors}
         macros={emacsVariables.katexMacros}
         attachDir={emacsVariables.attachDir || ''}
         useInheritance={emacsVariables.useInheritance || false}
       >
-        <Tweaks
-          {...{
-            physics,
-            setPhysics,
-            threeDim,
-            setThreeDim,
-            filter,
-            setFilter,
-            visuals,
-            setVisuals,
-            mouse,
-            setMouse,
-            behavior,
-            setBehavior,
-            tagColors,
-            setTagColors,
-            coloring,
-            setColoring,
-            local,
-            setLocal,
-          }}
-          tags={tagsRef.current}
-        />
-
         {graphData?.nodes.length ? (
           <Graph
             //ref={graphRef}

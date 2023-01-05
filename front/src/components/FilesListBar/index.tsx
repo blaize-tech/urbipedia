@@ -9,7 +9,16 @@ import { ThemeContext } from '../../util/themecontext';
 import { usePersistantState } from '../../util/persistant-state';
 import { OrgRoamGraphReponse } from "../../api";
 import { getThemeColor } from "../../util/getThemeColor";
-import { initialVisuals } from "../config";
+import {
+  initialPhysics,
+  initialFilter,
+  initialVisuals,
+  initialMouse,
+  initialBehavior,
+  initialLocal,
+  TagColors,
+  initialColoring,
+} from '../config';
 import {
   urbitCreateFile,
   urbitCreateLinkFileToFile,
@@ -33,12 +42,48 @@ interface FilesListBarProps {
   className: string;
   graphData: OrgRoamGraphReponse;
   visuals: typeof initialVisuals;
+  physics: typeof initialPhysics;
+  setPhysics: any;
+  threeDim: boolean;
+  setThreeDim: (value: boolean) => void;
+  filter: typeof initialFilter;
+  setFilter: any;
+  setVisuals: any;
+  mouse: typeof initialMouse;
+  setMouse: any;
+  behavior: typeof initialBehavior;
+  setBehavior: any;
+  tags: string[];
+  tagColors: TagColors;
+  setTagColors: any;
+  coloring: typeof initialColoring;
+  setColoring: any;
+  local: typeof initialLocal;
+  setLocal: any;
 }
 
 const FilesListBar: FC<FilesListBarProps> = ({
   className,
   graphData,
-  visuals
+  visuals,
+  physics,
+  setPhysics,
+  threeDim,
+  setThreeDim,
+  filter,
+  setFilter,
+  setVisuals,
+  mouse,
+  setMouse,
+  behavior,
+  setBehavior,
+  tagColors,
+  setTagColors,
+  coloring,
+  setColoring,
+  local,
+  setLocal,
+  tags,
 }) => {
   const windowWidth = useWindowWidth();
   const theme = useTheme()
@@ -184,7 +229,28 @@ const FilesListBar: FC<FilesListBarProps> = ({
         />
       )}
 
-      <Menu className={styles.menu} />
+      <Menu
+        className={styles.menu}
+        visuals={visuals}
+        physics={physics}
+        setPhysics={setPhysics}
+        threeDim={threeDim}
+        setThreeDim={setThreeDim}
+        filter={filter}
+        setFilter={setFilter}
+        setVisuals={setVisuals}
+        mouse={mouse}
+        setMouse={setMouse}
+        behavior={behavior}
+        setBehavior={setBehavior}
+        tagColors={tagColors}
+        setTagColors={setTagColors}
+        coloring={coloring}
+        setColoring={setColoring}
+        local={local}
+        setLocal={setLocal}
+        tags={tags}
+      />
     </Resizable>
   );
 };

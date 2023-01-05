@@ -2,9 +2,17 @@ import { FC } from 'react';
 import { NodeObject } from 'force-graph';
 
 import { OrgRoamGraphReponse } from '../../api';
-import { initialVisuals } from '../config';
 import { LinksByNodeId, NodeByCite, NodeById } from '../../index';
-import { initialFilter, TagColors } from '../config';
+import {
+  initialPhysics,
+  initialFilter,
+  initialVisuals,
+  initialMouse,
+  initialBehavior,
+  initialLocal,
+  TagColors,
+  initialColoring,
+} from '../config';
 
 import FilesListBar from '../FilesListBar';
 import IconButton from '../IconButton';
@@ -19,6 +27,24 @@ import styles from './Layout.module.scss';
 interface LayoutProps {
   graphData: OrgRoamGraphReponse;
   visuals: typeof initialVisuals;
+  physics: typeof initialPhysics;
+  setPhysics: any;
+  threeDim: boolean;
+  setThreeDim: (value: boolean) => void;
+  filter: typeof initialFilter;
+  setFilter: any;
+  setVisuals: any;
+  mouse: typeof initialMouse;
+  setMouse: any;
+  behavior: typeof initialBehavior;
+  setBehavior: any;
+  tags: string[];
+  tagColors: TagColors;
+  setTagColors: any;
+  coloring: typeof initialColoring;
+  setColoring: any;
+  local: typeof initialLocal;
+  setLocal: any;
   children: any;
   nodeIds: string[];
   onExit: (arr: any) => void;
@@ -32,9 +58,6 @@ interface LayoutProps {
   canRedo: any;
   previousPreviewNode: any;
   nextPreviewNode: any;
-  filter: typeof initialFilter;
-  setFilter: any;
-  tagColors: TagColors;
   macros?: { [key: string]: string };
   attachDir: string;
   useInheritance: boolean;
@@ -43,6 +66,24 @@ interface LayoutProps {
 const Layout: FC<LayoutProps> = ({
   graphData,
   visuals,
+  physics,
+  setPhysics,
+  threeDim,
+  setThreeDim,
+  filter,
+  setFilter,
+  setVisuals,
+  mouse,
+  setMouse,
+  behavior,
+  setBehavior,
+  tagColors,
+  setTagColors,
+  coloring,
+  setColoring,
+  local,
+  setLocal,
+  tags,
   children,
   nodeIds,
   onExit,
@@ -56,9 +97,6 @@ const Layout: FC<LayoutProps> = ({
   canRedo,
   previousPreviewNode,
   nextPreviewNode,
-  filter,
-  setFilter,
-  tagColors,
   macros,
   attachDir,
   useInheritance,
@@ -69,6 +107,24 @@ const Layout: FC<LayoutProps> = ({
         className={styles.sidebar}
         graphData={graphData}
         visuals={visuals}
+        physics={physics}
+        setPhysics={setPhysics}
+        threeDim={threeDim}
+        setThreeDim={setThreeDim}
+        filter={filter}
+        setFilter={setFilter}
+        setVisuals={setVisuals}
+        mouse={mouse}
+        setMouse={setMouse}
+        behavior={behavior}
+        setBehavior={setBehavior}
+        tagColors={tagColors}
+        setTagColors={setTagColors}
+        coloring={coloring}
+        setColoring={setColoring}
+        local={local}
+        setLocal={setLocal}
+        tags={tags}
       />
 
       <div className={styles.content}>
