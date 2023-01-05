@@ -41,16 +41,14 @@ const Select: FC<InputProps> = ({
       {selectedlist.length > 0 && (
         <ul className={styles.tags}>
           {selectedlist.map((item: ItemInterface) => (
-            <li key={item.value}>
-              <button
-                className={styles.tagsButton}
-                onClick={() => onChange(
-                  selectedlist.filter((element) => element !== item),
-                )}
-                type="button"
-              >
-                {item.label}
-              </button>
+            <li
+              className={styles.tagsButton}
+              onClick={() => onChange(
+                selectedlist.filter((element) => element !== item),
+              )}
+              key={item.value}
+            >
+              <span className={styles.text}>{item.label}</span>
             </li>
           ))}
         </ul>

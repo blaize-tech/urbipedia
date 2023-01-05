@@ -68,6 +68,7 @@ const TagBar: FC<TagBarProps> = ({
               borderColor: getThemeColor(tagColors[tag], theme),
             }: undefined}
             type="button"
+            key={tag}
           >
             <span className={styles.text}>{tag}</span>
 
