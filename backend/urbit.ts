@@ -12,7 +12,7 @@ function sleep(ms) {
 
 const fetchWithStreamReader = async (resource, options) => {
     if (options.method === undefined) {
-        console.log(resource);
+        // console.log(resource);
         const stream = await axios.get(resource, {...options, responseType: 'stream'});
         let end = false;
         let haveBuffers = new Array<any>();
@@ -21,7 +21,7 @@ const fetchWithStreamReader = async (resource, options) => {
         const newRes = {
             body: "",
             json: () => {
-                if (lastBody.length) {
+                if (!!lastBody && lastBody.length) {
                     return JSON.parse(String(lastBody));
                 }
                 return {};
@@ -29,8 +29,11 @@ const fetchWithStreamReader = async (resource, options) => {
         };
         // @ts-ignore
         stream.data.on("data", async data => {
-            console.log('data', String(data), "<<<");
-            lastBody = String(lastBody);
+            // console.log('data', String(data), "<<<");
+            if (String(data) === ":\n") {
+                return;
+            }
+            lastBody = String(data);
             if (haveBuffers.length === 0) {
                 haveBuffers.push(Promise.resolve(data));
                 return;
