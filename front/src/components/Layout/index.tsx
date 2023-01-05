@@ -131,16 +131,18 @@ const Layout: FC<LayoutProps> = ({
         {children}
       </div>
 
-      <IconButton
-        ariaLabel="Exit local mode"
-        className={styles.button}
-        disabled={!nodeIds.length}
-        onClick={onExit}
-        title="Return to main graph"
-        icon={IconExit}
-        iconHover={IconExitHover}
-        iconActive={IconExitActive}
-      />
+      {nodeIds.length > 0 && (
+        <IconButton
+          ariaLabel="Exit local mode"
+          className={styles.button}
+          disabled={!nodeIds.length}
+          onClick={onExit}
+          title="Return to main graph"
+          icon={IconExit}
+          iconHover={IconExitHover}
+          iconActive={IconExitActive}
+        />
+      )}
 
       <Sidebar
         className={styles.sidebar}
