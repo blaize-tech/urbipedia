@@ -12,26 +12,40 @@ function sleep(ms) {
 
 const fetchWithStreamReader = async (resource, options) => {
     if (options.method === undefined) {
+        console.log(resource);
         const stream = await axios.get(resource, {...options, responseType: 'stream'});
         let end = false;
-        let buffers = new Array<string>();
-        // @ts-ignore
-        stream.data.on("data", data => {
-            buffers.push(String(data));
-        });
-        stream.data.on('end', () => {
-            end = true;
-        });
+        let haveBuffers = new Array<any>();
+        let readers = new Array<any>();
         let lastBody = "";
         const newRes = {
             body: "",
             json: () => {
                 if (lastBody.length) {
-                    return JSON.parse(lastBody);
+                    return JSON.parse(String(lastBody));
                 }
                 return {};
             }
         };
+        // @ts-ignore
+        stream.data.on("data", async data => {
+            console.log('data', String(data), "<<<");
+            lastBody = String(lastBody);
+            if (haveBuffers.length === 0) {
+                haveBuffers.push(Promise.resolve(data));
+                return;
+            }
+            const current = readers[0];
+            readers = readers.splice(1);
+
+            current({
+                done: end,
+                value: data,
+            });
+        });
+        stream.data.on('end', () => {
+            end = true;
+        });
         Object.assign(newRes, stream);
         // @ts-ignore
         newRes.ok = true;
@@ -40,15 +54,14 @@ const fetchWithStreamReader = async (resource, options) => {
             getReader: () => {
                 return {
                     read: async () => {
-                        while (!end && buffers.length === 0) {
-                            await sleep(50);
+                        if (haveBuffers.length > 0) {
+                            const current = haveBuffers[0];
+                            haveBuffers = haveBuffers.splice(1);
+                            return current;
                         }
-                        const lastBody = buffers[0];
-                        buffers = buffers.splice(1);
-                        return {
-                            done: end,
-                            value: lastBody,
-                        };
+                        return new Promise((resolve, reject) => {
+                            readers.push(resolve);
+                        });
                     },
                 }
             }
