@@ -1,4 +1,4 @@
-/-  *zettelkasten
+/-  *urbitpedia
 /+  *decode-json
 |_  act=action
 ++  grow

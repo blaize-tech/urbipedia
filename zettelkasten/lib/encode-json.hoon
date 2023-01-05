@@ -1,4 +1,4 @@
-/-  *zettelkasten
+/-  *urbitpedia
 |%
 ++  enjs-update
   =,  enjs:format

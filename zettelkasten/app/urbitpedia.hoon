@@ -1,4 +1,4 @@
-/-  *zettelkasten
+/-  *urbitpedia
 /+  default-agent, dbug, agentio
 |%
 +$  versioned-state
