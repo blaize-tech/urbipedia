@@ -12,8 +12,12 @@ function sleep(ms) {
 
 const fetchWithStreamReader = async (resource, options) => {
     if (options.method === undefined) {
-        const res = await fetch(resource, options);
-        console.log('options', options);
+        const stream = await axios.get(resource, {...options, responseType: 'stream'});
+        // console.log('options', options);
+        // @ts-ignore
+        stream.data.on("data", data => {
+            console.log("data>>>", String(data));
+        });
         let lastBody = "";
         const newRes = {
             body: "",
@@ -24,10 +28,10 @@ const fetchWithStreamReader = async (resource, options) => {
                 return {};
             }
         };
-        Object.assign(newRes, res);
+        Object.assign(newRes, stream);
         // @ts-ignore
         newRes.ok = true;
-        const body = res.body;
+        const body = stream.data;
         let lastRead = 0;
         // @ts-ignore
         newRes.body = {
@@ -52,7 +56,7 @@ const fetchWithStreamReader = async (resource, options) => {
                             full += String(getChunk(body._readableState.buffer.head, i, 0));
                         }
                         console.log(">>>>>>>>>>>>>>", full, "<<<<<<<<<<<<<<");
-                        console.log(">>>>>>>>>>>>>>", JSON.stringify(body, null, 4), "<<<<<<<<<<<<<<");
+                        // console.log(">>>>>>>>>>>>>>", JSON.stringify(body, null, 4), "<<<<<<<<<<<<<<");
                         return {
                             done,
                             value: lastBody,
