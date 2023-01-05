@@ -12,6 +12,15 @@
   color: #8B8C93;
 }
 
+.tags {
+  justify-content: flex-start;
+  margin-bottom: 15px;
+  align-items: flex-start;
+  list-style: none;
+  grid-gap: 5px;
+  display: flex;
+}
+
 .input {
   transition: border-color .3s;
   background-color: #F6F7FA;

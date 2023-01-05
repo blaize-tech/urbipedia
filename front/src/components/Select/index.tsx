@@ -39,7 +39,7 @@ const Select: FC<InputProps> = ({
       <span className={styles.title}>{title}</span>
 
       {selectedlist.length > 0 && (
-        <ul>
+        <ul className={styles.tags}>
           {selectedlist.map((item: ItemInterface) => (
             <li key={item.value}>
               <button
