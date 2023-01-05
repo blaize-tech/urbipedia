@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useState, useEffect } from 'react';
 import cn from 'classnames';
 
 interface ItemInterface {
@@ -8,6 +8,7 @@ interface ItemInterface {
 
 interface InputProps {
   className?: string;
+  onChange: (value: ItemInterface[]) => void;
   title: string;
   itemList: ItemInterface[];
   itemListselected: ItemInterface[];
@@ -17,28 +18,40 @@ import styles from './Select.module.scss';
 
 const Select: FC<InputProps> = ({
   className,
+  onChange,
   title,
   itemList,
   itemListselected,
 }) => {
   const [isOpened, setIsOpened] = useState<boolean>(false);
   const [searchValue, setSearchValue] = useState<string>('');
+  const [selectedlist, setSelectedlist] = useState<ItemInterface[]>([]);
+
+  // useEffect is needed to prevent rerender of the itemListselected
+  useEffect(() => setSelectedlist(itemListselected), [itemListselected]);
 
   return (
     <label className={cn(styles.container, className)}>
       <span className={styles.title}>{title}</span>
 
-      {itemListselected.length > 0 && (
+      {selectedlist.length > 0 && (
         <ul>
-          {itemListselected.map(({ value }: ItemInterface) => (
-            <li key={value}>
-              <button type="button">{value}</button>
+          {selectedlist.map((item: ItemInterface) => (
+            <li key={item.value}>
+              <button
+                onClick={() => onChange(
+                  selectedlist.filter((element) => element !== item),
+                )}
+                type="button"
+              >
+                {item.value}
+              </button>
             </li>
           ))}
         </ul>
       )}
 
-      <button type="button" onClick={() => setIsOpened(true)}>
+      <button type="button" onClick={() => setIsOpened(!isOpened)}>
         <input
           className={styles.input}
           type="text"
@@ -51,19 +64,45 @@ const Select: FC<InputProps> = ({
 
       {isOpened && (
         <ul>
-          {itemList?.map(({ value }: ItemInterface) => {
-            if (searchValue && value.includes(searchValue)) {
+          {itemList?.map((item: ItemInterface) => {
+            if (searchValue && item.value.includes(searchValue)) {
               return (
-                <li key={value}>
-                  <span>{value}</span>
+                <li key={item.value}>
+                  <button
+                    onClick={() => {
+                      if (!selectedlist.includes(item)) {
+                        const list = selectedlist;
+
+                        list.push(item);
+
+                        onChange(list);
+                      }
+                    }}
+                    type="button"
+                  >
+                    {item.value}
+                  </button>
                 </li>
               );
             }
 
             if (!searchValue) {
               return (
-                <li key={value}>
-                  <span>{value}</span>
+                <li key={item.value}>
+                  <button
+                    onClick={() => {
+                      if (!selectedlist.find((element: ItemInterface) => {
+                        return element.value === item.value;
+                      })) {
+                        onChange([...selectedlist, item]);
+
+                        setIsOpened(false);
+                      }
+                    }}
+                    type="button"
+                  >
+                    {item.value}
+                  </button>
                 </li>
               );
             }
