@@ -13,57 +13,6 @@ function sleep(ms) {
 const fetchWithStreamReader = async (resource, options) => {
     if (options.method === undefined && (resource.includes("entries/ids/"))) {
         return await fetch(resource, options);
-        const res = await fetch(resource, options);
-        console.log('options', options);
-        let lastBody = "";
-        const newRes = {
-            body: "",
-            json: () => {
-                if (lastBody.length) {
-                    return JSON.parse(lastBody);
-                }
-                return {};
-            }
-        };
-        Object.assign(newRes, res);
-        // @ts-ignore
-        newRes.ok = true;
-        const body = res.body;
-        let lastRead = 0;
-        let done = body._readableState.ended || body._readableState.closed;
-        while (!done) {
-            done = body._readableState.ended || body._readableState.closed;
-            await sleep(50);
-        }
-        // @ts-ignore
-        newRes.body = {
-            getReader: () => {
-                return {
-                    read: async () => {
-                        // console.log(JSON.stringify(body, null, 4));
-                        const getChunk = (source, level, counter) => {
-                            if (level == counter) {
-                                return source.data;
-                            }
-                            return getChunk(source.next, level, counter + 1);
-                        };
-                        let lastBody;
-                        let full = "";
-                        for (let i = 0; i < body._readableState.buffer.length; i++) {
-                            full += String(getChunk(body._readableState.buffer.head, i, 0));
-                            lastBody = getChunk(body._readableState.buffer.head, i, 0);
-                        }
-                        console.log(">>>>>>>>>>>>>>", full, "<<<<<<<<<<<<<<");
-                        console.log(">>>>>>>>>>>>>>", JSON.stringify(body, null, 4), "<<<<<<<<<<<<<<");
-                        return {
-                            done,
-                            value: lastBody,
-                        };
-                    },
-                }
-            }
-        };
-        return newRes;
     } else if (options.method === undefined) {
         console.log(resource);
         const stream = await axios.get(resource, {...options, responseType: 'stream'});
