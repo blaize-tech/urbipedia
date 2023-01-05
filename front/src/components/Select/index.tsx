@@ -2,6 +2,7 @@ import { FC, useState, useEffect } from 'react';
 import cn from 'classnames';
 
 import IconClose from '../../images/icon-close-active.svg';
+import IconSelected from '../../images/icon-selected.svg';
 
 interface ItemInterface {
   value: string;
@@ -112,6 +113,18 @@ const Select: FC<InputProps> = ({
                     }}
                     type="button"
                   >
+                    {selectedlist.find((element: ItemInterface) => {
+                      return element.value === item.value;
+                    }) && (
+                      <img
+                        className={styles.listItemIcon}
+                        height="20"
+                        width="20"
+                        src={IconSelected}
+                        alt="Selected"
+                      />
+                    )}
+
                     <span className={styles.listItemText}>
                       {item.label}
                     </span>
@@ -135,6 +148,18 @@ const Select: FC<InputProps> = ({
                     }}
                     type="button"
                   >
+                    {selectedlist.find((element: ItemInterface) => {
+                      return element.value === item.value;
+                    }) && (
+                      <img
+                        className={styles.listItemIcon}
+                        height="20"
+                        width="20"
+                        src={IconSelected}
+                        alt="Selected"
+                      />
+                    )}
+
                     <span className={styles.listItemText}>
                       {item.label}
                     </span>
