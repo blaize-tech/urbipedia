@@ -6,7 +6,10 @@ import {
     urbitCreateLinkFileToFile,
     urbitDeleteFile,
     urbitDeleteLinkFileToFile,
-    urbitGetFileEntries, urbitGetLink, urbitGetLinks, urbitGetNodes,
+    urbitGetFileEntries,
+    urbitGetLink,
+    urbitGetLinks,
+    urbitGetNodes,
     urbitRenameFile,
     urbitUpdateFile,
     urbitUpdateTagsToFile
