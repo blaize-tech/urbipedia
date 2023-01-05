@@ -11,10 +11,8 @@ function sleep(ms) {
 }
 
 const fetchWithStreamReader = async (resource, options) => {
-    if (options.method === undefined && (resource.includes("entries/ids/"))) {
-        return await fetch(resource, options);
-    } else if (options.method === undefined) {
-        console.log(resource);
+    if (options.method === undefined && (resource.includes("/~/channel/"))) {
+        // console.log(resource);
         const stream = await axios.get(resource, {...options, responseType: 'stream'});
         let end = false;
         let haveBuffers = new Array<any>();
@@ -31,17 +29,14 @@ const fetchWithStreamReader = async (resource, options) => {
         };
         // @ts-ignore
         stream.data.on("data", async data => {
-            console.log('data', String(data), "<<<");
             if (String(data) === ":\n") {
                 return;
             }
             lastBody = String(data);
             if (readers.length === 0) {
                 haveBuffers.push(Promise.resolve(data));
-                console.log("new haveBuffers", haveBuffers.length);
                 return;
             }
-            console.log("have readers", readers.length);
             const current = readers[0];
             readers = readers.splice(1);
 
@@ -81,9 +76,11 @@ const fetchWithStreamReader = async (resource, options) => {
     if (!res.response) {
         res.response = {}
     }
-    res.json = () => {
-        return JSON.parse(res.body);
-    };
+    if (typeof res.body !== "object") {
+        res.json = () => {
+            return JSON.parse(String(res.body));
+        };
+    }
     return res;
 };
 
