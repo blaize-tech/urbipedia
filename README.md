@@ -21,8 +21,13 @@ Urbit - https://urbit.org/getting-started
 
 # Install
 Run urbit.
+
 |merge %urbitpedia our %webterm
+
 |mount %urbitpedia
+
 Copy content of zettelkasten folder into {$your-planet}/urbitpedia
+
 |commit %urbitpedia
+
 |install our %urbitpedia
