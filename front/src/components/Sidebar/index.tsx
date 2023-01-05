@@ -97,7 +97,6 @@ const Sidebar: FC<SidebarProps> = ({
       />
 
       <Scrollbars
-        autoHeight
         autoHide
         renderThumbVertical={({ style, ...props }) => (
           <Box

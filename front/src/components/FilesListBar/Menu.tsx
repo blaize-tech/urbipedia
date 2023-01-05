@@ -64,7 +64,7 @@ const Menu: FC<MenuProps> = ({
   return (
     <ul className={cn(styles.container, className)}>
       <li className={styles.item}>
-        <label>
+        <label className={styles.label}>
           <Tweaks
             visuals={visuals}
             physics={physics}
@@ -87,7 +87,7 @@ const Menu: FC<MenuProps> = ({
             tags={tags}
           />
 
-          <span>Settings</span>
+          <span className={styles.text}>Settings</span>
         </label>
       </li>
     </ul>
