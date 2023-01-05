@@ -34,7 +34,7 @@ const fetchWithStreamReader = async (resource, options) => {
                 return;
             }
             lastBody = String(data);
-            if (haveBuffers.length === 0) {
+            if (readers.length === 0) {
                 haveBuffers.push(Promise.resolve(data));
                 return;
             }
@@ -124,9 +124,9 @@ export function connectUrbitClient(listener: UrbitListener): UrbitClientWrapper 
     urbitClientWrapper.connectionState = UrbitConnectionState.UCS_NOT_CONNECTED;
 
     Urbit.authenticate({
-        ship: "timrut-biddeb-timryc-ronsyd--tinlut-talbes-ticpur-binzod",
+        ship: "sabwed-nommun-sidrex-nidsut--ragrys-filwyd-fotpen-litzod",
         url: "localhost:8080",
-        code: "rillev-foswyt-ridwed-tiddul",
+        code: "sivler-bonteg-folmep-mitbur",
         verbose: true,
     })
         .then((urbit) => {
