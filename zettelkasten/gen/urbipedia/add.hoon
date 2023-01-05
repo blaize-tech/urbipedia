@@ -1,4 +1,4 @@
-/-  *urbitpedia, *sole
+/-  *urbipedia, *sole
 /+  *generators
 :-  %ask
 |=  [[now=@da * bek=beak] *]

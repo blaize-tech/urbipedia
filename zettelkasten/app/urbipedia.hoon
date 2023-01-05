@@ -1,4 +1,4 @@
-/-  *urbitpedia
+/-  *urbipedia
 /+  default-agent, dbug, agentio
 |%
 +$  versioned-state
