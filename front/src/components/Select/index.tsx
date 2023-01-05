@@ -1,6 +1,8 @@
 import { FC, useState, useEffect } from 'react';
 import cn from 'classnames';
 
+import IconClose from '../../images/icon-close-active.svg';
+
 interface ItemInterface {
   value: string;
   label: string;
@@ -49,6 +51,14 @@ const Select: FC<InputProps> = ({
               key={item.value}
             >
               <span className={styles.text}>{item.label}</span>
+
+              <img
+                className={styles.icon}
+                height="20"
+                width="20"
+                src={IconClose}
+                alt="Delete"
+              />
             </li>
           ))}
         </ul>
