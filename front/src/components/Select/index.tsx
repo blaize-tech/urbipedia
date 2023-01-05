@@ -2,6 +2,7 @@ import { FC, useState, useEffect } from 'react';
 import cn from 'classnames';
 
 import IconClose from '../../images/icon-close-active.svg';
+import IconArrow from '../../images/icon-arrow.svg';
 import IconSelected from '../../images/icon-selected.svg';
 
 interface ItemInterface {
@@ -78,6 +79,16 @@ const Select: FC<InputProps> = ({
             setIsOpened(true);
           }}
           placeholder={placeholder}
+        />
+
+        <img
+          className={cn(styles.arrow, {
+            [styles['is-opened']]: isOpened,
+          })}
+          height="25"
+          width="25"
+          src={IconArrow}
+          alt="Delete"
         />
       </button>
 

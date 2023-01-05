@@ -104,6 +104,19 @@
   color: #3E3F4B;
 }
 
+.arrow {
+  transition: all .3s;
+  margin-right: 10px;
+  margin-left: 10px;
+  min-width: 25px;
+  height: auto;
+  width: 25px;
+
+  &.is-opened {
+    transform: rotate(180deg);
+  }
+}
+
 .list {
   background-color: #F6F7FA;
   border-radius: 5px;
