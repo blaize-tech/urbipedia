@@ -37,3 +37,16 @@
     resize: vertical;
   }
 }
+
+.list {
+  background-color: #F6F7FA;
+  border-radius: 5px;
+  list-style: none;
+  padding: 10px;
+}
+
+.listItem {
+  &:not(:last-child) {
+    margin-bottom: 4px;
+  }
+}

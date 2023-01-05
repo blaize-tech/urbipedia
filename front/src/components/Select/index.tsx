@@ -68,11 +68,11 @@ const Select: FC<InputProps> = ({
       </button>
 
       {isOpened && (
-        <ul>
+        <ul className={styles.list}>
           {itemList?.map((item: ItemInterface) => {
             if (onCreate && searchValue && !item.value.includes(searchValue)) {
               return (
-                <li key={item.value}>
+                <li className={styles.listItem} key={item.value}>
                   <button
                     onClick={() => onCreate({
                       value: searchValue,
@@ -88,7 +88,7 @@ const Select: FC<InputProps> = ({
 
             if (searchValue && item.value.includes(searchValue)) {
               return (
-                <li key={item.value}>
+                <li className={styles.listItem} key={item.value}>
                   <button
                     onClick={() => {
                       if (!selectedlist.includes(item)) {
@@ -109,7 +109,7 @@ const Select: FC<InputProps> = ({
 
             if (!searchValue) {
               return (
-                <li key={item.value}>
+                <li className={styles.listItem} key={item.value}>
                   <button
                     onClick={() => {
                       if (!selectedlist.find((element: ItemInterface) => {
