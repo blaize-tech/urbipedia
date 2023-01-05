@@ -200,7 +200,7 @@ const FilesListBar: FC<FilesListBarProps> = ({
         haveSelection={(selectedItemIndex >= 0)}
       />
 
-      <Scrollbars autoHeight autoHide={false}>
+      <Scrollbars autoHide={false}>
         <ItemList
           setSelectedItemIndex={setSelectedItemIndex}
           setCurrentFileName={setCurrentFileName}

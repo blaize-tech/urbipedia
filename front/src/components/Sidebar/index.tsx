@@ -60,7 +60,7 @@ const Sidebar: FC<SidebarProps> = ({
   const windowWidth = useWindowWidth();
 
   useEffect(() => {
-    if (!previewNode?.id) {
+    if (previewNode?.id) {
       setPreviewRoamNode(previewNode as OrgRoamNode);
     }
   }, [previewNode?.id]);
