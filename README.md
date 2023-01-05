@@ -11,6 +11,8 @@ Two type of users:
 Urbipedia implements the Zettelkasten method of storing information.
 
 Zettelkasten - small items of information stored like note that may be linked to each other through subject headings or other metadata such as numbers and tags.It has often been used as a system of note-taking and personal knowledge management for research, study, and writing.
+![image](https://user-images.githubusercontent.com/99647044/210794083-d07462b9-cfd0-4e5e-bc69-15f4397c442d.png)
+![image](https://user-images.githubusercontent.com/99647044/210794214-e7d3c596-3ecf-41cd-a811-dbdf0a12a1ac.png)
 
 # Overview
 Admin users create notes of information with links to other notes by linkage or tags. 
