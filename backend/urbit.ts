@@ -1,14 +1,8 @@
 import {Urbit} from "@urbit/http-api";
 import {AbortController} from "node-abort-controller";
-// import {Headers, Request, Response} from 'node-fetch';
 import fetch, {Headers, Request, Response} from 'node-fetch';
 import axios from "axios";
-// import fetch from 'cross-fetch';
-// import 'whatwg-fetch'
 
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
 
 const fetchWithStreamReader = async (resource, options) => {
     if (options.method === undefined && (resource.includes("/~/channel/"))) {
@@ -57,14 +51,12 @@ const fetchWithStreamReader = async (resource, options) => {
                 return {
                     read: async () => {
                         if (haveBuffers.length > 0) {
-                            console.log("haveBuffers", haveBuffers.length);
                             const current = haveBuffers[0];
                             haveBuffers = haveBuffers.splice(1);
                             return current;
                         }
                         return new Promise((resolve, reject) => {
                             readers.push(resolve);
-                            console.log("new readers", readers.length);
                         });
                     },
                 }

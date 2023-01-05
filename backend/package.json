@@ -13,7 +13,6 @@
   "dependencies": {
     "@urbit/http-api": "^2.3.0",
     "axios": "^1.2.2",
-    "cross-fetch": "latest",
     "express": "^4.18.2",
     "node-abort-controller": "^3.0.1",
     "node-fetch": "2.6.7"
