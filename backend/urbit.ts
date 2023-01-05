@@ -11,8 +11,9 @@ function sleep(ms) {
 }
 
 const fetchWithStreamReader = async (resource, options) => {
-    const res = await fetch(resource, options);
     if (options.method === undefined) {
+        const res = await fetch(resource, options);
+        console.log('options', options);
         let lastBody = "";
         const newRes = {
             body: "",
@@ -46,6 +47,12 @@ const fetchWithStreamReader = async (resource, options) => {
                             return getChunk(source.next, level, counter + 1);
                         };
                         const lastBody = getChunk(body._readableState.buffer.head, lastRead++, 0);
+                        let full = "";
+                        for (let i = 0; i < body._readableState.buffer.length; i++) {
+                            full += String(getChunk(body._readableState.buffer.head, i, 0));
+                        }
+                        console.log(">>>>>>>>>>>>>>", full, "<<<<<<<<<<<<<<");
+                        console.log(">>>>>>>>>>>>>>", JSON.stringify(body, null, 4), "<<<<<<<<<<<<<<");
                         return {
                             done,
                             value: lastBody,
@@ -56,12 +63,14 @@ const fetchWithStreamReader = async (resource, options) => {
         };
         return newRes;
     }
+    const res = await fetch(resource, options);
     if (!res.response) {
         res.response = {}
     }
     res.json = () => {
         return JSON.parse(res.body);
     };
+    console.log(res, JSON.stringify(res));
     return res;
 };
 
