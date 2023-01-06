@@ -1,4 +1,4 @@
-/-  *urbitpedia
+/-  *urbipedia
 |%
 ++  enjs-update
   =,  enjs:format

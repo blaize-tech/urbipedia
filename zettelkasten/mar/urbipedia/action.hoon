@@ -1,4 +1,4 @@
-/-  *urbitpedia
+/-  *urbipedia
 /+  *decode-json
 |_  act=action
 ++  grow

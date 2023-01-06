@@ -1,4 +1,4 @@
-/-  *urbitpedia
+/-  *urbipedia
 |%
 ++  dejs-action
   =,  dejs:format
