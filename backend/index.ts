@@ -18,7 +18,7 @@ import {
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded());
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
@@ -121,7 +121,9 @@ app.get('/links/ids', function (req: Request, res: Response, next: NextFunction)
 connectUrbitClient({
     onEvent: (event: string) => {
         wsInstance.getWss().clients.forEach((client) => {
-            client.send(JSON.stringify(event));
+            if (client.readyState === client.OPEN) {
+                client.send(JSON.stringify(event));
+            }
         })
     }
 });
