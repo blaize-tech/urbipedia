@@ -119,9 +119,12 @@ export function connectUrbitClient(listener: UrbitListener): UrbitClientWrapper 
     urbitClientWrapper.connectionState = UrbitConnectionState.UCS_NOT_CONNECTED;
 
     Urbit.authenticate({
-        ship: "sabwed-nommun-sidrex-nidsut--ragrys-filwyd-fotpen-litzod",
-        url: "localhost:8080",
-        code: "sivler-bonteg-folmep-mitbur",
+        // @ts-ignore
+        ship: process.env.SHIP,
+        // @ts-ignore
+        url: process.env.URL,
+        // @ts-ignore
+        code: process.env.CODE,
         verbose: true,
     })
         .then((urbit) => {

@@ -6,3 +6,4 @@
 /backend/yarn.lock
 /backend/package-lock.json
 /backend/dist/
+/backend/.env
