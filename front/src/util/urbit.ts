@@ -224,7 +224,6 @@ async function getFullGraph() {
 }
 
 export function connectUrbitClient(listener: UrbitListener): UrbitClientWrapper {
-    console.log('ssss');
     urbitClientWrapper.listener = listener;
 
     const webSocket = new WebSocket(`ws://${BACKEND_URL}/ws`);
