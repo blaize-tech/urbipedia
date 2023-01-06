@@ -20,7 +20,7 @@
 ++  on-init
   ^-  (quip card _this)
   :_  this
-  :~  (~(arvo pass:io /bind) %e %connect `/'updates' %zettelkasten)
+  :~  (~(arvo pass:io /bind) %e %connect `/'updates' %urbipedia)
   ==
 ++  on-save
   ^-  vase
@@ -37,7 +37,7 @@
   ?>  (team:title our.bowl src.bowl)
   =^  cards  state
     ?+  mark  (on-poke:def mark vase)
-      %zettelkasten-action  (poke-action !<(action vase))
+      %urbipedia-action  (poke-action !<(action vase))
     ==
   [cards this]
   ++  poke-action
@@ -54,7 +54,7 @@
         $(rng rng)
       =/  =zettel  [name.act '' '']
       :_  state(nodes (put:z-orm nodes id zettel))
-      :~  (fact:io zettelkasten-update+!>(`update`[%node-created id]) ~[/updates])
+      :~  (fact:io urbipedia-update+!>(`update`[%node-created id]) ~[/updates])
       ==
     ::
         %create-link
@@ -66,19 +66,19 @@
           n
         $(rng rng)
       :_  state(links (put:link-orm links id link.act))
-      :~  (fact:io zettelkasten-update+!>(`update`[%link-created id]) ~[/updates])
+      :~  (fact:io urbipedia-update+!>(`update`[%link-created id]) ~[/updates])
       ==
     ::
         %delete-node
       ?>  (has:z-orm nodes id.act)
       :_  state(nodes +:(del:z-orm nodes id.act))
-      :~  (fact:io zettelkasten-update+!>(`update`[%node-deleted id.act]) ~[/updates])
+      :~  (fact:io urbipedia-update+!>(`update`[%node-deleted id.act]) ~[/updates])
       ==
     ::
         %delete-link
       ?>  (has:link-orm links id.act)
       :_  state(links +:(del:link-orm links id.act))
-      :~  (fact:io zettelkasten-update+!>(`update`[%link-deleted id.act]) ~[/updates])
+      :~  (fact:io urbipedia-update+!>(`update`[%link-deleted id.act]) ~[/updates])
       ==
     ::
         %rename-node
@@ -86,7 +86,7 @@
       =/  old=zettel  (got:z-orm nodes id.act)
       =/  new=zettel  [name.act content.old tags.old]
       :_  state(nodes (put:z-orm nodes id.act new))
-      :~  (fact:io zettelkasten-update+!>(`update`[%node-renamed id.act]) ~[/updates])
+      :~  (fact:io urbipedia-update+!>(`update`[%node-renamed id.act]) ~[/updates])
       ==
     ::
         %update-content
@@ -94,7 +94,7 @@
       =/  old=zettel  (got:z-orm nodes id.act)
       =/  new=zettel  [name.old content.act tags.old]
       :_  state(nodes (put:z-orm nodes id.act new))
-      :~  (fact:io zettelkasten-update+!>(`update`[%content-updated id.act]) ~[/updates])
+      :~  (fact:io urbipedia-update+!>(`update`[%content-updated id.act]) ~[/updates])
       ==
     ::
         %update-tags
@@ -102,7 +102,7 @@
       =/  old=zettel  (got:z-orm nodes id.act)
       =/  new=zettel  [name.old content.old tags.act]
       :_  state(nodes (put:z-orm nodes id.act new))
-      :~  (fact:io zettelkasten-update+!>(`update`[%tags-updated id.act]) ~[/updates])
+      :~  (fact:io urbipedia-update+!>(`update`[%tags-updated id.act]) ~[/updates])
       ==
     ==
   --
@@ -123,13 +123,13 @@
       [%x %entries *]
     ?+    t.t.path  (on-peek:def path)
         [%all ~]
-      :^  ~  ~  %zettelkasten-update
+      :^  ~  ~  %urbipedia-update
       !>  ^-  update
       [%zttls (turn (tap:z-orm nodes) head)]
     ::
         [%ids @ ~]
       =/  =id  (rash i.t.t.t.path dem)
-      :^  ~  ~  %zettelkasten-update
+      :^  ~  ~  %urbipedia-update
       !>  ^-  update
       [%zttl (need (get:z-orm nodes id))]
     ==
@@ -137,7 +137,7 @@
       [%x %updates *]
     ?+    t.t.path  (on-peek:def path)
         [%all ~]
-      :^  ~  ~  %zettelkasten-update
+      :^  ~  ~  %urbipedia-update
       !>  ^-  update
       [%acts actions]
     ==
@@ -145,13 +145,13 @@
       [%x %links *]
     ?+    t.t.path  (on-peek:def path)
         [%all ~]
-      :^  ~  ~  %zettelkasten-update
+      :^  ~  ~  %urbipedia-update
       !>  ^-  update
       [%lnks (turn (tap:link-orm links) head)]
     ::
         [%ids @ ~]
       =/  =id  (rash i.t.t.t.path dem)
-      :^  ~  ~  %zettelkasten-update
+      :^  ~  ~  %urbipedia-update
       !>  ^-  update
       [%lnk (need (get:link-orm links id))]
     ==
