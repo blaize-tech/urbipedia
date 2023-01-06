@@ -210,7 +210,7 @@ async function watchGraphWithUrbit() {
     }
     try {
         await urbitClientWrapper.urbit.subscribe({
-            app: "zettelkasten",
+            app: "urbipedia",
             path: "/updates",
             event: handleUpdateUrbit,
             err: () => console.error("Subscription rejected"),
@@ -288,7 +288,7 @@ export function connectUrbitClient(listener: UrbitListener): UrbitClientWrapper 
                 };
                 urbitClientWrapper.urbit
                     .scry({
-                        app: "zettelkasten",
+                        app: "urbipedia",
                         path: path,
                     })
                     .then(
@@ -339,8 +339,8 @@ export async function urbitCreateFile(name: string) {
             throw "error";
         }
         urbitClientWrapper.urbit.poke({
-            app: "zettelkasten",
-            mark: "zettelkasten-action",
+            app: "urbipedia",
+            mark: "urbipedia-action",
             json: {"create-node": {name: name}},
             onSuccess: () => resolve({status: "ok"}),
             onError: () => reject("can't create file"),
@@ -357,8 +357,8 @@ export async function urbitUpdateTagsToFile(id: string, tags: Array<string>) {
             throw "error";
         }
         urbitClientWrapper.urbit.poke({
-            app: "zettelkasten",
-            mark: "zettelkasten-action",
+            app: "urbipedia",
+            mark: "urbipedia-action",
             json: {"update-tags": {id: Number.parseInt(id), tags: tags.join("#$")}},
             onSuccess: () => resolve({status: "ok"}),
             onError: () => reject("can't update tags"),
@@ -376,8 +376,8 @@ export async function urbitUpdateFile(id: string, text: string) {
             throw "error";
         }
         urbitClientWrapper.urbit.poke({
-            app: "zettelkasten",
-            mark: "zettelkasten-action",
+            app: "urbipedia",
+            mark: "urbipedia-action",
             json: {"update-content": {id: Number.parseInt(id), content: text}},
             onSuccess: () => resolve({status: "ok"}),
             onError: () => reject("can't update file"),
@@ -394,8 +394,8 @@ export async function urbitRenameFile(id: string, name: string) {
             throw "error";
         }
         urbitClientWrapper.urbit.poke({
-            app: "zettelkasten",
-            mark: "zettelkasten-action",
+            app: "urbipedia",
+            mark: "urbipedia-action",
             json: {"rename-node": {id: Number.parseInt(id), name: name}},
             onSuccess: () => resolve({status: "ok"}),
             onError: () => reject("can't update name for file"),
@@ -412,8 +412,8 @@ export async function urbitCreateLinkFileToFile(from: string, to: string) {
             throw "error";
         }
         urbitClientWrapper.urbit.poke({
-            app: "zettelkasten",
-            mark: "zettelkasten-action",
+            app: "urbipedia",
+            mark: "urbipedia-action",
             json: {"create-link":{link: {from: Number.parseInt(from), to: Number.parseInt(to)}}},
             onSuccess: () => resolve({status: "ok"}),
             onError: () => reject("can't create link to file"),
@@ -430,8 +430,8 @@ export async function urbitDeleteLinkFileToFile(linkId: string) {
             throw "error";
         }
         urbitClientWrapper.urbit.poke({
-            app: "zettelkasten",
-            mark: "zettelkasten-action",
+            app: "urbipedia",
+            mark: "urbipedia-action",
             json: {"delete-link": {id: Number.parseInt(linkId)}},
             onSuccess: () => resolve({status: "ok"}),
             onError: () => reject("can't delete link to file"),
@@ -448,8 +448,8 @@ export async function urbitDeleteFile(id: string) {
             throw "error";
         }
         urbitClientWrapper.urbit.poke({
-            app: "zettelkasten",
-            mark: "zettelkasten-action",
+            app: "urbipedia",
+            mark: "urbipedia-action",
             json: {"delete-node": {id: Number.parseInt(id)}},
             onSuccess: () => resolve({status: "ok"}),
             onError: () => reject("can't delete file"),
@@ -469,7 +469,7 @@ export function urbitGetFileEntries(id: string): Promise<any> {
         const path = `/entries/ids/${id}`;
         urbitClientWrapper.urbit
             .scry({
-                app: "zettelkasten",
+                app: "urbipedia",
                 path: path,
             })
             .then(
@@ -500,7 +500,7 @@ export function urbitGetNodes(): Promise<Array<string>> {
         const path = `/entries/all`;
         urbitClientWrapper.urbit
             .scry({
-                app: "zettelkasten",
+                app: "urbipedia",
                 path: path,
             })
             .then(
@@ -530,7 +530,7 @@ export function urbitGetLinks(): Promise<Array<string>> {
         const path = `/links/all`;
         urbitClientWrapper.urbit
             .scry({
-                app: "zettelkasten",
+                app: "urbipedia",
                 path: path,
             })
             .then(
@@ -560,7 +560,7 @@ export function urbitGetLink(id: string): Promise<any> {
         const path = `/links/ids/${id}`;
         urbitClientWrapper.urbit
             .scry({
-                app: "zettelkasten",
+                app: "urbipedia",
                 path: path,
             })
             .then(

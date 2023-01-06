@@ -20,7 +20,7 @@
 %+  print  leaf+"{off}-------------------------------------\0a"
 %+  print  leaf+"{off}|                                   |"
 %+  print  leaf+"{off}| (\\\\\\ to submit, <BKSP> to cancel) |"
-%+  print  leaf+"{off}|         New zettelkasten Zettel         |"
+%+  print  leaf+"{off}|         New urbipedia Zettel         |"
 %+  print  leaf+"{off}|                                   |"
 %+  print  leaf+"\0a{off}-------------------------------------"
 line
@@ -28,7 +28,7 @@ line
   %+  prompt   [%& %prompt ""]
   |=  t=tape
   ?:  =(t "\\\\\\")
-    %+  produce  %zettelkasten-action
+    %+  produce  %urbipedia-action
     :+  %add
       (unm:chrono:userlib now)
     (of-wain:format (flop acc))
