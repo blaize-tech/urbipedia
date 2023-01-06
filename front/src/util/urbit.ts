@@ -1,5 +1,4 @@
 import {OrgRoamGraphReponse, OrgRoamLink, OrgRoamNode} from "../api";
-import {Urbit} from "@urbit/http-api";
 import axios from "axios";
 
 const BACKEND_URL = process.env.BACKEND_URL || "localhost:3000";
