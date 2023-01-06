@@ -320,113 +320,89 @@ export async function urbitDeleteFile(id: string) {
 
 export function urbitGetFileEntries(id: string): Promise<any> {
     return new Promise((resolve, reject) => {
-    if (!urbitClientWrapper) {
+        if (!urbitClientWrapper) {
             reject("not connected to urbit");
             throw "error";
         }
-
-        const path = `/entries/ids/${id}`;
-        urbitClientWrapper.urbit
-            .scry({
-                app: "urbipedia",
-                path: path,
-            })
-            .then(
-                (data) => {
-                    resolve({
-                        id: String(id),
-                        tags: data.zettel.tags,
-                        name: data.zettel.name,
-                        content: data.zettel.content,
-                    });
-                },
-                (err) => {
-                    reject(err);
-                }
-            );
+        axios.get(
+            `http://${BACKEND_URL}/entries/ids?id=${id}`
+        ).then(
+            (res) => {
+                const data = res.data;
+                resolve({
+                    id: String(id),
+                    tags: data.zettel.tags,
+                    name: data.zettel.name,
+                    content: data.zettel.content,
+                });
+            },
+            (err) => {
+                reject(err);
+            }
+        ).catch(reject);
     });
 }
 
 export function urbitGetNodes(): Promise<Array<string>> {
     return new Promise((resolve, reject) => {
-    if (!urbitClientWrapper) {
+        if (!urbitClientWrapper) {
             reject("not connected to urbit");
             throw "error";
         }
-
-        const path = `/entries/all`;
-        urbitClientWrapper.urbit
-            .scry({
-                app: "urbipedia",
-                path: path,
-            })
-            .then(
-                (data) => {
-                    resolve(data.entries.map((item: any) => String(item)));
-                },
-                (err) => {
-                    if (err.status === 404) {
-                        resolve([]);
-                    } else {
-                        reject(err);
-                    }
-                }
-            ).catch(reject);
+        axios.get(
+            `http://${BACKEND_URL}/entries/all`
+        ).then(
+            (res) => {
+                const data = res.data;
+                resolve(data.entries.map((item: any) => String(item)));
+            },
+            (err) => {
+                reject(err);
+            }
+        ).catch(reject);
     });
 }
 
 export function urbitGetLinks(): Promise<Array<string>> {
     return new Promise((resolve, reject) => {
-    if (!urbitClientWrapper) {
+        if (!urbitClientWrapper) {
             reject("not connected to urbit");
             throw "error";
         }
-
-        const path = `/links/all`;
-        urbitClientWrapper.urbit
-            .scry({
-                app: "urbipedia",
-                path: path,
-            })
-            .then(
-                (data) => {
-                    resolve(data.links.map((item: any) => String(item)));
-                },
-                (err) => {
-                    if (err.status === 404) {
-                        resolve([]);
-                    } else {
-                        reject(err);
-                    }
-                }
-            );
+        axios.get(
+            `http://${BACKEND_URL}/links/all`
+        ).then(
+            (res) => {
+                const data = res.data;
+                resolve(data.links.map((item: any) => String(item)));
+            },
+            (err) => {
+                reject(err);
+            }
+        ).catch(reject);
     });
 }
 
 export function urbitGetLink(id: string): Promise<any> {
     return new Promise((resolve, reject) => {
-    if (!urbitClientWrapper) {
+        if (!urbitClientWrapper) {
             reject("not connected to urbit");
             throw "error";
         }
-
-        const path = `/links/ids/${id}`;
-        urbitClientWrapper.urbit
-            .scry({
-                app: "urbipedia",
-                path: path,
-            })
-            .then(
-                (data) => {
-                    resolve({
-                        id: String(id),
-                        from: String(data.link.from),
-                        to: String(data.link.to),
-                    });
-                },
-                (err) => {
-                    reject(err);
-                }
-            );
+        axios.get(
+            `http://${BACKEND_URL}/links/ids?id=${id}`
+        ).then(
+            (res) => {
+                const data = res.data;
+                resolve({
+                    id: String(id),
+                    from: String(data.link.from),
+                    to: String(data.link.to),
+                });
+            },
+            (err) => {
+                reject(err);
+            }
+        ).catch(reject);
     });
 }
