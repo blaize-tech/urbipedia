@@ -121,7 +121,7 @@ app.get('/links/ids', function (req: Request, res: Response, next: NextFunction)
 connectUrbitClient({
     onEvent: (event: string) => {
         wsInstance.getWss().clients.forEach((client) => {
-            client.send(event);
+            client.send(JSON.stringify(event));
         })
     }
 });

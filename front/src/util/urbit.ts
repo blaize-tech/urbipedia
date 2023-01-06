@@ -261,9 +261,10 @@ export function connectUrbitClient(listener: UrbitListener): UrbitClientWrapper 
 
     const webSocket = new WebSocket(`ws://${BACKEND_URL}/ws`);
 
-    webSocket.onmessage = (event: MessageEvent<any> | string) => {
-        if (event != "pong") {
-            urbitClientWrapper.listener?.onEvent(event);
+    webSocket.onmessage = (packedEvent: MessageEvent<any>) => {
+        const event = JSON.parse(packedEvent.data);
+        if (!event.ping) {
+            urbitClientWrapper.listener?.onEvent(packedEvent);
         }
     };
 
