@@ -1,5 +1,8 @@
 import {OrgRoamGraphReponse, OrgRoamLink, OrgRoamNode} from "../api";
 import {Urbit} from "@urbit/http-api";
+import axios from "axios";
+
+const BACKEND_URL = process.env.BACKEND_URL || "localhost:3000";
 
 export interface UrbitListener {
     onEvent(event: any): void;
@@ -33,7 +36,7 @@ class UrbitClientWrapperImpl implements UrbitClientWrapper {
 
 const urbitClientWrapper = new UrbitClientWrapperImpl();
 
-function parseTags(tags: string) : Array<string> {
+function parseTags(tags: string): Array<string> {
     if (!tags || tags.length === 0) {
         return [];
     }
@@ -253,99 +256,36 @@ async function getFullGraph() {
 }
 
 export function connectUrbitClient(listener: UrbitListener): UrbitClientWrapper {
+    console.log('ssss');
     urbitClientWrapper.listener = listener;
-    urbitClientWrapper.connectionState = UrbitConnectionState.UCS_NOT_CONNECTED;
 
-    urbitClientWrapper.urbit = new Urbit("");
-    (window as any).urbit = urbitClientWrapper.urbit;
+    const webSocket = new WebSocket(`ws://${BACKEND_URL}/ws`);
 
-    if (!(window as any)?.ship) {
-        throw new Error("window.ship not defined");
-    }
-
-    urbitClientWrapper.urbit.ship = (window as any)?.ship;
-    urbitClientWrapper.urbit.onOpen = () => {
-        urbitClientWrapper.connectionState = UrbitConnectionState.UCS_CONNECTED;
-    };
-    urbitClientWrapper.urbit.onRetry = () => {
-        urbitClientWrapper.connectionState = UrbitConnectionState.UCS_NOT_CONNECTED;
-    };
-    urbitClientWrapper.urbit.onError = (err) => {
-        urbitClientWrapper.connectionState = UrbitConnectionState.UCS_HAS_ERROR;
-        console.error('urbit error', err);
-    };
-
-    const forceTestConnection = () => {
-        try {
-            console.log("forceTestConnection");
-            const path = `/entries/all`;
-            if (urbitClientWrapper.urbit) {
-                const init = () => {
-                    urbitClientWrapper.connectionState = UrbitConnectionState.UCS_CONNECTED;
-                    getFullGraph().then(()=>{
-                        watchGraphWithUrbit().catch(console.error);
-                    }).catch(console.error);
-                };
-                urbitClientWrapper.urbit
-                    .scry({
-                        app: "urbipedia",
-                        path: path,
-                    })
-                    .then(
-                        (data) => {
-                            init();
-                        },
-                        (err) => {
-                            if(err.status === 404) {
-                                init();
-                            } else {
-                                throw new Error(err.statusText);
-                            }
-                        }
-                    );
-            } else {
-                throw new Error("not connected to urbit");
-            }
-        } catch (e) {
-            console.error(e);
-            setTimeout(forceTestConnection, 1000);
+    webSocket.onmessage = (event: MessageEvent<any> | string) => {
+        if (event != "pong") {
+            urbitClientWrapper.listener?.onEvent(event);
         }
     };
-    forceTestConnection();
 
-    setTimeout(() => {
-        const message = {
-            type: "variables",
-            data: {
-                varKey1: "444",
-                varKey2: "555",
-            }
+    webSocket.onopen = (event) => {
+        const ping = () => {
+            webSocket.send(JSON.stringify({ping: Date.now()}));
+            setTimeout(ping, 5 * 60 * 1000);
         };
-        const event = {
-            data: JSON.stringify(message)
-        };
-        listener.onEvent(event);
-    }, 1000);
+        ping();
+    };
+
 
     return urbitClientWrapper;
 }
 
 export async function urbitCreateFile(name: string) {
-    return new Promise((resolve, reject) => {
-        if (!urbitClientWrapper
-            || !urbitClientWrapper.urbit
-            || urbitClientWrapper.connectionState !== UrbitConnectionState.UCS_CONNECTED) {
-            reject("not connected to urbit");
-            throw "error";
+    return axios.post(
+        `http://${BACKEND_URL}/create-node`,
+        {
+            name
         }
-        urbitClientWrapper.urbit.poke({
-            app: "urbipedia",
-            mark: "urbipedia-action",
-            json: {"create-node": {name: name}},
-            onSuccess: () => resolve({status: "ok"}),
-            onError: () => reject("can't create file"),
-        });
-    });
+    );
 }
 
 export async function urbitUpdateTagsToFile(id: string, tags: Array<string>) {
@@ -414,7 +354,7 @@ export async function urbitCreateLinkFileToFile(from: string, to: string) {
         urbitClientWrapper.urbit.poke({
             app: "urbipedia",
             mark: "urbipedia-action",
-            json: {"create-link":{link: {from: Number.parseInt(from), to: Number.parseInt(to)}}},
+            json: {"create-link": {link: {from: Number.parseInt(from), to: Number.parseInt(to)}}},
             onSuccess: () => resolve({status: "ok"}),
             onError: () => reject("can't create link to file"),
         });
@@ -508,7 +448,7 @@ export function urbitGetNodes(): Promise<Array<string>> {
                     resolve(data.entries.map((item: any) => String(item)));
                 },
                 (err) => {
-                    if(err.status === 404) {
+                    if (err.status === 404) {
                         resolve([]);
                     } else {
                         reject(err);
@@ -538,7 +478,7 @@ export function urbitGetLinks(): Promise<Array<string>> {
                     resolve(data.links.map((item: any) => String(item)));
                 },
                 (err) => {
-                    if(err.status === 404) {
+                    if (err.status === 404) {
                         resolve([]);
                     } else {
                         reject(err);

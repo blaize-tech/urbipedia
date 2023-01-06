@@ -124,8 +124,8 @@ connectUrbitClient({
 // @ts-ignore
 app.ws('/ws', function (ws, req: Request) {
     ws.on('message', function (msg: any) {
-        if (msg === "ping") {
-            ws.send("pong");
+        if ("ping" in JSON.parse(msg)) {
+            ws.send(JSON.stringify({ping: Date.now()}));
         } else {
             console.log(msg);
         }
