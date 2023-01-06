@@ -264,11 +264,12 @@ export function connectUrbitClient(listener: UrbitListener): UrbitClientWrapper 
     webSocket.onmessage = (packedEvent: MessageEvent<any>) => {
         const event = JSON.parse(packedEvent.data);
         if (!event.ping) {
-            urbitClientWrapper.listener?.onEvent(packedEvent);
+            handleUpdateUrbit(event);
         }
     };
 
     webSocket.onopen = (event) => {
+        getFullGraph().catch(console.error);
         const ping = () => {
             webSocket.send(JSON.stringify({ping: Date.now()}));
             setTimeout(ping, 5 * 60 * 1000);
