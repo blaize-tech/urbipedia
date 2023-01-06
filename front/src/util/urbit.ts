@@ -328,13 +328,7 @@ export function urbitGetFileEntries(id: string): Promise<any> {
             `http://${BACKEND_URL}/entries/ids?id=${id}`
         ).then(
             (res) => {
-                const data = res.data;
-                resolve({
-                    id: String(id),
-                    tags: data.zettel.tags,
-                    name: data.zettel.name,
-                    content: data.zettel.content,
-                });
+                resolve(res.data);
             },
             (err) => {
                 reject(err);
@@ -353,8 +347,7 @@ export function urbitGetNodes(): Promise<Array<string>> {
             `http://${BACKEND_URL}/entries/all`
         ).then(
             (res) => {
-                const data = res.data;
-                resolve(data.entries.map((item: any) => String(item)));
+                resolve(res.data);
             },
             (err) => {
                 reject(err);
@@ -373,8 +366,7 @@ export function urbitGetLinks(): Promise<Array<string>> {
             `http://${BACKEND_URL}/links/all`
         ).then(
             (res) => {
-                const data = res.data;
-                resolve(data.links.map((item: any) => String(item)));
+                resolve(res.data);
             },
             (err) => {
                 reject(err);
@@ -393,12 +385,7 @@ export function urbitGetLink(id: string): Promise<any> {
             `http://${BACKEND_URL}/links/ids?id=${id}`
         ).then(
             (res) => {
-                const data = res.data;
-                resolve({
-                    id: String(id),
-                    from: String(data.link.from),
-                    to: String(data.link.to),
-                });
+                resolve(res.data);
             },
             (err) => {
                 reject(err);
