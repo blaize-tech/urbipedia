@@ -132,4 +132,4 @@ app.ws('/ws', function (ws, req: Request) {
     });
 });
 
-app.listen(3000);
+app.listen(process.env.LISTEN_PORT || 3000);
