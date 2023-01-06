@@ -1,7 +1,7 @@
 import {OrgRoamGraphReponse, OrgRoamLink, OrgRoamNode} from "../api";
 import axios from "axios";
 
-const BACKEND_URL = process.env.BACKEND_URL || "localhost:3000";
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || "localhost:3000";
 
 export interface UrbitListener {
     onEvent(event: any): void;

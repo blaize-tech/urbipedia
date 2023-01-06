@@ -192,13 +192,16 @@ const FilesListBar: FC<FilesListBarProps> = ({
     >
       <Logo />
 
-      <Toolbar
-        createNewFile={createNewFile}
-        editFile={editFile}
-        renameFile={renameFile}
-        deleteFile={deleteFile}
-        haveSelection={(selectedItemIndex >= 0)}
-      />
+      {
+        process.env.REACT_APP_ADMIN === "1" &&
+        <Toolbar
+            createNewFile={createNewFile}
+            editFile={editFile}
+            renameFile={renameFile}
+            deleteFile={deleteFile}
+            haveSelection={(selectedItemIndex >= 0)}
+        />
+      }
 
       <Scrollbars autoHide={false}>
         <ItemList
