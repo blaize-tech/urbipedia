@@ -1,4 +1,4 @@
-/-  *zettelkasten
+/-  *urbitpedia
 /+  *encode-json
 |_  upd=update
 ++  grow

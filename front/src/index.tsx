@@ -1,20 +1,9 @@
-import { HamburgerIcon } from '@chakra-ui/icons'
-import {
-  Box,
-  Flex,
-  Heading,
-  IconButton,
-  Slide,
-  Tooltip,
-  useDisclosure,
-  useOutsideClick,
-  useTheme,
-} from '@chakra-ui/react'
-import { useAnimation } from '@lilib/hooks'
-import { useWindowSize, useWindowWidth } from '@react-hook/window-size'
-import * as d3int from 'd3-interpolate'
-import { GraphData, LinkObject, NodeObject } from 'force-graph'
-import Head from 'next/head'
+import { useTheme } from '@chakra-ui/react';
+import { useAnimation } from '@lilib/hooks';
+import { useWindowSize, useWindowWidth } from '@react-hook/window-size';
+import * as d3int from 'd3-interpolate';
+import { GraphData, LinkObject, NodeObject } from 'force-graph';
+import Head from 'next/head';
 import React, {
   ComponentPropsWithoutRef,
   useContext,
@@ -22,19 +11,17 @@ import React, {
   useMemo,
   useRef,
   useState,
-} from 'react'
+} from 'react';
 import ReactDOM from 'react-dom/client';
 //@ts-expect-error
 import jLouvain from 'jlouvain.js'
 import type, {
   ForceGraph2D as TForceGraph2D,
   ForceGraph3D as TForceGraph3D,
-} from 'react-force-graph'
-import { BiNetworkChart } from 'react-icons/bi'
-import { BsReverseLayoutSidebarInsetReverse, BsLayoutSidebarInset } from 'react-icons/bs'
-import SpriteText from 'three-spritetext'
-import useUndo from 'use-undo'
-import { OrgRoamGraphReponse, OrgRoamLink, OrgRoamNode } from './api'
+} from 'react-force-graph';
+import SpriteText from 'three-spritetext';
+import useUndo from 'use-undo';
+import { OrgRoamGraphReponse, OrgRoamLink, OrgRoamNode } from './api';
 import {
   algos,
   colorList,
@@ -46,27 +33,27 @@ import {
   initialPhysics,
   initialVisuals,
   TagColors,
-} from './components/config'
-import { ContextMenu } from './components/contextmenu'
-import Sidebar from './components/Sidebar'
-import { Tweaks } from './components/Tweaks'
-import { usePersistantState } from './util/persistant-state'
-import { ThemeContext, ThemeContextProps } from './util/themecontext'
-import { drawLabels } from './components/Graph/drawLabels'
-import { VariablesContext } from './util/variablesContext'
-import { findNthNeighbors } from './util/findNthNeighbour'
-import { getThemeColor } from './util/getThemeColor'
-import { normalizeLinkEnds } from './util/normalizeLinkEnds'
-import { nodeSize } from './util/nodeSize'
-import { getNodeColor } from './util/getNodeColor'
-import { isLinkRelatedToNode } from './util/isLinkRelatedToNode'
-import { getLinkColor } from './util/getLinkColor'
-import {UrbitClientWrapper, connectUrbitClient} from "./util/urbit";
-import MyApp from './_app'
-import {FilesListBar} from './components/FilesListBar'
-import {openNodeInEmacs} from "./util/webSocketFunctions";
+} from './components/config';
+import Sidebar from './components/Sidebar';
+import Tweaks from './components/Tweaks';
+import { usePersistantState } from './util/persistant-state';
+import { ThemeContext, ThemeContextProps } from './util/themecontext';
+import { drawLabels } from './components/Graph/drawLabels';
+import { VariablesContext } from './util/variablesContext';
+import { findNthNeighbors } from './util/findNthNeighbour';
+import { getThemeColor } from './util/getThemeColor';
+import { normalizeLinkEnds } from './util/normalizeLinkEnds';
+import { nodeSize } from './util/nodeSize';
+import { getNodeColor } from './util/getNodeColor';
+import { isLinkRelatedToNode } from './util/isLinkRelatedToNode';
+import { getLinkColor } from './util/getLinkColor';
+import { UrbitClientWrapper, connectUrbitClient } from './util/urbit';
+import MyApp from './_app';
+import FilesListBar from './components/FilesListBar';
+import Layout from './components/Layout';
+import { openNodeInEmacs } from './util/webSocketFunctions';
 
-const d3promise = import('d3-force-3d')
+const d3promise = import('d3-force-3d');
 
 // react-force-graph fails on import when server-rendered
 // https://github.com/vasturiano/react-force-graph/issues/155
@@ -128,15 +115,6 @@ export function GraphPage() {
     future: futurePreviewNodes,
   } = previewNodeState
   const [sidebarHighlightedNode, setSidebarHighlightedNode] = useState<OrgRoamNode | null>(null)
-  const { isOpen, onOpen, onClose } = useDisclosure()
-
-  let isOpenFilesListSideBar, onOpenFilesListSideBar, onCloseFilesListSideBar;
-  {
-    const {isOpen, onOpen, onClose} = useDisclosure({defaultIsOpen: true})
-    isOpenFilesListSideBar = isOpen;
-    onOpenFilesListSideBar = onOpen;
-    onCloseFilesListSideBar = onClose;
-  }
 
   const nodeByIdRef = useRef<NodeById>({})
   const linksByNodeIdRef = useRef<LinksByNodeId>({})
@@ -496,37 +474,6 @@ export function GraphPage() {
 
   const [windowWidth, windowHeight] = useWindowSize()
 
-  const contextMenuRef = useRef<any>()
-  const [contextMenuTarget, setContextMenuTarget] = useState<OrgRoamNode | string | null>(null)
-  type ContextPos = {
-    left: number | undefined
-    right: number | undefined
-    top: number | undefined
-    bottom: number | undefined
-  }
-  const [contextPos, setContextPos] = useState<ContextPos>({
-    left: 0,
-    top: 0,
-    right: undefined,
-    bottom: undefined,
-  })
-
-  const contextMenu = useDisclosure()
-  useOutsideClick({
-    ref: contextMenuRef,
-    handler: () => {
-      contextMenu.onClose()
-    },
-  })
-
-  const openContextMenu = (target: OrgRoamNode | string, event: any, coords?: ContextPos) => {
-    coords
-      ? setContextPos(coords)
-      : setContextPos({ left: event.pageX, top: event.pageY, right: undefined, bottom: undefined })
-    setContextMenuTarget(target)
-    contextMenu.onOpen()
-  }
-
   const handleLocal = (node: OrgRoamNode, command: string) => {
     if (command === 'remove') {
       setScope((currentScope: Scope) => ({
@@ -556,191 +503,79 @@ export function GraphPage() {
 
   return (
     <VariablesContext.Provider value={{ ...emacsVariables }}>
-      <Box
-        display="flex"
-        alignItems="flex-start"
-        flexDirection="row"
-        height="100vh"
-        overflow="clip"
+      <Layout
+        graphData={currentOrgRoamGraph.current}
+        visuals={visuals}
+        physics={physics}
+        setPhysics={setPhysics}
+        threeDim={threeDim}
+        setThreeDim={setThreeDim}
+        filter={filter}
+        setFilter={setFilter}
+        setVisuals={setVisuals}
+        mouse={mouse}
+        setMouse={setMouse}
+        behavior={behavior}
+        setBehavior={setBehavior}
+        tagColors={tagColors}
+        setTagColors={setTagColors}
+        coloring={coloring}
+        setColoring={setColoring}
+        local={local}
+        setLocal={setLocal}
+        tags={tagsRef.current}
+        nodeIds={scope.nodeIds}
+        onExit={() => {
+          setScope((currentScope: Scope) => ({ ...currentScope, nodeIds: [] }));
+        }}
+        nodeById={nodeByIdRef.current!}
+        previewNode={previewNode}
+        setPreviewNode={setPreviewNode}
+        linksByNodeId={linksByNodeIdRef.current!}
+        nodeByCite={nodeByCiteRef.current!}
+        setSidebarHighlightedNode={setSidebarHighlightedNode}
+        canUndo={canUndo}
+        canRedo={canRedo}
+        previousPreviewNode={previousPreviewNode}
+        nextPreviewNode={nextPreviewNode}
+        macros={emacsVariables.katexMacros}
+        attachDir={emacsVariables.attachDir || ''}
+        useInheritance={emacsVariables.useInheritance || false}
       >
-        <Box position="relative" zIndex={4}>
-          <FilesListBar
-              {...{
-                isOpen: isOpenFilesListSideBar,
-                onOpen: onOpenFilesListSideBar,
-                onClose: onCloseFilesListSideBar,
-                windowWidth,
-                graphData: currentOrgRoamGraph.current,
-                visuals
-              }}
-          />
-        </Box>
-        <Box position="relative" zIndex={4}>
-          <Tooltip label={isOpenFilesListSideBar ? 'Close sidebar' : 'Open sidebar'}>
-            <IconButton
-                m={1}
-                // eslint-disable-next-line react/jsx-no-undef
-                icon={<BsLayoutSidebarInset />}
-                aria-label="Close files-list"
-                variant="subtle"
-                onClick={isOpenFilesListSideBar ? onCloseFilesListSideBar : onOpenFilesListSideBar}
-            />
-          </Tooltip>
-        </Box>
-        <Tweaks
-          {...{
-            physics,
-            setPhysics,
-            threeDim,
-            setThreeDim,
-            filter,
-            setFilter,
-            visuals,
-            setVisuals,
-            mouse,
-            setMouse,
-            behavior,
-            setBehavior,
-            tagColors,
-            setTagColors,
-            coloring,
-            setColoring,
-            local,
-            setLocal,
-          }}
-          tags={tagsRef.current}
-          haveOffset={isOpenFilesListSideBar}
-        />
-        <Box position="absolute">
-          {(graphData && graphData.nodes.length) ? (
-            <Graph
-              //ref={graphRef}
-              nodeById={nodeByIdRef.current!}
-              linksByNodeId={linksByNodeIdRef.current!}
-              urbitClientWrapper={urbitClient.current}
-              variables={emacsVariables}
-              {...{
-                physics,
-                graphData,
-                threeDim,
-                emacsNodeId,
-                filter,
-                visuals,
-                behavior,
-                mouse,
-                scope,
-                setScope,
-                tagColors,
-                setPreviewNode,
-                sidebarHighlightedNode,
-                windowWidth,
-                windowHeight,
-                openContextMenu,
-                contextMenu,
-                handleLocal,
-                mainWindowWidth,
-                setMainWindowWidth,
-                setContextMenuTarget,
-                graphRef,
-                clusterRef,
-                coloring,
-                local,
-              }}
-            />
-          ) : (<div/>)}
-        </Box>
-        <Box position="relative" zIndex={4} width="100%">
-          <Flex className="headerBar" h={10} flexDir="column">
-            <Flex alignItems="center" h={10} justifyContent="flex-end">
-              {/* <Flex flexDir="row" alignItems="center">
-               *   <Box color="blue.500" bgColor="alt.100" h="100%" p={3} mr={4}>
-               *     {mainItem.icon}
-               *   </Box>
-               *   <Heading size="sm">{mainItem.title}</Heading>
-               * </Flex> */}
-              <Flex height="100%" flexDirection="row">
-                {scope.nodeIds.length > 0 && (
-                  <Tooltip label="Return to main graph">
-                    <IconButton
-                      m={1}
-                      icon={<BiNetworkChart />}
-                      aria-label="Exit local mode"
-                      onClick={() =>
-                        setScope((currentScope: Scope) => ({
-                          ...currentScope,
-                          nodeIds: [],
-                        }))
-                      }
-                      variant="subtle"
-                    />
-                  </Tooltip>
-                )}
-                <Tooltip label={isOpen ? 'Close sidebar' : 'Open sidebar'}>
-                  <IconButton
-                    m={1}
-                    // eslint-disable-next-line react/jsx-no-undef
-                    icon={<BsReverseLayoutSidebarInsetReverse />}
-                    aria-label="Close file-viewer"
-                    variant="subtle"
-                    onClick={isOpen ? onClose : onOpen}
-                  />
-                </Tooltip>
-              </Flex>
-            </Flex>
-          </Flex>
-        </Box>
-
-        <Box position="relative" zIndex={4}>
-          <Sidebar
-            {...{
-              isOpen,
-              onOpen,
-              onClose,
-              previewNode,
-              setPreviewNode,
-              canUndo,
-              canRedo,
-              previousPreviewNode,
-              nextPreviewNode,
-              resetPreviewNode,
-              setSidebarHighlightedNode,
-              openContextMenu,
-              scope,
-              setScope,
-              windowWidth,
-              tagColors,
-              setTagColors,
-              filter,
-              setFilter,
-            }}
-            macros={emacsVariables.katexMacros}
-            attachDir={emacsVariables.attachDir || ''}
-            useInheritance={emacsVariables.useInheritance || false}
+        {graphData?.nodes.length ? (
+          <Graph
+            //ref={graphRef}
             nodeById={nodeByIdRef.current!}
             linksByNodeId={linksByNodeIdRef.current!}
-            nodeByCite={nodeByCiteRef.current!}
+            urbitClientWrapper={urbitClient.current}
+            variables={emacsVariables}
+            {...{
+              physics,
+              graphData,
+              threeDim,
+              emacsNodeId,
+              filter,
+              visuals,
+              behavior,
+              mouse,
+              scope,
+              setScope,
+              tagColors,
+              setPreviewNode,
+              sidebarHighlightedNode,
+              windowWidth,
+              windowHeight,
+              handleLocal,
+              mainWindowWidth,
+              setMainWindowWidth,
+              graphRef,
+              clusterRef,
+              coloring,
+              local,
+            }}
           />
-        </Box>
-        {contextMenu.isOpen && (
-          <div ref={contextMenuRef}>
-            <ContextMenu
-              //contextMenuRef={contextMenuRef}
-              scope={scope}
-              target={contextMenuTarget}
-              background={false}
-              coordinates={contextPos}
-              handleLocal={handleLocal}
-              menuClose={contextMenu.onClose.bind(contextMenu)}
-              urbitClientWrapper={urbitClient.current}
-              setPreviewNode={setPreviewNode}
-              setFilter={setFilter}
-              filter={filter}
-              setTagColors={setTagColors}
-              tagColors={tagColors}
-            />
-          </div>
-        )}
-      </Box>
+        ) : null}
+      </Layout>
     </VariablesContext.Provider>
   )
 }
@@ -765,9 +600,6 @@ export interface GraphProps {
   sidebarHighlightedNode: OrgRoamNode | null
   windowWidth: number
   windowHeight: number
-  setContextMenuTarget: any
-  openContextMenu: any
-  contextMenu: any
   handleLocal: any
   mainWindowWidth: number
   setMainWindowWidth: any
@@ -799,9 +631,6 @@ export const Graph = function (props: GraphProps) {
     sidebarHighlightedNode,
     windowWidth,
     windowHeight,
-    setContextMenuTarget,
-    openContextMenu,
-    contextMenu,
     handleLocal,
     variables,
     clusterRef,
@@ -828,10 +657,6 @@ export const Graph = function (props: GraphProps) {
       }
       case mouse.follow: {
         openNodeInEmacs(node, urbitClientWrapper)
-        break
-      }
-      case mouse.context: {
-        openContextMenu(node, event)
         break
       }
       default:
@@ -1190,7 +1015,7 @@ export const Graph = function (props: GraphProps) {
     graphData: scope.nodeIds.length ? scopedGraphData : filteredGraphData,
     width: windowWidth,
     height: windowHeight,
-    backgroundColor: getThemeColor(visuals.backgroundColor, theme),
+    backgroundColor: '#F6F7FA',
     warmupTicks: scope.nodeIds.length === 1 ? 100 : scope.nodeIds.length > 1 ? 20 : 0,
     onZoom: ({ k, x, y }) => (scaleRef.current = k),
     nodeColor: (node) => {
@@ -1308,7 +1133,6 @@ export const Graph = function (props: GraphProps) {
 
     onNodeClick: (nodeArg: NodeObject, event: any) => {
       const node = nodeArg as OrgRoamNode
-      //contextMenu.onClose()
       const doubleClickTimeBuffer = 200
       const isDoubleClick = event.timeStamp - lastNodeClickRef.current < doubleClickTimeBuffer
       lastNodeClickRef.current = event.timeStamp
@@ -1324,19 +1148,6 @@ export const Graph = function (props: GraphProps) {
         return handleClick('click', node, event)
       }, doubleClickTimeBuffer)
     },
-    /* onBackgroundClick: () => {
-     *   contextMenu.onClose()
-     *   setHoverNode(null)
-     *   if (scope.nodeIds.length === 0) {
-     *     return
-     *   }
-     *   if (mouse.backgroundExitsLocal) {
-     *     setScope((currentScope: Scope) => ({
-     *       ...currentScope,
-     *       nodeIds: [],
-     *     }))
-     *   }
-     * }, */
     onNodeHover: (node) => {
       if (!visuals.highlight) {
         return
@@ -1357,7 +1168,6 @@ export const Graph = function (props: GraphProps) {
       handleClick('right', node, event)
     },
     onNodeDrag: (node) => {
-      //contextMenu.onClose()
       setHoverNode(node)
       setDragging(true)
     },
@@ -1367,51 +1177,47 @@ export const Graph = function (props: GraphProps) {
     },
   }
 
-  return (
-    <Box overflow="hidden" onClick={contextMenu.onClose}>
-      {threeDim ? (
-        <ForceGraph3D
-          ref={graphRef}
-          {...graphCommonProps}
-          nodeThreeObjectExtend={true}
-          nodeOpacity={visuals.nodeOpacity}
-          nodeResolution={visuals.nodeResolution}
-          linkOpacity={visuals.linkOpacity}
-          nodeThreeObject={(node: OrgRoamNode) => {
-            if (!visuals.labels) {
-              return
-            }
-            if (visuals.labels < 3 && !highlightedNodes[node.id!]) {
-              return
-            }
-            const sprite = new SpriteText(node.title.substring(0, 40))
-            sprite.color = getThemeColor(visuals.labelTextColor, theme)
-            sprite.backgroundColor = getThemeColor(visuals.labelBackgroundColor, theme)
-            sprite.padding = 2
-            sprite.textHeight = 8
+  return threeDim ? (
+    <ForceGraph3D
+      ref={graphRef}
+      {...graphCommonProps}
+      nodeThreeObjectExtend={true}
+      nodeOpacity={visuals.nodeOpacity}
+      nodeResolution={visuals.nodeResolution}
+      linkOpacity={visuals.linkOpacity}
+      nodeThreeObject={(node: OrgRoamNode) => {
+        if (!visuals.labels) {
+          return
+        }
+        if (visuals.labels < 3 && !highlightedNodes[node.id!]) {
+          return
+        }
+        const sprite = new SpriteText(node.title.substring(0, 40))
+        sprite.color = getThemeColor(visuals.labelTextColor, theme)
+        sprite.backgroundColor = getThemeColor(visuals.labelBackgroundColor, theme)
+        sprite.padding = 2
+        sprite.textHeight = 8
 
-            return sprite
-          }}
-        />
-      ) : (
-        <ForceGraph2D
-          ref={graphRef}
-          {...graphCommonProps}
-          linkLineDash={(link) => {
-            const linkArg = link as OrgRoamLink
-            if (visuals.citeDashes && linkArg.type?.includes('cite')) {
-              return [visuals.citeDashLength, visuals.citeGapLength]
-            }
-            if (visuals.refDashes && linkArg.type == 'ref') {
-              return [visuals.refDashLength, visuals.refGapLength]
-            }
-            return null
-          }}
-        />
-      )}
-    </Box>
-  )
-}
+        return sprite
+      }}
+    />
+  ) : (
+    <ForceGraph2D
+      ref={graphRef}
+      {...graphCommonProps}
+      linkLineDash={(link) => {
+        const linkArg = link as OrgRoamLink
+        if (visuals.citeDashes && linkArg.type?.includes('cite')) {
+          return [visuals.citeDashLength, visuals.citeGapLength]
+        }
+        if (visuals.refDashes && linkArg.type == 'ref') {
+          return [visuals.refDashLength, visuals.refGapLength]
+        }
+        return null
+      }}
+    />
+  );
+};
 
 
 export default function Home() {

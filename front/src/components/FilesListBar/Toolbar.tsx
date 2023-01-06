@@ -1,68 +1,83 @@
-import React from 'react'
-import {Flex, IconButton, ButtonGroup, Tooltip} from '@chakra-ui/react'
-import {PlusSquareIcon, EditIcon, DeleteIcon, CalendarIcon} from '@chakra-ui/icons'
+import { FC } from 'react';
 
-export interface ToolbarProps {
-    createNewFile: any
-    editFile: any
-    renameFile: any
-    deleteFile: any
-    haveSelection: boolean
+import IconButton from '../IconButton';
+
+import IconAdd from '../../images/icon-add.svg';
+import IconAddHover from '../../images/icon-add-hover.svg';
+import IconAddActive from '../../images/icon-add-active.svg';
+import IconEdit from '../../images/icon-edit.svg';
+import IconEditHover from '../../images/icon-edit-hover.svg';
+import IconEditActive from '../../images/icon-edit-active.svg';
+import IconRename from '../../images/icon-rename.svg';
+import IconRenameHover from '../../images/icon-rename-hover.svg';
+import IconRenameActive from '../../images/icon-rename-active.svg';
+import IconDelete from '../../images/icon-delete.svg';
+import IconDeleteHover from '../../images/icon-delete-hover.svg';
+import IconDeleteActive from '../../images/icon-delete-active.svg';
+
+import styles from './Toolbar.module.scss';
+
+interface ToolbarProps {
+    createNewFile: any;
+    editFile: any;
+    renameFile: any;
+    deleteFile: any;
+    haveSelection: boolean;
 }
 
-export const Toolbar = (props: ToolbarProps) => {
-    const {
-        createNewFile,
-        editFile,
-        renameFile,
-        deleteFile,
-        haveSelection,
-    } = props
-    return (
-        <Flex flex="0 1 40px" pb={3} alignItems="center" justifyContent="space-between" pr={1}>
-            <Flex>
-                <ButtonGroup isAttached>
-                    <Tooltip label="Create new">
-                        <IconButton
-                            _focus={{}}
-                            variant="subtle"
-                            icon={<PlusSquareIcon/>}
-                            aria-label="Create new file"
-                            onClick={createNewFile}
-                        />
-                    </Tooltip>
-                    <Tooltip label="Edit selected">
-                        <IconButton
-                            _focus={{}}
-                            variant="subtle"
-                            icon={<CalendarIcon/>}
-                            aria-label="Edit selected file"
-                            disabled={!haveSelection}
-                            onClick={editFile}
-                        />
-                    </Tooltip>
-                    <Tooltip label="Rename selected">
-                        <IconButton
-                            _focus={{}}
-                            variant="subtle"
-                            icon={<EditIcon/>}
-                            aria-label="Rename selected file"
-                            disabled={!haveSelection}
-                            onClick={renameFile}
-                        />
-                    </Tooltip>
-                    <Tooltip label="Delete selected">
-                        <IconButton
-                            _focus={{}}
-                            variant="subtle"
-                            icon={<DeleteIcon/>}
-                            aria-label="Delete selected file"
-                            disabled={!haveSelection}
-                            onClick={deleteFile}
-                        />
-                    </Tooltip>
-                </ButtonGroup>
-            </Flex>
-        </Flex>
-    )
-}
+const Toolbar: FC<ToolbarProps> = ({
+    createNewFile,
+    editFile,
+    renameFile,
+    deleteFile,
+    haveSelection,
+}) => {
+  return (
+    <div className={styles.container}>
+      <IconButton
+        ariaLabel="Create new file"
+        className={styles.button}
+        onClick={createNewFile}
+        title="Create new"
+        icon={IconAdd}
+        iconHover={IconAddHover}
+        iconActive={IconAddActive}
+      />
+
+      <IconButton
+        ariaLabel="Edit selected file"
+        className={styles.button}
+        disabled={!haveSelection}
+        onClick={editFile}
+        title="Edit selected"
+        icon={IconEdit}
+        iconHover={IconEditHover}
+        iconActive={IconEditActive}
+      />
+
+      <IconButton
+        ariaLabel="Rename selected file"
+        className={styles.button}
+        disabled={!haveSelection}
+        onClick={renameFile}
+        title="Rename selected"
+        icon={IconRename}
+        iconHover={IconRenameHover}
+        iconActive={IconRenameActive}
+      />
+
+      <IconButton
+        ariaLabel="Delete selected file"
+        className={styles.button}
+        disabled={!haveSelection}
+        onClick={deleteFile}
+        title="Delete selected"
+        icon={IconDelete}
+        iconHover={IconDeleteHover}
+        iconActive={IconDeleteActive}
+      />
+    </div>
+  );
+};
+
+export default Toolbar;

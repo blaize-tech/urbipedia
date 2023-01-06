@@ -1,4 +1,4 @@
-/-  *zettelkasten
+/-  *urbitpedia
 |%
 ++  dejs-action
   =,  dejs:format
