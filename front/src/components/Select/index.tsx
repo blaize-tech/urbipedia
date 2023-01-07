@@ -34,9 +34,21 @@ const Select: FC<InputProps> = ({
   const [isOpened, setIsOpened] = useState<boolean>(false);
   const [searchValue, setSearchValue] = useState<string>('');
   const [selectedlist, setSelectedlist] = useState<ItemInterface[]>([]);
+  const [needCreteOne, setNeedCreteOne] = useState<boolean>(false);
 
   // useEffect is needed to prevent rerender of the itemListselected
   useEffect(() => setSelectedlist(itemListselected), [itemListselected]);
+  useEffect(() => {
+    let needCreteOneLocal = searchValue.length > 0;
+    itemList.map(item => {
+      if (item.value === searchValue) {
+        needCreteOneLocal = false;
+      }
+    });
+    if (needCreteOneLocal !== needCreteOne) {
+      setNeedCreteOne(needCreteOneLocal);
+    }
+  }, [itemList, searchValue]);
 
   return (
     <label className={cn(styles.container, className)}>
@@ -94,25 +106,27 @@ const Select: FC<InputProps> = ({
 
       {isOpened && (
         <ul className={styles.list}>
-          {itemList?.map((item: ItemInterface) => {
-            if (onCreate && searchValue && !item.value.includes(searchValue)) {
-              return (
-                <li className={styles.listItem} key={item.value}>
-                  <button
-                    onClick={() => onCreate({
+          {
+            (onCreate && needCreteOne)
+            &&
+            <li className={styles.listItem} key={searchValue}>
+              <button
+                  onClick={() => {
+                    onCreate({
                       value: searchValue,
                       label: searchValue,
-                    })}
-                    type="button"
-                  >
-                    <span className={styles.listItemText}>
-                      {`Create ${searchValue}`}
-                    </span>
-                  </button>
-                </li>
-              );
-            }
-
+                    });
+                    setNeedCreteOne(false);
+                  }}
+                  type="button"
+              >
+            <span className={styles.listItemText}>
+            {`Create ${searchValue}`}
+            </span>
+              </button>
+            </li>
+          }
+          {itemList?.map((item: ItemInterface) => {
             if (searchValue && item.value.includes(searchValue)) {
               return (
                 <li className={styles.listItem} key={item.value}>
