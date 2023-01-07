@@ -116,7 +116,7 @@ export function drawLabels(props: drawLabelsProps) {
   // draw label text
   ctx.textAlign = 'center'
   ctx.textBaseline = 'middle'
-  const labelText = hexToRGBA(labelTextColor, textOpacity)
+  const labelText = "#000"
   ctx.fillStyle = labelText
   ctx.font = `${fontSize}px Sans-Serif`
   const wordsArray = wrap(label, { width: visuals.labelWordWrap }).split('\n')
