@@ -150,7 +150,6 @@ function updateTagsToFile(id: string, tags: Array<string>) {
 }
 
 async function handleUpdateUrbit(event: any) {
-    console.log('event', JSON.stringify(event, null, 4));
     if (
         "node-created" in event
         || "content-updated" in event
