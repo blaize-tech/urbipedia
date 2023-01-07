@@ -127,7 +127,7 @@ const Select: FC<InputProps> = ({
               </button>
             </li>
           }
-          {itemList?.map((item: ItemInterface) => {
+          {!needCreteOne && itemList?.map((item: ItemInterface) => {
             if (searchValue && item.value.includes(searchValue)) {
               return (
                 <li className={styles.listItem} key={item.value}>

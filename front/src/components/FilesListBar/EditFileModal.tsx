@@ -24,10 +24,10 @@ const EditFileModal: FC<EditFileModalProps> = ({
   isVisible,
 }) => {
   const [newContent, setNewContent] = useState(node.content);
-  const [showTrigger, setShowTrigger] = useState(false);
-
-  const tagsOptionArray =
-    graphData.tags.map((option) => ({ value: option, label: option })) || [];
+  const [tagsOptionArray, setTagsOptionArray] = useState(graphData.tags.map((option) => ({
+    value: option,
+    label: option
+  })) || []);
 
   const [selectedItemsTags, setSelectedItemsTags] =
     useState<typeof tagsOptionArray>(
@@ -95,7 +95,7 @@ const EditFileModal: FC<EditFileModalProps> = ({
         onCreate={(item) => {
           if (!graphData.tags.includes(item.value)) {
             setSelectedItemsTags((curr) => [...selectedItemsTags, item]);
-            tagsOptionArray.push(item);
+            setTagsOptionArray((curr) => [...tagsOptionArray, item]);
           }
         }}
         onChange={setSelectedItemsTags}
