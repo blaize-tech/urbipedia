@@ -117,6 +117,7 @@ const Select: FC<InputProps> = ({
                       label: searchValue,
                     });
                     setNeedCreteOne(false);
+                    setSearchValue("");
                   }}
                   type="button"
               >
