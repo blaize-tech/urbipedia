@@ -21,6 +21,9 @@ Regular users can interact with this system of information.
 # Requirements
 Urbit - https://urbit.org/getting-started
 
+# Viewer page without Urbipedia installed
+Especially for the hackathon, a midware was implemented that allows you to view information from Urbipedia without installing Urbit and the Urbipedia application itself. The midware implementation is in the `midware` branch. A demo can be found at: http://64.227.74.132:4545/.
+
 # Install
 Run urbit.
 
